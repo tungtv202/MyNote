@@ -38,3 +38,4 @@ if (untrusted_offset_from_caller < arr1->length) {
 }
 ```
 Tuỳ vào value là 0 hay 1 mà arr2 sẽ load lên 0x200 hay 0x300, sau đó kiểm tra lại bằng timing 1 lần nữa xem 0x200 hay 0x300 có trên cache hay không sẽ biết được giá trị value ban đâu là bao nhiêu -> leak dc memory ngoài độ dài cho phép của arr1.
+...
