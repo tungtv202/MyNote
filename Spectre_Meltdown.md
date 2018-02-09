@@ -5,8 +5,10 @@ Hiện nay lỗ hổng này đều đã có trong bản vá lỗi của Microsof
 ## Bản chất của Meltdown và Spectre là gì?
 
 Chúng không phải là "bug" trong hệ thống. Chúng là những CÁCH THỨC tấn công vào chính cách hoạt động của các bộ xử lý Intel, ARM hay AMD. Lỗi này được phòng thí nghiệm bảo mật mạng Project Zero của Google phát hiện ra.
+Họ nghiên cứu kỹ những con chip trên, tìm ra được một lỗ hổng trong thiết kế, một lỗ hổng chết người mà Meltdown và Spectre có thể lợi dụng, kéo đổ những phương thức bảo mật thông thường của các bộ xử lý này.
 
-## Giải thích bug Spectre
+Cụ thể, đó chính là cách thức "thực hành suy đoán – speculative execution", một kỹ thuật xử lý được sử dụng trong chip Intel từ năm 1995 và cũng là cách thức xử lý dữ liệu thường gặp trên bộ xử lý ARM và AMD. Với cách thức thực hành suy đoán thì về cơ bản, con chip sẽ suy đoán xem bạn chuẩn bị làm gì. Nếu như chúng đoán đúng thì chúng đã đi trước bạn một bước, việc đó sẽ khiến bạn cảm thấy máy chạy trơn tru hơn. Nếu như chúng đoán sai, dữ liệu được bỏ đi và đoán lại từ đầu.
+## Giải thích bug Spectre dưới góc nhìn code
 if a > b:
 then do C
 Sếp yêu cầu bạn kiểm tra lại số tiền trong ngân hàng nếu có đủ thì vác xác đi mua cho sếp 1 thùng rượu để biếu nhân dịp năm mới.
