@@ -39,3 +39,9 @@ if (untrusted_offset_from_caller < arr1->length) {
 ```
 Tuỳ vào value là 0 hay 1 mà arr2 sẽ load lên 0x200 hay 0x300, sau đó kiểm tra lại bằng timing 1 lần nữa xem 0x200 hay 0x300 có trên cache hay không sẽ biết được giá trị value ban đâu là bao nhiêu -> leak dc memory ngoài độ dài cho phép của arr1.
 ...
+
+## Kết luận
+Hiện nay lỗ hổng này khá lớn, vì là vấn đề của phần cứng, nên việc khắc phục triệt để là không thể. 
+CEO của Intel đã bán dần cổ phần của mình.
+Hiện tại ngoài Intel, thì lỗ hổng này cũng phát hiện ra trên chip AMD và ARM
+
