@@ -1,10 +1,10 @@
 # Memory leak trong Java    
 ## 1. Là gì?    
-    a. Memory leak là gì?
+a. Memory leak là gì?   
     Là việc chương trình được cấp tài nguyên memory theo khai báo của coder nhưng vì lý do nào đó mà chúng lại không được sử dụng tới. Và cũng không được trình của Java phát hiện để thu hồi lại. 
     
-    b. Garbage Collector là gì?
-    Là 1 trình của JVM thực thi nhiệm vụ quản lý bộ nhớ. 
+b. Garbage Collector là gì?     
+ Là 1 trình của JVM thực thi nhiệm vụ quản lý bộ nhớ. 
     Code Java sẽ được bytecode rồi chạy trên JVM. Các Object được tạo ở vùng nhớ heap. Sau cùng, sẽ có một vài object mà chương trình không cần đến. Các object này sẽ được garbage collector truy tìm và xóa bỏ để thu hồi lại dung lượng bộ nhớ. 
     Vấn đề là GC chỉ tìm được các Object không sử dụng, chứ nó không đủ hoàn hảo để tìm được các Object không sử dụng, nhưng lại được tham chiếu tới 1 nơi khác.
 
