@@ -1,0 +1,1 @@
+# Tổng hợp các note hiểu biết về các vấn đề liên quan tới AWS
