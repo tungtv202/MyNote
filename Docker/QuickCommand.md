@@ -1,4 +1,4 @@
-![Docker](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/7svsburqjy_gsviec-docker.png)
+![alt](https://s3-ap-southeast-1.amazonaws.com/kipalog.com/7svsburqjy_gsviec-docker.png)
 
 ## 1. Install   
 - Sau khi cài đặt docker, cần lưu ý gán quyền user cho docker. Nếu không gán quyền, thì command trong docker sẽ bị permission
