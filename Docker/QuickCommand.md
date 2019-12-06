@@ -4,9 +4,11 @@
 - [2. Một số lệnh Docker](#2-một-số-lệnh-docker)
     - [2.1 Tạo/ Chạy container](#21-tạo-chạy-container)
     - [2.2 Ít dùng](#22-ít-dùng)
-- [3 Docker Swarm](#3-docker-swarm)
+- [3 Docker Swarm](#3-docker-swarm)   TOC dang ko hoat dong
     - [3.1 Tạo Swarm](#31-tạo-swarm)
     - [3.2 Tạo service](#32-tạo-service)
+    
+  
 
 <!-- /TOC -->
 ## 1. Install   
