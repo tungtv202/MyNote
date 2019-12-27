@@ -1,8 +1,7 @@
 # Install SecureCRT có thuốc
 ## 1. Install
 Version 8.5.4
-- Download package
-https://drive.google.com/drive/u/0/folders/1URylpTv4MGMdZJ6rUeSIkHe1_Pj1GuJa
+- Download package : [Gooogle Driver](https://drive.google.com/drive/folders/1URylpTv4MGMdZJ6rUeSIkHe1_Pj1GuJa?usp=sharing)
 - Install file setup "Setup 64 Bit.exe"
 - Coppy file keygen_path vào folder file location cài đặt 
 ex:
@@ -28,8 +27,8 @@ Trong mục "Current color scheme", lựa chọn 1 theme bất kỳ, và bấm O
 
 ### 2.2 Config bởi file theme trên mạng
 - Download file theme example       
-Link 1: https://forums.vandyke.com/showpost.php?p=45225&postcount=1     
-Link 2: https://drive.google.com/drive/u/0/folders/1URylpTv4MGMdZJ6rUeSIkHe1_Pj1GuJa
+Link 1: [VandykeForum](https://forums.vandyke.com/showpost.php?p=45225&postcount=1)     
+Link 2: [Gooogle Driver](https://drive.google.com/drive/folders/1URylpTv4MGMdZJ6rUeSIkHe1_Pj1GuJa?usp=sharing)
 ```
 ColorSchemeAutoRotation.py
 ```
