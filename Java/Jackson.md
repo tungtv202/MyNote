@@ -375,3 +375,32 @@ public class PersonEntity {
 
 ### 1.29 @JsonFilter
 ### 1.30 @JsonMerge
+
+## 2. Config ObjectMapper Example
+```java
+
+@Component
+@Configuration
+public class ObjectMapperConfig {
+
+    @Bean(name = "json_main")
+    @Primary
+    public ObjectMapper main() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
+        objectMapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.setDateFormat(new ISO8601DateFormat());
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(String.class, new StringDeserializer());
+        SimpleFilterProvider filters = new SimpleFilterProvider();
+        filters.addFilter("empty", SimpleBeanPropertyFilter.serializeAllExcept(new HashSet<>()));
+        filters.addFilter("field", SimpleBeanPropertyFilter.serializeAllExcept(new HashSet<>()));
+        objectMapper.setFilterProvider(filters);
+        objectMapper.registerModule(module);
+        return objectMapper;
+    }
+}
+```
