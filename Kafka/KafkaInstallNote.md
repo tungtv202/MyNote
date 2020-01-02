@@ -23,7 +23,14 @@ advertised.listeners=PLAINTEXT://192.168.60.4:9092
 # Run broker server
 kafka-server-start.sh config/server.properties
 ```
+- Quick run by nohub
+```bash
+echo "run zookeeper"
+nohup bash zookeeper-server-start.sh config/zookeeper.properties >> /tmp/zookeeper.log 2>&1&
 
+echo "run bootstrap server / broker server"
+nohup kafka-server-start.sh config/server.properties >> /tmp/kafkaserver.log 2>&1&
+```
 
 ## 2.Topic 
 ```bash
