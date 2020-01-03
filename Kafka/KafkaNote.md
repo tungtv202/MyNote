@@ -14,6 +14,7 @@
 - Data is kept only for a limited time (default is one week)
 - Once the data is written to a partition, `it can't be changed` (immutability)
 - Data is assigned randomly to a partition unless a key is provided (more on this later)
+- Thư mục chứa các partitions ở tại ../data/kafka
 
 ## 2. Brokers 
 - A Kafka cluster is composed of multiple brokers (servers)
