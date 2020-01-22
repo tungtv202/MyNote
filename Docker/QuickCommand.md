@@ -34,6 +34,15 @@ docker ps -a
 
 ### 2.1 Tạo/ Chạy container 
 ```bash
+# Xem log container đang chạy
+docker logs containerId
+# Update docker container đã tồn tại 
+# Ví dụ update docker container luôn luôn start sau khi reboot 
+docker update --restart=unless-stopped 37
+
+# Đổi tên docker 
+docker rename CONTAINER NEW_NAME
+
 # Tạo, chạy một container từ image với id (name) là image_id
 docker run -it --name nameyourcontainer -h "nameyourhost" image_id
 

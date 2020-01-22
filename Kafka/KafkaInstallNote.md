@@ -1,7 +1,7 @@
 # Kafka CLI Command
 
 ## 1. Install 
-- Linux
+### 1.1 Thủ công Linux
 ```bash
 # 1. Download
 wget http://mirror.downloadvn.com/apache/kafka/2.4.0/kafka_2.13-2.4.0.tgz
@@ -30,6 +30,32 @@ nohup bash zookeeper-server-start.sh config/zookeeper.properties >> /tmp/zookeep
 
 echo "run bootstrap server / broker server"
 nohup kafka-server-start.sh config/server.properties >> /tmp/kafkaserver.log 2>&1&
+```
+### 1.2 Docker 
+```bash
+# docker hub: https://hub.docker.com/r/bitnami/kafka
+
+# 1. create network
+docker network create app-tier --driver bridge
+
+# 2. install zookeeper
+docker run --name zookeeper-server -d \
+    --network app-tier \
+    -e ALLOW_ANONYMOUS_LOGIN=yes \
+    -p 2181:2181 \
+    bitnami/zookeeper:latest
+
+# 3. Install broker/boostrap
+# Lưu ý KAFKA_CFG_ADVERTISED_LISTENERS
+docker run --name kafka-server -d \
+    --network app-tier \
+    -e ALLOW_PLAINTEXT_LISTENER=yes \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-server:2181 \
+    -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://tungexplorer.me:19092 \
+    -e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092 \
+    -p 19092:9092 \
+    bitnami/kafka:latest
+
 ```
 
 ## 2.Topic 

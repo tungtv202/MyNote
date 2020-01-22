@@ -1,0 +1,1 @@
+docker run --name file-server -p 8082:8080 -v /home/ubuntu/torrents:/torrents -w /torrents -t cannin/nodejs-http-server

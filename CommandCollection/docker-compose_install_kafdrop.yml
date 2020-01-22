@@ -1,0 +1,9 @@
+version: "2"
+services:
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    restart: "no"
+    ports:
+      - "9009:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "tungexplorer.me:9092" 
