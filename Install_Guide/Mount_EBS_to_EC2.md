@@ -7,7 +7,7 @@ In this tutorial, we will teach you how to  attach and mount an EBS volume to 
 
 **Step 2:** Select the created volume, right click and select the "attach volume" option. 
 **Step 3:** Select the instance from the instance text box as shown below.
-[![attach ebs volume](https://devopscube.com/wp-content/uploads/2016/08/ebs-volume.jpg)](https://devopscube.com/wp-content/uploads/2016/08/ebs-volume.jpg)  
+![attact](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/aws/ebs/EBS_Attact.jpg)  
 
 **Step 4:** Now, login to your ec2 instance and list the available disks using the following command.
 ```
