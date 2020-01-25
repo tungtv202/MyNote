@@ -55,6 +55,7 @@ https://ap-east-1.console.aws.amazon.com/ecs/home?region=ap-east-1#/clusters
 - Run new `Services`
     - Lưu ý trường `Service type*` (chọn DAEMON)
     ![ECS_CreateNewService](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/aws/ecs/ECS_CreateNewService.png)
+    - Services sau khi tạo xong, thì `container` trong ec2 sẽ luôn luôn được chạy, nếu stop manual, thì sẽ tự động được restart lại
 
 - Note
     - Có thể sẽ có sự conflict giữa việc tạo `Tasks` trên aws, với việc Task được sinh ra do tạo `Serrvices`
