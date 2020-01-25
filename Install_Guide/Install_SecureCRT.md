@@ -43,3 +43,14 @@ ColorSchemeAutoRotation.py
 - Click vào button vừa tạo, mỗi lần click sẽ ra 1 màu khác nhau
 
 // Tham khảo: [Youtube](https://www.youtube.com/watch?v=SZLbBsp3914)
+
+## 3. Keep connect alive
+Ví dụ với server EC2, sau khoảng 60s nếu không có active, thì phiên kết nối sẽ bị lost. Cần phải connect lại.
+Giải pháp:
+```
+> Options 
+    > Session Options
+        > Terminal
+            > Send protocol NO-OP
+                > "nhập số giây để CRT ping lại, ví dụ 30"
+```
