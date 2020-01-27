@@ -1,4 +1,5 @@
-# Amazon Simple Queue Service (SQS) là 1 dịch vụ hàng đợi message queue, giống như message queue của Redis hay ActiveMQ
+# Amazon Simple Queue Service (SQS)
+ là 1 dịch vụ hàng đợi message queue, giống như message queue của Redis hay ActiveMQ
 
 ## 1. Một vài điểm đặc biệt cần lưu ý của SQS
 -	Mặc định các queue message trong SQS không đảm bảo được sắp xếp theo đúng trật tự mà chúng được thêm vào. Nếu muốn các message queue có trật tự thì cần phải thêm dữ liệu tuần tự vào message.
