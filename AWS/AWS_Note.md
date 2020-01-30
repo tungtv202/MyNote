@@ -144,6 +144,17 @@ Direct Connect
 - Là một tính năng cho phép các EC2 liên quan có thể kết nối với nhau với băng thông cao, độ trễ thấp, trong cùng 1 AZ
 - Yêu cầu cùng 1 AZ
 - Có thể sử dụng Enhanced networking instances trong Placement groups
+- We first create a placement group and then launch multiple instances inside it
+- Placement group cannot span across multiple availability zones
+- There are only specific instance type which can be launched inside the placement group
+- We cannot move existing instance into placement group, in such case we need to create an AMI of instance and launch new instance from that AMI inside the p group
+- Maximum network throughput traffic between two instance in placement group is limited by the slower of the two instance
+- Có 3 type tạo placementGroup: cluster, partition, spread. 
+- the name that we specify for placement group must be unique across your AWS account.
+- AWS recommends instances with same type to be launched within a placement group
+- We cannot merge placement groups
+
+
 
 ## EC2 - Bastion Host 
 - 1 Computer được cấu hình đặc biệt, thuộc miền external/ public (DMZ) hoặc bên ngoài firewall, hoạt động như một server trung gian, cho phép bạn connect vào các Instance nằm trong Private Subnet
