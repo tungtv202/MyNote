@@ -184,3 +184,125 @@ Example 1 download link có token:
 ```
 https://xinchaovietna222me.s3.ap-southeast-1.amazonaws.com/188?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20180710T065913Z&X-Amz-SignedHeaders=host&X-Amz-Expires=299&X-Amz-Credential=AKIAIP7Y2FP3U3AJWLPQ%2F20180710%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=fc46c9d6cef32a94ee120dac5ab6a33c08e245256b979be977232b76c32e6926
 ```
+
+## 4. Sử dụng SSE-C để encrypt/decrypt object 
+- Với cách này, chỉ có client chứa "key" mới có thể download/retrivew metadata của object được. Cho dù tài khoản root của AWS có full quyền, cũng không thể can thiệp, nếu không có key.
+ref: https://docs.aws.amazon.com/AmazonS3/latest/dev/sse-c-using-java-sdk.html
+### 4.1 Code example
+```java
+package tung.demo.ssec_s3;
+
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.*;
+
+import javax.crypto.KeyGenerator;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
+public class ServerSideEncryptionUsingClientSideEncryptionKey {
+    private static SSECustomerKey SSE_KEY;
+    private static AmazonS3 S3_CLIENT;
+    private static KeyGenerator KEY_GENERATOR;
+
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+        Regions clientRegion = Regions.AP_SOUTHEAST_1;
+        String accessKey = "";
+        String secretKey = "ga+tu8vB";
+        String bucketName = "";
+        String keyName = "test001.png";
+        String uploadFileName = "D:\\yamaha.png";
+        String targetKeyName = "*** Target key name ***";
+
+        // Create an encryption key.
+        KEY_GENERATOR = KeyGenerator.getInstance("AES");
+        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        secureRandom.setSeed("TUNGTUNGTUNG".getBytes());
+        KEY_GENERATOR.init(256, secureRandom);
+        SSE_KEY = new SSECustomerKey(KEY_GENERATOR.generateKey());
+
+        try {
+
+            S3_CLIENT = AmazonS3ClientBuilder.standard()
+                    .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
+                    .withRegion(clientRegion)
+                    .build();
+
+            // Upload an object.
+            uploadObject(bucketName, keyName, new File(uploadFileName));
+
+            // Download the object.
+//            downloadObject(bucketName, keyName);
+
+            // Verify that the object is properly encrypted by attempting to retrieve it
+            // using the encryption key.
+            retrieveObjectMetadata(bucketName, keyName);
+
+            // Copy the object into a new object that also uses SSE-C.
+//            copyObject(bucketName, keyName, targetKeyName);
+        } catch (AmazonServiceException e) {
+            // The call was transmitted successfully, but Amazon S3 couldn't process
+            // it, so it returned an error response.
+            e.printStackTrace();
+        } catch (SdkClientException e) {
+            // Amazon S3 couldn't be contacted for a response, or the client
+            // couldn't parse the response from Amazon S3.
+            e.printStackTrace();
+        }
+    }
+
+    private static void uploadObject(String bucketName, String keyName, File file) {
+//        PutObjectRequest putRequest = new PutObjectRequest(bucketName, keyName, file);
+        PutObjectRequest putRequest = new PutObjectRequest(bucketName, keyName, file).withSSECustomerKey(SSE_KEY);
+        S3_CLIENT.putObject(putRequest);
+        System.out.println("Object uploaded");
+    }
+
+    private static void downloadObject(String bucketName, String keyName) throws IOException {
+        GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, keyName).withSSECustomerKey(SSE_KEY);
+        S3Object object = S3_CLIENT.getObject(getObjectRequest);
+
+        System.out.println("Object content: ");
+        displayTextInputStream(object.getObjectContent());
+    }
+
+    private static void retrieveObjectMetadata(String bucketName, String keyName) {
+        GetObjectMetadataRequest getMetadataRequest = new GetObjectMetadataRequest(bucketName, keyName)
+                .withSSECustomerKey(SSE_KEY);
+        ObjectMetadata objectMetadata = S3_CLIENT.getObjectMetadata(getMetadataRequest);
+        System.out.println("Metadata retrieved. Object size: " + objectMetadata.getContentLength());
+    }
+
+    private static void copyObject(String bucketName, String keyName, String targetKeyName)
+            throws NoSuchAlgorithmException {
+        // Create a new encryption key for target so that the target is saved using SSE-C.
+        SSECustomerKey newSSEKey = new SSECustomerKey(KEY_GENERATOR.generateKey());
+
+        CopyObjectRequest copyRequest = new CopyObjectRequest(bucketName, keyName, bucketName, targetKeyName)
+                .withSourceSSECustomerKey(SSE_KEY)
+                .withDestinationSSECustomerKey(newSSEKey);
+
+        S3_CLIENT.copyObject(copyRequest);
+        System.out.println("Object copied");
+    }
+
+    private static void displayTextInputStream(S3ObjectInputStream input) throws IOException {
+        // Read one line at a time from the input stream and display each line.
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
+        System.out.println();
+    }
+}
+```
