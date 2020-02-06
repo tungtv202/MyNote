@@ -73,6 +73,31 @@ Ex `BatchJobMetric` class file
 
         }
     ```
+- Với kiểu metric `Gauges`, cần chú ý tới việc khai báo ref giá trị metric. Code example
+```java
+public class MailLagMetricJob implements CommandLineRunner {
+    private static int DELAY_QUERY_SECOND = 1;
+    private AtomicInteger totalMailIsSendingMetric = new AtomicInteger();
+    private AtomicInteger totalMailNotSentMetric = new AtomicInteger();
+
+    @Autowired
+    private MailOutboxDao _mailOutboxDao;
+
+    @Autowired
+    private MeterRegistry meterRegistry;
+
+    @Override
+    public void run(String... args) throws Exception {
+        while (true) {
+            totalMailIsSendingMetric.set(_mailOutboxDao.totalMailIsSending());
+            totalMailNotSentMetric.set(_mailOutboxDao.totalMailNotSent());
+            meterRegistry.gauge("mail.is-sending", totalMailIsSendingMetric);
+            meterRegistry.gauge("mail.is-not-sent", totalMailNotSentMetric);
+            Thread.sleep(DELAY_QUERY_SECOND * 1000);
+        }
+    }
+}
+```
 ## 3. Ref
 - [Youtube về metric type + demo dùng prometheus-client](https://www.youtube.com/watch?v=nJMRmhbY5hY)
 - [Blog về metric type + demo dùng prometheus-client = ](https://tomgregory.com/the-four-types-of-prometheus-metrics/)
