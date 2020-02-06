@@ -3,7 +3,7 @@
 ## 1. Install   
 - Sau khi cài đặt docker, cần lưu ý gán quyền user cho docker. Nếu không gán quyền, thì command trong docker sẽ bị permission
 ```sh
-sudo usermod -aG dockker $USER
+sudo usermod -aG docker $USER
 ```
 Logout sau đó login lại để có hiệu lực
 - docker và docker-compose là 2 package khác nhau. Nếu muốn xài docker-compose thì phải cài đặt riêng
@@ -34,6 +34,9 @@ docker ps -a
 
 ### 2.1 Tạo/ Chạy container 
 ```bash
+# Khi `bash` vào trong container, mà ko thể chạy lệnh apt-get update, có thể thử với
+apk add curl
+
 # Xem log container đang chạy
 docker logs containerId
 # Update docker container đã tồn tại 
