@@ -30,22 +30,19 @@ Về việc cấp quyền access, thì ElastiCache dựa theo NETWORK. Nghĩa l�
 Lưu ý: các node không bao giờ được access từ ngoài internet, hoặc từ EC2 bên ngoài VPC chạy ElastiCache. Có thể hạn chế xâm nhập vào bằng cách cấu hình trong ACL (Acess List) .        
 Về việc manage, sử dụng service IAM, AWS Identity của Amazon để định nghĩa các chính sách cho các AWS User.
 
-# 2. Amazon Route 53
-![Route53](https://blog.outsource.com/wp-content/uploads/2018/10/getting-started-on-aws-74-638.jpg)
-
+# Amazon Route 53
 Là một dịch vụ tên miền DNS     
-## 2.1 chức năng chính
+## chức năng chính
 - Register domain names
 - Route internet traffic to the resources for your domain
 - Check the health of your resources
 
-## 2.2 Tính năng
+## Tính năng
 - Kết nối hiệu quả với EC2, S3, ELB, Cloudfront
 - Using Traffic Flow to Route DNS Traffic: Có thể sử dụng để redirect traffic, định tuyến enduser tới endpoint tốt nhất dựa theo: geoproximity, latency, health, and other considerations
 - DNS failover: Route 53 tự động phát hiện sự cố của website và redirect truy cập user tới 1 locations khác. Khi bật tính năng này, thì
 Route 53 sẽ thành 1 helth checking agent, để giám sát tính "availabale" của các endpoint
-- Private DNS for Amazon VPC (A private hosted zone) dùng để làm DNS private cho các service trong cùng 1 VPC.  Ví dụ có thể tạo ra các record A, AAAA như db.example.com để DNS cho các query domain đến từ nội bộ VPC. Kết quả được trả về trước khi DNS ra ngoài global
-![Create hosted zone](https://blog.andrewray.me/content/images/2017/09/hosted-zones.jpg)
+- Private DNS for Amazon VPC (A private hosted zone) dùng để làm DNS private cho các service trong cùng 1 VPC. 
 - Domain Name Registration: trả tiền để thuê tên miền
 
 ## 2.3 Các Routing policy:
@@ -57,19 +54,7 @@ Route 53 sẽ thành 1 helth checking agent, để giám sát tính "availabale"
 - Multivalue answer routing policy: định tuyến random, kết quả trả về là 1 trong 8 record của DNS
 - Weighted routing policy: định tuyến truy cập tới các server theo hệ số khác nhau mà mình config
 
-
-## 2.4 Các API mà Route 53 cung cấp
-- CreateHostedZone: tạo hosted zone chứa DNS data, sau khi tạo Hosted zone sẽ nhận được 4 name server
-- GetHostedZone: lấy thông tin của Hosted Zone
-- DeleteHostedZone
-- ChangeResourceRecordSets
-- ListResourceRecordSets
-- CheckAvailability
-- RegisterDomain
-
-# 3. AWS Lambda
-AWS Lambda nằm trong category "Compute" của danh sách các service mà Amazon web service cung cấp. 
-
+# AWS Lambda
 Sự khác biệt giữa EC2 và Lambda là gì? 
 - Lambda là serverless (không có các tài nguyên như RAM, CPU, Disk...), còn EC2 thì ngược lại, nó là server. 
 
@@ -89,39 +74,12 @@ Một vài điểm nổi bật của Lambda
 - Code sau khi được deploy lêm Lambda, tùy thuộc vào traffic, và effort của request mà tính tiền.
 - Cần phải tính toán về RAM và khai báo cho ứng dụng trước khi chạy. Việc tính toán CPU là tự động.
 - Lambda sử dụng BeanStalk (1 dịch vụ khác của AWS) để deploy code. Và code được lưu trữ ở S3
+## Use case nổi
+- combo kết hợp Lambda + API Gateway 
 
-# Chưa có time tổng hợp
-- ELB chỉ chạy được trong 1 hoạc nhiều AZ? tức là khác region thì ko chạy được?
-Có thể chạy khác Region được, nhưng cần phải có Route 53
-- RDS hỗ trợ lưu data tối đa là 35 ngày
-- Mặc định mỗi tài khoản AWS sẽ giới hạn 5IP Elastic
-- EBS : the data set?
+# DynamoDB
 - Dynamic DB: 10 000 beyond
-- Provisioned IOPS SSD at least 4GB in size
-- AWS Import/Export : không thể expỏt from Glacier
-- Không thể di chuyển Reserved instance từ 1 region tới another
-- 1 IOPS - 256KB IO
-- Microsoft SQL: max 10GB per DB
-- Key pair are used only for EC2 and CloudFront
-- Khi nhìn thấy keyword non-production workloads cái mà có thể interupted, immediately => chọn spot instances
-- Elastic Map Reduce
-- AWS Cloudformation sẽ rollback lại toàn bộ các service đã tạo, nếu có 1 service bị lỗi
-Instance type khác nhau thì sẽ có số ENIs có thể đính vào khác nhau
-- Amazon Web servicé , cung cấp các cơ chế định danh hỗ trợ: Facebook, Google, Amazon
-Federated Storage Engine: ???
-- Oracle database: Oracle Data Pump
-- Redshift
-- AWS STS
-- Sau khi chạy Start VPC Wizard, thì không thể có lựa chọn nào nữa?
-- VPC with a Public Subnet Only and Hardware VPN Access
-AWS Security Token Service
-PIOPS la gi?
-- Với dịch vụ EC2, aws bắt đầu tính tiền khi EC2 được khởi tạo ở boot sequence, và kết thúc khi Instant shutdown
-- Có thể acces với EC2, sử dụng SOAP protocol
-- Application vs Classic Load Balancer????
-Direct Connect
-
-# Amazon EC2
+- Stored on SSD storage
 
 # EC2 
 ## EC2 Enhanced Networking 
@@ -139,6 +97,7 @@ Direct Connect
 
 ## EC2 Bootstrapping 
 - Pass script chạy sau khi EC2 instance launched (ví dụ như script sau khi chạy thì update OS, run shell script...)
+- Startup
 
 ## EC2 - Placement Groups 
 - Là một tính năng cho phép các EC2 liên quan có thể kết nối với nhau với băng thông cao, độ trễ thấp, trong cùng 1 AZ
@@ -153,33 +112,26 @@ Direct Connect
 - the name that we specify for placement group must be unique across your AWS account.
 - AWS recommends instances with same type to be launched within a placement group
 - We cannot merge placement groups
-
+- Đi kèm với Instance support Enhance Networking
 
 
 ## EC2 - Bastion Host 
 - 1 Computer được cấu hình đặc biệt, thuộc miền external/ public (DMZ) hoặc bên ngoài firewall, hoạt động như một server trung gian, cho phép bạn connect vào các Instance nằm trong Private Subnet
 - Trường hợp Instance bị terminated, nhưng Auto Scaling Group đang launches, thì Elastic IP sẽ được đính lên cho instances mới
 
-
 ## EC2 - Spot instances
 - Đấu thầu để được chạy instances (các tài nguyên mà AWS đang dư thừa), giá rẻ hơn Instances on-demaind rất nhiều. Tuy nhiên khi nào có người khác trả giá cao hơn giá mình thầu, thì instance đó sẽ bị terminated
-- Spot instance không đảm bảo luôn luôn khả dụng, nhưng giá rất rẻ
+- Spot instance không đảm bảo luôn luôn khả dụng, nhưng giá rẻ
 
 ## EC2 - Rerserved Instances 
 - Là Instances on-demand, nhưng có thuê bao, trả trước sẽ có giá rẻ hơn. Ví dụ đảm bảo dùng trong 12 tháng.
-- You can NOT migrate RI instances between regions
 - They can be used to launch AS Group instances or standalone ones
 
 ## EC2 - IAM Roles
 - Gán quyền để application access read/write S3, SQS, DynamoDB, SNS...
 - Default IAM Roles cho phép EC2 instances access vào các service khác 
 - You can add the IAM role while the instance is running 
-
-## EC2 - ENIs
-- Network interfaces được tọa bởi CLI sẽ KHÔNG được tự động terminated khi EC2 instance terminates.
-
-## EC2 - Instance Immediate Termination 
-- AWS khuyến cáo sau khi launch EC2 cần check trạng thái của EC2 để chắc chắn là nó là "running", và không phải là "terminated"
+## Error
 - Một vài lỗi khiến EC2 bị terminate khi launch:
     - AMI thiếu 1 số part
     - Limit volume EBS
@@ -188,16 +140,7 @@ Direct Connect
     - From Console: Go to Instances (select the instance) -> Description tab -> State Transition reason
     - From CLI use the "describe-instance command
 
-## EC2 Troubleshooting - Insufficient Capacity Error
-- Lỗi: Insufficient Instance Capacity
-- If you get an InsufficientInstanceCapacity error when you try to launch an instance or start a stopped instance:
-    - The reason is: AWS does not currently have enough available capacity to service your request
-        - To solve the problem try one or more of the following
-            - Wait a few minutes and then submit your request again
-            - Submit a new request with a reduced number of instances
-            - (If launching an Instance) Submit a new request without specifying an AZ
-            - (If launching an Instance) Submit a new request using a different instance type (which you can resize at a later stage)
-            - Try purchasing Reserved Instances
+- Lỗi: Insufficient Instance Capacity : aws hết tài nguyên, đợi, hoặc reserved instances
 
 # Elastic Network Interface
 - Là card mạng ảo, được đính vào EC2 (vd: eth0, eth1...)
@@ -205,6 +148,7 @@ Direct Connect
 - Có thể được cấu hình khi: instance running, stopped, launched
 - 1 ENI chỉ được cho 1 Insntace, nhưng 1 instance có thể attached nhiều ENI
 - Subnet có thể khác nhau nhưng phải chung VPC, chung AZ
+- Instance type khác nhau thì sẽ có số ENIs có thể đính vào khác nhau
 
 # RDS
 - Service cung cấp hệ quản trị SQL: MySQL, PostgreSQL...
@@ -214,8 +158,8 @@ Direct Connect
     - Có sự bất đồng bộ giữa các node
 - AWS quản lý fully managed service, tức là dev ko thể can thiệp được vào OS, instance chạy RDS => chỉ access được vào RDS enginer
 - Primary và standby có thể khác AZs 
-- Không nên sử dụng IP address làm point để kết nối, mà nên sử dụng emdpoint (endpoint kiểu domain dài dài loằng ngoằng)
-- Có thể sử dụng CloudWatch Alarm ddeer monitor metric, và alarm
+- Không nên sử dụng IP address làm point để kết nối, mà nên sử dụng emdpoint 
+- Có thể sử dụng CloudWatch Alarm để monitor metric, và alarm
 - CloudTrail để logs all AWS RDS API
 - Có thể read replica (được với MySQL, MariaDB, PostgreSQL (MyMaPo) )
 - Quá trình scale, hay chuyển giao primary-standby sẽ mất vài phút
@@ -226,26 +170,27 @@ Direct Connect
 - MS SQL DB engine can have storage capacity up to 4TB
 - Không thể giảm size của RDS sau khi chạy, chỉ có thể tăng
 - Amazon RDS Provisioned IOPS Storage được dùng để tăng performance (ứng dụng nào yêu cầu I/O cao, thì nên dùng )
-- Có thể test DB instance against trước khi upgrade version. Step:
-    - Tạo 1 bản DB snapshot mới cho DB đang chạy
-    - Restore bản snapshot sang DB instance mới
-    - Khởi tạo, upgrade version mới trên DB instance mới
-- Mỗi DB instance có 1 cửa sổ maintance weekly 
 - Việc upgrade version RDS có 2 loại
-    - Major version Upgrades
+    - Major version Upgrades - admin phải upgrade manual, cant revert
     - Minor version Upgrades
-- Với "major", AWS sẽ không tự động, phải làm bằng tay thủ công. Không thể revert về version trước đó. Nếu muốn restore thì trước khi upgrade nên tạo 1 instance mới và chứa data snapshot đó
 - Không thể restore 1 bản snapshot tới 1 instance đã tồn tại DB (cần tạo mới, và restore vô cái mới)
 
 - Không thể thay đổi Storage type (magnetic, Provisioned IOPS, General purpose) trong suốt quá trình restore thực thi
 - Nếu set retention period = 0, tương đương tắt chế độ automatic backups. 
-- If you set retention period to zero, automatic backups are disabled
 - Khi bạn restore a DB instance, chỉ có các tham số mặc định và Security groups đã được liên kết mới có thể restore
 - Sau lưu tự động hiện tại chỉ support InnoDB , MySQL (ko support cho MyISAM)
 - Tính năng khôi phục theo thời gian Point-In-Time chỉ được hỗ trợ cho MySQL, InnoDB
-- InnoDB có vẻ là chiến lược của AWS, ko thấy support khá nhiều ưu ái
+- InnoDB có vẻ là chiến lược của AWS
+- Aurora là RDS mà tự động HA tới 3 AZ
+- Encrypting existing RDS is not currently supported
+- Achieved using asynchronous replication
+
 
 # S3 
+
+- S3 Versioning once enabled, versioning cannot be disabled, only suspended
+
+## Encrypt
 - Có 2 cách để mã hóa dữ liệu được lưu trữ trên S3 buckets
     - Client side encryption (được mã hóa dưới client, trước khi upload lên S3)
     - Server Side Encryption (SSE)
@@ -256,12 +201,14 @@ Direct Connect
     - SSE-S3: S3 quản lý encryption keys
     - SSE-KMS: sử dụng KM keys
     - SSE-C: Client cung cấp keys
+- Glacier: chỉ có thể read
 
-- Nếu bucket của bạn có lượng truy cập dưới 100 PUT/LIST/DELETE cho mỗi giây, hoặc dưới 800 GET request mỗi giây, thì ko cần phải cấu hình gì cho S3 để nâng performance cả
+## Performance 
+- Nếu bucket có lượng truy cập dưới 100 PUT/LIST/DELETE cho mỗi giây, hoặc dưới 800 GET request mỗi giây, thì ko cần phải cấu hình gì cho S3 để nâng performance cả
 - Ngược lại: 
-    - Random prefix để chúng được lưu vào các phân vùng khác nhau
+    - Random prefix để chúng được lưu vào các phân vùng khác nhau (hình như version mới nhất thì ko cần phải random nữa, mà S3 tự động performance)
     - Sử dụng CloudFront để phân phối tải tới S3
-- Versioning is enabled
+- Versioning is disable default
 
 - Bạn có thể truy suất data từ Glacier theo nhiều cách
     - Expedited: 1-5 mts
@@ -274,30 +221,20 @@ Direct Connect
         - Cheapest
         - Use to retrieve large amounts up to Petabytes in a day
 
-- IAM users/groups/roles không thể gán quyền cho Object, ACL
-- IAM users/groups/roles không thể 
-- AWS sẽ không replicate dữ liệu ra ngoài region, nó chỉ sao chép trong nhiều facilities (AZ)
+## S3 Cross Region Replication
+- AWS sẽ không replicate dữ liệu ra ngoài region, nó chỉ sao chép trong nhiều facilities (AZ) (nhưng có feature cross region)
 - Mặc định, tất cả objects sẽ gán quyền private, và chỉ có owner mới có thể access
 - Để chia sẻ object bạn có 2 cách
     - Set quyền object public 
     - Tạo pre-signed URL 
 
 - bucket 
-    - là container
     - global name, unique across all AWS accounts
 - object
     - 0 bytes - 5 TB
     - Dung lượng lớn nhất cho 1 PUT request upload là 5GB (nếu dung lượng lớn hơn 100MB, cân nhắc nên sử dụng Multipart Upload)
-    - key (name of object) + Data + metadata (describe, object size, MD5 digest, other...) + version ID
 - Data tự động được replicated trong 1 region
 
-
-- Use case:
-    - backup, storage on-premises data
-    - content, media, and software storage and distribution
-    - bigdata
-    - static website hosting
-    - Cloud-native mobile and internet application hosting
 - Security
     - ACL
     - BucketPolicies
@@ -305,11 +242,30 @@ Direct Connect
         - AWS account
         - Objects with a specific prefix
     - Encryption
+- Có thể xài kèm Athena để query SQL trên S3 (dạng sheet)
+- Signed URL
+- Có chức năng Restric Viewer
+- Từ Standard sang IA phải ít nhất 30 ngày, nhưng từ Standard sang Glacier thì whenever
+## S3 Cross Region Replication
+- Versioning must be enabled on both the source and destination buckets
+- Files in an existing bucket are not replicated automatically, all new and updated files will be replicated automatically
 
+# Storage Gateway
+- dùng cho hệ thống lai (on premises vs on demand)
+- hay đi kèm vs NFS (base on S3) (ngoài ra có VolumeGateway (base on EBS)...)
+- Import to S3 or Export from S3
+- Snowball
+    - 80TB, no compute
+- Snowball Edge
+    - 100TB, has compute
+- Snowmobile
+    - 100PB, semi-truck
+# Snowball
+- Snowball là giải pháp vận chuyển dữ liệu ở cấp độ petabyte sử dụng các thiết bị được thiết kế bảo mật để truyền lượng dữ liệu lớn vào và ra khỏi Đám mây AWS.
+- Snowball can:
+    - import to S3
+    - export from S3
 
-- Có thể tích hợp với các service khác của AWS:
-    - Như SNS, SQS, Lamda
-    
 # VPC
 ## 1. Security
 ### Security groups vs Network ACLs
@@ -318,26 +274,30 @@ Direct Connect
 |  instance level | subnet level  | 
 |  stateful | stateless  |  
 
-- Security groups STATEFUL: responses to allowed inbound traffic are allowed to flow outbound regardless of outbound rules, and vice versa. (tức nếu đồng ý cho phép chiều đi vào, thì chiều đi ra cũng sẽ được đồng ý, ngược lại)
-- Network ACL STATELESS: eg: if you enable inbound SSH on port 22 from the specific IP address, you would need to add a Outbound rule for the response as well (Nếu có rule đồng ý cho kết nối tới port 22 đi vào, thì cũng phải có rule cho phép đi ra)
+- Security groups STATEFUL: nếu đồng ý cho phép chiều đi vào, thì chiều đi ra cũng sẽ được đồng ý, ngược lại
+- Network ACL STATELESS: Nếu có rule đồng ý cho kết nối tới port 22 đi vào, thì cũng phải có rule cho phép đi ra
 
-### 1.1 Security groups
+### Security groups
+- stateful
 - Có thể sử dụng Security Group names như 1 khai báo "source" hoặc "destination" cho 1 Security Group khác
 - Chỉ có rule allow (không thể khai báo rule deny, nếu không khai báo allow thì mặc định traffic là deny)
 - Default là deny tất cả traffic inbound, và allow tất cả traffic outbound
-- (ko hiểu) Remember Private subnet DB instance will want to Access websites on the internet (HTTP or HTTPs)
-- Instances mà có public subnet thì không cần thông qua NAT instance nữa (hiển nhiên)
 
+### NACL
+- stateless
+- supports allow rules and deny rules
+- Hình như là default allow all cho EC2 cùng subnet
+- You can associate network ACL with multiple subnets, however subnet can only associate with one ACL at a time
 
 ## 2. VPC peering 
-- Dùng để kết nối giữa các VPCs. Ví dụ: kết nối các EC2 ở các Region khác nhau
+- Dùng để kết nối giữa các VPCs. Ví dụ: kết nối các EC2 ở các Region khác nhau (kể cả khác Account)
 - Hạn chế:
     - không thể định tuyến gói tin từ VPC B tới VPC C thông qua VPC A 
     - không thể khởi tạo, nếu như có sự trùng lặp, conflict CIDR blocks giữa các VPC (ví dụ: cùng chung dải mảng 10.0.0.0/16)
     - giữa 2 VPC, tại cùng 1 time, chỉ có thể có duy nhất 1 VPC peering
-
 ## 3. AWS Direct Connect
-- AWS cung cấp 1 số địa điểm (office vật lý) để khách hàng có thể tới trực tiếp cắm dây mạng vào để kết nối tới hệ thống của AWS. => giảm chi phí truyền tải băng thông trên internet . Giải quyết:
+- AWS cung cấp 1 số địa điểm (office vật lý) để khách hàng có thể tới trực tiếp cắm dây mạng vào để kết nối tới hệ thống của AWS. => giảm chi phí truyền tải băng thông trên internet . 
+- Use case:
     - Thao tác với bộ dữ liệu lớn
     - Nguồn cấp dữ liệu theo thời gian thực
     - Môi trường lai
@@ -352,17 +312,29 @@ Direct Connect
     - Tạo 1 VPN connection
 ## 6. VPC CIDR Block 
 - Không thể thay đổi size CIDR Block sau khi tạo. Nếu muốn tăng size thì tạo 1 VPC mới (cần thiết kế cẩn thận từ đầu)
-- Không thể tạo 1 block CIDR mới mà trùng với cũ (hiển nhiên)
 
+### 7. VPC Folow log
+- Nếu VPC Peering đang được bật, và chủ peering là Account khác, thì ko thể bật `flow logs`
+- cannot tag a flow log
+- after flow log is created, you canot change its configuration
+- (1 số IP đặc biệt, DHCP) sẽ ko được monitor
+### 8. Nat gateway
+- 1 cải tiến của Nat Instance
 
+### VPC Endpoint
+- Không có VPCEndpoint cho RDS
+- Chỉ có S3 và dynamodb là có Gateway VPC endpoitn
+- còn lại là Interface VPC endpoint
 # ELB
+- ELB có thể chạy khác Region được, nhưng cần phải có Route 53
 - Phân phối traffic cho các EC2 ở nhiều AZ 
 - Sticky sessions 
 - X-Forwarded-For:
     - get client IP address
     - get previous Request IP Address
     - get Load Balancer IP Address
-
+- Trả về `504` nếu EC2 ko có response
+- ko có IPv4
 ## 1. Các cách để monitoring ELB
 - AWS Cloud Watch:
     - ELB gửi ELB metric tới Cloud Watch mỗi 1 phút 
@@ -385,42 +357,29 @@ Direct Connect
 - The ELB hỗ trợ các SSL protocols:
     - TLS 1.0, TLS 1.1, TLS 1.2, SSL 3.0
     - It does not support TLS 1.3 or SSL 2.0 (which is deprecated)
-
-## ELB - Proxy Protocol
+## 3. Type
+- ALB => layer 7 of OSI
+- NLB => Layer 4 of OSI
+- CLB => layer 7 mix 4
+## 4. ELB - Proxy Protocol
 - Trước khi bật tính năng Proxy Protocal thì cần chắc chắn rằng trước Load Balancer chưa có proxy server
 
-## ELB - Sticky sessions
+## 5. ELB - Sticky sessions
 - Trường hợp BE instance bị chết, ELB sẽ định tuyến traffic tới 1 instance mới, khỏe mạnh, và sticky session trên instance mới. (kể cả khi instance cũ đã khỏe lại)
-- For ELB, duration based, cookie stickiness:
+- For ELB, duration based, cookie stickiness
 
-
-## Connection Draining 
+## 6. Connection Draining 
+- Mặc định ELB sẽ check helth của EC2, nếu check lỗi, sẽ đưa EC2 ra `out of service`, có thể sẽ khởi tạo 1 EC2 khác thay thế. Tuy nhiên trong 1 số trường hợp, EC2 được admin chủ động maintaince gì đó (ví dụ để update, upgrade) dẫn tới việc "unhelth", thì ELB sẽ tạm ignore case này, trong khoảng thời gian này
 - Is disabled by default
-- Khi có Instance không thể checking được healthy, thì ELB sẽ không route traffic tới nữa?
 - Default, wait 300 seconds
 
-- Kịch bản để có HA tốt
-    - VPC (với config Sec groups và N ACLs đúng) with IGW configured attached
-    - tối thiểu 2 AZs trong cùng 1 region
-    - Public subnet(s) in each AZ, ELB defined on one of them to enable it to serve the AZ
-    - Private subnet for the data base tier (to protect it)
-    - Multi-AZ RDS or AWS managed DB engine
-    - Auto scaling defined in both AZs and configured to work with the ELB and EC2 instances. 
-    
-- Nếu bạn cần có ELB trong giải pháp HA, bạn không cần phải cấu hình 2 ELB riêng biệt => AWS sẽ làm cho bạn
-
-## Session Affinity and Application Performance
-- If the ELB is configured with session affinity (sticky sessions), it will continue to route the requests from the same clients to the same backend EC2 instances disregarding:
-- Can be used to host multiple domains on a single server/IP when it is not feasible to group them all on one certificate
-- The big advantage of SNI is, it will allow the server (or Load balancer) to present many certificates on the same server IP address and TCP port nuber, which means multiple secure (HTTPS) websites can be served from the same server IP address, and each of these websites can have its own Certificate (They do not have to have the same certificate)
-
-## SNI and ELB
+## 7. SNI and ELB
 - Server Name Indication (SNI) là một phần mở rộng của giao thức mạng máy tính TLS . Nó cho phép một máy chủ có thể sử dụng nhiều chứng chỉ SSL cho nhiều tên miền trên cùng một địa chỉ IP mạng WAN. Nó giống như việc sử dụng https cho nhiều tên miền cùng sử dụng chung một địa chỉ IP để tiết kiệm
 - Elastic Load Balancing không hỗ trợ Server Name Indication (SNI) => cần tìm giải pháp
 - X-Forwarded-For is supported with HTTP/HTTPS listeners only
 - Proxy protocol is supported with TCP/SSL listeners only
 
-## ELB-Pre-Warming
+## 8. ELB-Pre-Warming
 ELB Scaling:
 - Thời gian để ELB phát hiện được việc tăng traffic là khoảng 1-7p
 - ELB không được thiết kế để queue requests
@@ -428,3 +387,128 @@ ELB Scaling:
 - Nếu traffic có thể tăng quá nhanh, hơn 50%, thì cần contact AWS để pre-warm
 - Khi ELB scales, nó sẽ update DNS record với danh sách IP mới
 - Để chắc chắn clients đang có sự gia tăng về capacity, ELB sẽ gửi TTL tới DNS Record mỗi 60s
+
+# Kinesis
+- Kinesis Stream  
+    - data stored for 24 hours by default
+    - data stored in shards
+    - data consumers (ec2 instances) turn shards into data to analyze
+    - 5 transactions per second for reads, maximum total rate of 2 MB/second up to 1,000 records for writes
+- Kinesis Firehose
+    - Automated
+    - no dealing with shards
+- Kinesis Analytics 
+    - Way of analyzing data in Kinesis using SQL-like queries
+
+# SQS
+- messages are 256KB in size
+- kept 1 minute to 14 days, default 4 days
+- Visibility Timeout
+  - if job is not processed within timeout time, message becomes visible again
+  - if message is processed within that time, message is deleted
+  - maximum invisible time is 12 hours
+- Standard Queues
+    - nearly-unlimited number of transactions per second
+    - guarantee message is delivered at least once
+    - more than one could be delivered out of order
+
+- FIFO Queues
+    - messages sent and received in order they arrive
+    - delivered once and remains available until consumer processes and deletes it
+    - SQS FIFO, chỉ có 1 process được access
+
+# SWF
+- Task is assigned only once and is never duplicated
+- assigns tasks and monitors progress
+- workers/deciders don't track execution state, run independently, and scale quickly
+- parameters described in JSON
+- maximum workflow is 1 year, always measured in seconds
+
+## SWF Domains
+- workflow, activity types, workflow execution all scoped to a Domain
+- Domains isolate set of types, executions, and task lists from others in same account
+
+## SWF Actors
+- SWF Workflow Starters
+  - application to start/initiate workflow
+  - could be website or mobile app, for example
+
+- SWF Decider
+  - program that controls coordination of tasks
+  - task ordering, concurrency, scheduling according to application logic
+
+- SWF Workers
+  - program/person that interacts with SWF
+  - gets task
+  - process receives tasks
+  - returns result
+
+# Cloudwatch
+- Có Cloudwatch Agent
+- Ko monitor được RAM (instance window monitor hạn chế hơn instance linux)
+- Standard Monitoring = 5 minutes
+- Detailed Monitoring = 1 Minute
+
+# Auto Scaling
+- Simple Scaling - Ví dụ khi CPU tới 1 ngưỡng nào đó thì scaling
+- Step Scaling - Ví dụ: khi có 2 instance, thì CPU tới ngưỡng X sẽ kickoff, nhưng khi 3 instance thì tới ngưỡng Y mới kickoff
+- Target Tracking Scaling - so complex
+
+# Developer Tools
+- CodeStar - Project managing of code for developers
+- CodeCommit - Place to store code (source control), private git repository
+- CodeBuild - Compiles, tests code and build packages ready for deployment
+- CodeDeploy - Deployment services that will deploy applications to EC2, Lambda, on-premise
+- CodePipeline - Continuous Delivery to Model/Visualize/Automate steps for software release
+- X-Ray - Used to debug/analyze serverless applications by showing traces
+- Cloud9 - IDE Environment to develop code inside AWS consol
+# Lộn xộn
+- Elastic Beanstalk có thể tự động hóa deploy, tự tạo instance, ELB, VPC    
+- Mặc định mỗi tài khoản AWS sẽ giới hạn 5IP Elastic
+- Provisioned IOPS SSD at least 4GB in size
+- AWS Import/Export : không thể export from Glacier
+- Microsoft SQL: max 10GB per DB
+- Key pair are used only for EC2 and CloudFront
+- AWS Cloudformation sẽ rollback lại toàn bộ các service đã tạo, nếu có 1 service bị lỗi
+- Federated Storage Engine: ???
+- Oracle database: Oracle Data Pump
+- AWS STS - giống access key + secret key nhưng mà có time expired đi kèm
+- Với dịch vụ EC2, aws bắt đầu tính tiền khi EC2 được khởi tạo ở boot sequence, và kết thúc khi Instant shutdown
+- Có thể acces với EC2, sử dụng SOAP protocol
+- OpsWorks - Similar to elastic beanstalk, used to automate configuration of environments (convered in  Sysops Admin test)
+- Data Pipeline - Way of moving data between different AWS services
+- Glue - Used for ETL (extract, transform, load), glue is optimized to achieve this
+- WAF - Web Application Firewall (7-layer firewall), monitoring application layer
+- Shield - DDoS Mitigation
+- GameLift - Service to help develop game services in AWS
+- CDN - Edge Locations are not just read only, you can write to them, too
+- Muốn share snapshot của Redshift cluster sang 1 region khác, thì cần BẬT `enable cross-Region snapshots.`
+- General Purpose (SSD) Storage - This storage type is optimized for I/O-intensive transactional (OLTP) database workloads
+- Provisioned IOPS SSD cũng support OLTP, performance cao hơn
+- HDD st1 hợp cho log-processing, nhưng throughput từ 250-500
+- AWS Trusted Advisor phân tích môi trường AWS của bạn và đưa ra khuyến nghị về phương pháp thực hành tốt nhất theo năm hạng, 1 kiểu như thư ký ảo
+- ko sử dụng Redshift như 1 OLTP Database, nó chỉ nên dùng như OLAP Database
+- Cloudwatch cannot remove EC2 instance from rotation but Route53 health check can do this
+- With Amazon Kinesis Data Analytics for SQL Applications, you can process and analyze streaming data using standard SQL
+- data in 8 KB chunks ==> NoSQL DB
+- AWS Config - tool analyzes account resources and provides a detailed inventory of changes over time
+- Khi design subnet, nhớ chú ý yếu tố nhân 2, vì để đảm bảo HA, thì mỗi AZ nên có 1 subnet
+- Redshift có thể config độ ưu tiên cho mỗi  query  riêng biệt được?
+- EFS does not support security groups.
+- (Use an Amazon SNS topic to fan out the data to the SQS queue in addition to a Lambda function that records the data to an S3 bucket.
+- Sử dụng AWS Organizations có thể set policy như IAM được, nhưng trong 1 số case, thao tác IAM tốn nhiều effort hơn
+- AWS Batch is not to be confused for AWS Backup.
+- AWS Batch plans, schedules, and executes your batch computing workloads using Amazon EC2 and Spot Instances and its not used to take backups. AWS Backup can perform backups.
+- Nếu tạo Nat Gateway dùng chung cho 2 AZ, thì case AZ đang chạy Nat gateway down, sẽ làm cho AZ còn lại cũng ko có NatGateway dùng
+- Aurora allows its read replicas to be easily promoted to the master and typically only has 100ms of replication lag -
+
+
+# Some topic
+- https://aws.amazon.com/vi/premiumsupport/knowledge-center/migrate-nat-instance-gateway/
+- https://acloud.guru/forums/aws-csa-2019/discussion/-LbnjIbr3jdqQdRSRa7s/VPC%20Endpoint%20Interface%20vs%20Gateway
+- https://blog.treasuredata.com/blog/2016/02/10/whats-the-difference-between-aws-redshift-aurora/
+- https://hevodata.com/blog/amazon-redshift-vs-aurora/
+- https://dev.to/garyker/aws-classic-load-balancer-vs-application-load-balancer-12m0
+- https://medium.com/awesome-cloud/aws-difference-between-ebs-and-instance-store-f030c4407387
+- https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-monitoring-using-cloudwatch.html
+- https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html
