@@ -55,3 +55,5 @@ public interface BarFeignClient {
     void getBar(@PathVariable("id") Long id);
 }
 ```
+
+// end
