@@ -12,6 +12,8 @@ Logout sau đó login lại để có hiệu lực
 
 ## 2. Một số lệnh Docker 
 ```bash
+# Va`o 1 service java
+docker run --rm -it --entrypoint /bin/bash hub.abc.vn/payment-integrations:gag216a-local
 # Kiểm tra phiên bản Docker 
 docker --version
 
