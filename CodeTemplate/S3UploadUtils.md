@@ -235,3 +235,9 @@ public class ServerSideEncryptionUsingClientSideEncryptionKey {
     }
 }
 ```
+## 3. Note 
+- Trường hợp OS chạy app java, nếu thỏa mãn 2 điều kiện sau, thì không cần phải khai báo access key, secret key trong code cho hàm s3Client()
+  - OS là máy chủ AWS, có gán ROLE access tới S3 
+  - OS có cài tool aws-cli, và có config accesskey, secret key.
+- Với file được upload lên với giới hạn truy cập private, trường hợp muốn download thì cần generator link có token, khái niệm này là SIGNED URL. Và link có token sẽ chỉ valid trong 1 khoảng thời gian được cấu hình bởi biến TIME_MINUTES_EXPIRED
+
