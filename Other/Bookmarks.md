@@ -4,6 +4,7 @@
 - [asmed.com](https://asmed.com/)
 - [vnhacker.blogspot.com](https://vnhacker.blogspot.com/)
 - [loda.me](https://loda.me/)
+- [ngochieu](https://ngochieu.com/)
 # Topic
 - [Transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html)
 - [Best Practices for Using Security Groups in AWS](https://www.threatstack.com/blog/101-aws-security-tips-quotes-part-3-best-practices-for-using-security-groups-in-aws)

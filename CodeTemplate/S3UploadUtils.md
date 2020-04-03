@@ -1,3 +1,6 @@
+- Upload file có option set quyền public/private   
+- Get link download (signed URL)  
+- Delete file  
 ## 1. Basic
 ```java
 import com.amazonaws.AmazonClientException;
