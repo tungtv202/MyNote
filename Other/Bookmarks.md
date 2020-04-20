@@ -19,7 +19,9 @@
 - [Acloud guru - AWS Certified Solutions Architect - Associate 2018](https://acloud.guru/forums/aws-certified-solutions-architect-associate/recent?p=1)
 - [Xác thực và phân quyền trong Microservices](https://engineering.tiki.vn/x%C3%A1c-th%E1%BB%B1c-v%C3%A0-ph%C3%A2n-quy%E1%BB%81n-trong-microservices-37689e53c082)
 - [Saving Money By Replacing API Gateway With Application Load Balancer's Lambda Integration](https://serverless-training.com/articles/save-money-by-replacing-api-gateway-with-application-load-balancer/)
-- 
+- [NoWayJoseCPV2018](https://paragonie.com/files/talks/NoWayJoseCPV2018.pdf)
+- [JWT Authentication Tutorial - An example using Spring Boot
+](https://svlada.com/jwt-token-authentication-with-spring-boot/?fbclid=IwAR3OBFK9XX0qfEbjFt3EiF765yUeH8P4xRJyGYFlaY7Qa2hb-vBtreonHPo)
 # TODO
 - [Spring Boot Admin](https://www.baeldung.com/spring-boot-admin)
 - [Spring Boot Actuator metrics monitoring with Prometheus and Grafana](https://www.callicoder.com/spring-boot-actuator-metrics-monitoring-dashboard-prometheus-grafana/)
