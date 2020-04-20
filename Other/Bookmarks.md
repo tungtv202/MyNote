@@ -31,3 +31,11 @@
 - [Architecture data warehouse at Zitga](https://trinhhieu668.wordpress.com/2020/02/08/architechture-dataware-house-at-zitga/?fbclid=IwAR2lbEEBiWRWnyd0T4zD22_VLe_yPJVn4hPJNj0xaGlXF4ZD_Mmze2Hr9Sw)
 - git subdomain
 - mamoto
+
+## Setup/install
+- Setup Selenium ChromeDriver trên ubuntu   
+https://tecadmin.net/setup-selenium-chromedriver-on-ubuntu/
+- Setup OpenVPN on linux    
+https://support.hidemyass.com/hc/en-us/articles/202721546-OpenVPN-via-terminal-using-openvpn-binary-the-manual-way-
+- Install PostgreSQL 12 on linux    
+https://computingforgeeks.com/install-postgresql-12-on-ubuntu/
