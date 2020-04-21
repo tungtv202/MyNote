@@ -7,3 +7,6 @@ sudo netstat -lnp
 
 # get public IP
 dig +short myip.opendns.com @resolver1.opendns.com
+
+# show size directory, "MB"
+alias ls="ls --block-size=M"
