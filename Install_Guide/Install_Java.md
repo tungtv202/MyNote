@@ -8,6 +8,8 @@ Dùng wget, curl...
 Link: https://jdk.java.net/java-se-ri/11 
 ```bash
 wget https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_linux-x64_bin.tar.gz
+wget https://download.oracle.com/otn/java/jdk/8u241-b07/1f5b5a70bf22433b84d0e960903adac8/jdk-8u241-linux-x64.tar.gz?AuthParam=1586232610_d9b5e1b404c1d80ee03b9ad36c391ed6
+
 ```    
 - Giải nén
 ```bash
