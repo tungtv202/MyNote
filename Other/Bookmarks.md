@@ -22,6 +22,10 @@
 - [NoWayJoseCPV2018](https://paragonie.com/files/talks/NoWayJoseCPV2018.pdf)
 - [JWT Authentication Tutorial - An example using Spring Boot
 ](https://svlada.com/jwt-token-authentication-with-spring-boot/?fbclid=IwAR3OBFK9XX0qfEbjFt3EiF765yUeH8P4xRJyGYFlaY7Qa2hb-vBtreonHPo)
+- [HA trong RabbitMQ](https://jack-vanlightly.com/blog/2018/8/31/rabbitmq-vs-kafka-part-5-fault-tolerance-and-high-availability-with-rabbitmq)
+- [Kipalog Nghia Minh Le](https://kipalog.com/users/NghiaMinhLe/mypage)
+- [Connection pool](https://www.youtube.com/watch?v=nwBBd9GrcqI)
+- [Trang tính toán file cấu hình postgresql theo resource của instance](https://pgtune.leopard.in.ua/?fbclid=IwAR2-s6Lqh_Q-8CI24InxwUwjbEFg4Go5E7LmImbi5t4HKNLVWfYITWNueCw#/)
 # TODO
 - [Spring Boot Admin](https://www.baeldung.com/spring-boot-admin)
 - [Spring Boot Actuator metrics monitoring with Prometheus and Grafana](https://www.callicoder.com/spring-boot-actuator-metrics-monitoring-dashboard-prometheus-grafana/)
