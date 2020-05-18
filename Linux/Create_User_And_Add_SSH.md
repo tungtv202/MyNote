@@ -2,32 +2,32 @@
 ## 1. Server
 Create Home Directory + .ssh Directory
 ```shell
-mkdir -p /home/mynewuser/.ssh
+mkdir -p /home/deploy/.ssh
 ```
 
 
 Create Authorized Keys File
 ```shell
-touch /home/mynewuser/.ssh/authorized_keys
+touch /home/deploy/.ssh/authorized_keys
 ```
 
 Create User + Set Home Directory
 ```shell
-useradd -d /home/mynewuser mynewuser
+useradd -d /home/deploy deploy
 ```
 
 Add User to sudo Group
 ```shell
-usermod -aG sudo mynewuser
+usermod -aG sudo deploy
 ``` 
 
 
 Set Permissions
 ```shell
-chown -R mynewuser:mynewuser /home/mynewuser/
-chown root:root /home/mynewuser
-chmod 700 /home/mynewuser/.ssh
-chmod 644 /home/mynewuser/.ssh/authorized_keys
+chown -R deploy:deploy /home/deploy/
+chown root:root /home/deploy
+chmod 700 /home/deploy/.ssh
+chmod 644 /home/deploy/.ssh/authorized_keys
 ```
 
 ## 2. Client
