@@ -1,0 +1,32 @@
+version: "3.6"
+
+networks:
+  rabbitmq-prometheus:
+
+volumes:
+  rabbitmq-prometheus_prometheus:
+  rabbitmq-prometheus_grafana:
+
+services:
+  rmq2-qq:
+    image: rabbitmq:3.8.3-management
+    networks:
+      - "rabbitmq-prometheus"
+    ports:
+      - "5672:5672"
+      - "4369:4369"
+      - "25672:25672"
+      - "15672:15672"
+    cap_add:
+      - ALL
+    hostname: rmq2-qq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: rabbitmq-qq
+    volumes:
+      - ./rabbitmq-qq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./rabbitmq-qq-env.conf:/etc/rabbitmq/rabbitmq-env.conf:ro
+      - ./rabbitmq-qq-definitions.json:/etc/rabbitmq/rabbitmq-definitions.json:ro
+      - ./data2:/var/lib/rabbitmq
+    extra_hosts:
+      - rmq1-qq:18.163.184.163
+      - rmq3-qq:18.162.48.238
