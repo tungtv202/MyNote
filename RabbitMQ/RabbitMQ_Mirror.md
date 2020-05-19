@@ -53,3 +53,102 @@ Rabbitmq từ version 3.8.0 trở đi, có 1 thay đổi lớn về các feature
     - Pause Minority mode
     - Persistent messages
 - Khi thiết kế HA, nên có 1 LB, để khi accesss vào node lỗi, thì sẽ được lb qua node khác.
+
+## Quorum Queue
+- client sử dụng mirror queue có thể sử dụng với quorum queue (có khả năng tương thích ngược)
+- khi sử dụng quorum queue, message luôn là durable (ko cần phải khai báo như với Mirror Queue)
+
+![Quorum vs Mirror](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/rabbitmq/QuorumVsMirrorQueue.PNG)
+
+- Poison Message Handling: message gửi cho consumer với số lần quá ngưỡng cho phép
+    - x-delivery-count  : thông tin ở header msg
+    - delivery-limit : sử dụng attribute này để setup config giới hạn
+- Quorum queue dữ msg mãi mãi trên disk (khác với mirror là sau khi consumer ack thì sẽ delete ?)
+- WAL - write-ahead-log
+- khi node fail, xong quay lại, thì nó chỉ đồng bộ các message mới. mà ko phải sync lại từ đầu. Và quá trình sync các message mới này ko bị blockking (ưu việt hơn so với Mirror)
+- MEMORY USAGE - ALL MESSAGES IN-MEMORY ALL THE TIME
+- Nếu broker bị lỗi gì đó làm mất dữ liệu, thì toàn bộ msg trên broker đó sẽ mất vĩnh viễn. Khi broker đó online trở lại, thì ko thể sync lại data từ leader từ đầu.
+
+----------------------------------------------------------------------------------------
+# Triển khai HA cho RabbitMQ
+## 1. Quick Start
+### Kịch bản
+- Xây dựng HA với 3 node (3 broker)
+- Sử dụng docker-compose để install (version 3.6)
+### Cài đặt 
+- Trên 3 node tải script tại thư mục `docker_rabbitmq_ha`
+- Truy cập vào từng node và run bash command
+    - Node 1: `docker-compose -f docker_rabbitmq_ha/docker-compose-ha-node1.yml up`
+    - Node 2: `docker-compose -f docker_rabbitmq_ha/docker-compose-ha-node2.yml up`
+    - Node 3: `docker-compose -f docker_rabbitmq_ha/docker-compose-ha-node3.yml up`
+- Verify:
+    - Truy cập vào webadmin của rabbitmq để verify cluster đã nhận đủ 3 node 
+        - Ex: http://localhost:15679 (guest/guest)
+        - http://localhost:15680
+        - http://localhost:15681
+        
+    ![web_admin_verify_install](https://tungexplorer.s3-ap-southeast-1.amazonaws.com/rabbitmq/web_admin_verify_install.png)
+### Sử dụng 
+- Khi tạo queue mới:
+    - `type = Quorum` : bắt buộc
+    - `node` : chọn bất kỳ 1 node để làm leader cho queue. (không quan trọng, sau này có sự cố tự động cluster sẽ bầu lại leader mới)
+    ![create_quorum_queue](https://tungexplorer.s3-ap-southeast-1.amazonaws.com/rabbitmq/create_quorum_queue.png)
+- Sau khi tạo queue xong, có thể verify lại bằng vào tab `detail`
+    - ![quorum_detail](https://tungexplorer.s3-ap-southeast-1.amazonaws.com/rabbitmq/quorum_detail.png)
+- Cấu hình cluster ở `Spring Boot`
+    ```yml
+    spring.rabbitmq.addresses=localhost:5679,localhost:5680,localhost:5681
+    spring.rabbitmq.username=guest
+    spring.rabbitmq.password=guest
+    ```
+## 2. Một vài chú ý
+### Lựa chọn giải pháp 
+- RabbitMQ chỉ support Quorum Queue từ version 3.8 trở đi. Trước đó để xây dựng HA phải sử dụng Mirror Queue
+- Quorum Queue ra đời để giải quyết các vấn đề lớn mà Mirror Queue đăng gặp phải:
+    - Quá trình sync data sau khi có node bị lỗi, xong sau đó online lại, làm `block` cả cluster. (Queue master sẽ không thể write/read)
+    - Khi gặp sự cố Network Partition, Mirror Queue rơi vào kịch bản `split-brain`. (1 queue/cluster > 1 master)
+- Để xây dựng cluster với Mirror Queue cần phải config policy từ đầu.
+    - Ví dụ:
+    ```json
+    "policies": [
+        {
+        "vhost": "/",
+        "name": "mirrorqueues",
+        "apply-to": "queues",
+        "pattern":"^.*",
+        "definition": {
+            "ha-mode":"exactly",
+            "ha-params":2,
+            "ha-sync-mode":"automatic"
+        }
+        }
+    ],
+    ```
+    - hiện tại tài liệu chưa có guide setup Mirror Queue
+- Có thể sử dụng 1 Load Balancer. Thay cho cách khai báo danh sách các broker ở `Spring boot`
+    - Ví dụ sử dụng nginx.
+    ```
+    events {
+
+    }
+    stream {
+    upstream myrabbit {
+        server rabbitmq1:5672;
+        server rabbitmq2:5672;
+    }
+
+    server {
+        listen 5000;
+        proxy_pass myrabbit;
+    }
+    }
+    ```       
+### Lưu ý vận hành
+- Đổi user/pass tại file `rabbitmq-qq-definitions.json` hoặc sau khi setup cluster thành công, login vào webadmin đổi
+- Mặc định message trên Quorum Queue lưu trên memory/disk mãi mãi. Cần setup giới hạn (và hệ thống 3rd giám sát) để khi tới ngưỡng, rabbitmq release tài nguyên
+    - `x-max-in-memory-length` sets a limit as a number of messages. Must be a non-negative integer.
+    - `x-max-in-memory-bytes` sets a limit as the total size of message bodies (payloads), in bytes. Must be a non-negative integer.
+- Cân nhắc khi sử dụng Quorum Queue cho Fanout Exchange. (Vì bộ nhớ để chứa message được nhân lên rất nhiều => tốn resource)
+- Nên set up số node (broker) là số lẻ. Ví dụ 3,5,7 để thuận lợi cho giải thuật bầu leader
+- Một khi node (broker) bị mất data msg (ví dụ lỗi disk/memory). Thì các msg trên broker đó sẽ mất mãi mãi. Khi online trở lại cluster. Sẽ chỉ có các msg mới được sync từ Leader (tính từ thời điểm online)
+
