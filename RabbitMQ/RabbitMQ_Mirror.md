@@ -77,17 +77,22 @@ Rabbitmq từ version 3.8.0 trở đi, có 1 thay đổi lớn về các feature
 - Sử dụng docker-compose để install (version 3.6)
 ### Cài đặt 
 - Trên 3 node tải script tại thư mục `docker_rabbitmq_ha`
+- Sửa thông số:
+    - Tại port tại file docker-compose
+        - "5672:5672" : port để client connect vào broker. Sửa đổi port này tại field `listeners.tcp.default` trong file `rabbitmq-qq.conf`
+        - "4369:4369" : port epmd , port này có thể thay đổi, nhưng trên tất cả các node, port này phải giống nhau. Để thay đổi port này. Sửa variable `ERL_EPMD_PORT` tại file `rabbitmq-qq-env.conf`
+        - "25672:25672" : port đi kèm với epmd, sử dụng cho các node trong cluster giao tiếp với nhau. Có thể đổi port này bằng thay đổi variable `RABBITMQ_NODE_PORT` tại file `rabbitmq-qq-env.conf`
+        - "15672:15672" : port vào webadmin
 - Truy cập vào từng node và run bash command
-    - Node 1: `docker-compose -f docker_rabbitmq_ha/docker-compose-ha-node1.yml up`
-    - Node 2: `docker-compose -f docker_rabbitmq_ha/docker-compose-ha-node2.yml up`
-    - Node 3: `docker-compose -f docker_rabbitmq_ha/docker-compose-ha-node3.yml up`
+    - Node 1: `docker-compose -f docker/docker-compose-ha-node1.yml up`
+    - Node 2: `docker-compose -f docker/docker-compose-ha-node2.yml up`
+    - Node 3: `docker-compose -f docker/docker-compose-ha-node3.yml up`
 - Verify:
     - Truy cập vào webadmin của rabbitmq để verify cluster đã nhận đủ 3 node 
-        - Ex: http://localhost:15679 (guest/guest)
-        - http://localhost:15680
-        - http://localhost:15681
+        - Ex: http://localhost:15672 (guest/guest)
         
     ![web_admin_verify_install](https://tungexplorer.s3-ap-southeast-1.amazonaws.com/rabbitmq/web_admin_verify_install.png)
+    
 ### Sử dụng 
 - Khi tạo queue mới:
     - `type = Quorum` : bắt buộc
@@ -151,4 +156,7 @@ Rabbitmq từ version 3.8.0 trở đi, có 1 thay đổi lớn về các feature
 - Cân nhắc khi sử dụng Quorum Queue cho Fanout Exchange. (Vì bộ nhớ để chứa message được nhân lên rất nhiều => tốn resource)
 - Nên set up số node (broker) là số lẻ. Ví dụ 3,5,7 để thuận lợi cho giải thuật bầu leader
 - Một khi node (broker) bị mất data msg (ví dụ lỗi disk/memory). Thì các msg trên broker đó sẽ mất mãi mãi. Khi online trở lại cluster. Sẽ chỉ có các msg mới được sync từ Leader (tính từ thời điểm online)
-
+- Khai báo node trong cluster sử dụng sortName, (ko dùng được FQDN)
+- 1 vài command
+    - rabbitmq status
+    - epmd -port 4369 -names
