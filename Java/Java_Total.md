@@ -39,3 +39,5 @@ https://stackoverflow.com/questions/1958636/what-is-double-brace-initialization-
     }
 ```
 - Lưu ý: `initialOffset` phải là số có thật trong kafka, chứ ko phải logic set initialOffset 1 số bất kỳ bé hơn 1 offset nào đó mà mình mong muốn.
+
+## @Lazy 
