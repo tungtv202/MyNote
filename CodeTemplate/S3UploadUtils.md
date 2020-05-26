@@ -244,3 +244,83 @@ public class ServerSideEncryptionUsingClientSideEncryptionKey {
   - OS có cài tool aws-cli, và có config accesskey, secret key.
 - Với file được upload lên với giới hạn truy cập private, trường hợp muốn download thì cần generator link có token, khái niệm này là SIGNED URL. Và link có token sẽ chỉ valid trong 1 khoảng thời gian được cấu hình bởi biến TIME_MINUTES_EXPIRED
 
+## 4. CopyObject sử dụng multi-thread - CompletableFuture
+// S3 SDK không hỗ trợ copyObject cho nhiều object cùng lúc
+```java
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
+import software.amazon.awssdk.services.s3.model.CopyObjectResponse;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+
+@Component
+public class Test implements CommandLineRunner {
+
+    private static final String accessKey = "1234567";
+    private static final String secretKey = "1345678/N0S8onuhk";
+
+    final private S3AsyncClient s3AsyncClient;
+
+    public Test() {
+        this.s3AsyncClient = S3AsyncClient.builder()
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
+                .region(Region.AP_EAST_1)
+                .build();
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println(123);
+        List<CompletableFuture<CopyObjectResponse>> listFuture = new ArrayList<>();
+        for (int i = 1; i < 100; i++) {
+            CopyObjectRequest copyObjectRequest = CopyObjectRequest.builder()
+                    .copySource("tungtv202-testversion" + "/" + "vnpayqr4.png")
+                    .destinationBucket("tungexplorer.me")
+                    .destinationKey(i + ".png")
+                    .build();
+            listFuture.add(s3AsyncClient.copyObject(copyObjectRequest));
+        }
+
+        CompletableFuture<Void> allFutures = CompletableFuture
+                .allOf(listFuture.toArray(new CompletableFuture[listFuture.size()]));
+
+        CompletableFuture<List<CopyObjectResponse>> allPageContentsFuture = allFutures.thenApply(v -> {
+
+            return listFuture.stream().map(CompletableFuture::join)
+                    .collect(Collectors.toList());
+        })
+//                .whenComplete((res, ex) -> {
+//                    if (ex != null) {
+//                        System.out.println("Oops! We have an exception - " + ex.getMessage());
+//                    } else {
+//                        System.out.println("done");
+//                    }
+//                })
+                .exceptionally(ex -> {
+                    System.out.println("Oops! We have an exception2 - " + ex.getMessage());
+                    return null;
+                });
+
+        var resultList = allPageContentsFuture.get();
+        if (CollectionUtils.isEmpty(resultList)) return;
+        for (CopyObjectResponse e : resultList) {
+            if (!"OK".equalsIgnoreCase(e.sdkHttpResponse().statusText().get())) {
+                System.out.println("Copy object error");
+            }
+        }
+        System.out.println(456);
+    }
+}
+```
+
+. end
