@@ -41,3 +41,6 @@ https://stackoverflow.com/questions/1958636/what-is-double-brace-initialization-
 - Lưu ý: `initialOffset` phải là số có thật trong kafka, chứ ko phải logic set initialOffset 1 số bất kỳ bé hơn 1 offset nào đó mà mình mong muốn.
 
 ## @Lazy 
+// TODO
+## HashMap 
+is not limited. That's the maximum number of buckets. Each bucket uses a form of linked list which has no limitation except memory. So in theory a HashMap can hold an unlimited number of elements. In practice you won't even get to 2^30 because you will have run out of memory long before that.
