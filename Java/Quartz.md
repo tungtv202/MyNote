@@ -34,7 +34,7 @@ spring:
 ```
 - Sử dụng jdbc để persistance các job, scheduler
 - Lưu ý trường hợp sử dụng MSSQL, cần khai báo `driverDelegateClass`
-- Cần tạo các table phục vụ cho QUARTZ. Query create table ứng với mỗi RDBMS: https://github.com/quartz-scheduler/quartz/tree/master/quartz-core/src/main/resources/org/quartz/impl/jdbcjobstore
+- Cần tạo các table phục vụ cho QUARTZ. Query create table ứng với mỗi RDBMS: [https://github.com/quartz-scheduler/quartz/tree/master/quartz-core/src/main/resources/org/quartz/impl/jdbcjobstore](https://github.com/quartz-scheduler/quartz/tree/master/quartz-core/src/main/resources/org/quartz/impl/jdbcjobstore)
 
 - ScheduleBuilder
     - Mỗi 1 job là 1 schedule
