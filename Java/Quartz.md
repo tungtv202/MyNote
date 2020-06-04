@@ -1,4 +1,5 @@
 # Tích hợp Quartz vào Spring
+![https://miro.medium.com/max/1400/1*TC0WiXrDTkYsLRdT2Sk9mg.png](https://miro.medium.com/max/1400/1*TC0WiXrDTkYsLRdT2Sk9mg.png)
 ## Use case
 - Dùng trong case có nhiều schedule, mà lịch chạy schedule là dynamic
 - Ví dụ:
