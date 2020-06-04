@@ -88,4 +88,6 @@ scheduler.deleteJob(new JobKey(storeConfig.getQuartzJobName(), storeConfig.getQu
 ```
 ## Other
 - `scheduler` default support sẵn Transactional
-
+- Nếu threadpool = 2, và số job có `fire time` trùng nhau là 1000. Thì tại thời điểm `fire time` 2 schedule sẽ được excute, sau đó 996 schedule còn lại sẽ bị delay xử lý dần dần, chứ ko mất
+- RISK: nếu time execute > circle time. (Ví dụ cron trigger 5s chạy 1 lần, và time exeute là 8s). Và có N schedule có time execute trùng nhau, thì có vẻ như có 1 local queue được sử dụng tạm thời, để N schedule đều được xử lý hết vòng. Nhưng khi tới 1 threshold nào đó (chưa rõ cách tính threshold), thì N schedule sẽ bị reset time next trigger. Khi  đó quartz sẽ có thông báo lỗi kiểu "Có N schedule bị miss"
+![Risk](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/QuartzRisk.PNG)
