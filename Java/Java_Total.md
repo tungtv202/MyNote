@@ -44,3 +44,6 @@ https://stackoverflow.com/questions/1958636/what-is-double-brace-initialization-
 // TODO
 ## HashMap 
 is not limited. That's the maximum number of buckets. Each bucket uses a form of linked list which has no limitation except memory. So in theory a HashMap can hold an unlimited number of elements. In practice you won't even get to 2^30 because you will have run out of memory long before that.
+
+## MappedSuperclass
+Không thể sử dụng @MappedSuperclass và @Entity cùng lúc
