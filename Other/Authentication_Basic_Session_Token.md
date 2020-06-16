@@ -18,3 +18,15 @@
 
 ## 4. Compare 
 ![Compare](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/authen_topic/compare.JPG)
+
+## 5. OAuth 2.0 
+![Oauth2.0](https://shopify.dev/assets/api/oauth-code-grant-flow.png)
+- The merchant makes a request to install the app.
+- The app redirects to Shopify to load the OAuth grant screen and requests the required scopes.
+- Shopify displays a prompt to receive authorization and prompts the merchant to login if required.
+- The merchant consents to the scopes and is redirected to the redirect_uri.
+- The app makes an access token request to Shopify including the client_id, client_secret, and code.
+- Shopify returns the access token and requested scopes.
+- The app uses the token to make requests to the Shopify API.
+- Shopify returns the requested data.
+[ref](https://shopify.dev/tutorials/authenticate-with-oauth)
