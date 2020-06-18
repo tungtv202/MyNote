@@ -88,4 +88,5 @@ scheduler.deleteJob(new JobKey(storeConfig.getQuartzJobName(), storeConfig.getQu
 ```
 ## Other
 - `scheduler` default support sẵn Transactional
-
+- Nếu có 1000 scheduler có cùng cron expression, nhưng lại chỉ có thread pool executer = 4. Vậy 996 scheduler còn lại có chạy ko?
+- Trường hợp total time run hết scheduler > time circle. Tức là scheduler cũ chưa chạy xong, lại tới lịch scheduler mới, vậy thứ tự ưu tiên là gì? có xảy ra case 1 scheduler mãi mãi ko bao giờ được execute ko
