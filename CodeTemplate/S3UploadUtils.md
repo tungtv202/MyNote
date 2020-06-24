@@ -322,5 +322,15 @@ public class Test implements CommandLineRunner {
     }
 }
 ```
+// Từ Java 9 trở đi CompleteTableFutre support delay giữa các async Executer
+```java
+CompletableFuture.delayedExecutor(5, TimeUnit.SECONDS)
 
+
+ private CompletableFuture<ProductList> clientAsyncGetProduct(Store store, int page, String createdOnMax) {
+        return CompletableFuture.supplyAsync(() -> productClient.filter(Utils.getxyzBaseUrl(store.getStoreAlias()), store.getAccessToken(), page, Constants.BACKUP_CLIENT_LIMIT
+                , Constants.BACKUP_CLIENT_SORT_DEFAULT, createdOnMax), CompletableFuture.delayedExecutor(5, TimeUnit.SECONDS));
+    }
+
+```
 . end
