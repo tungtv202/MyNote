@@ -114,4 +114,8 @@
 ref: Udemy - Apache Kafka Series - Learn Apache Kafka for Beginners v2
 ```
 
+
+____________________
+- khi set `enable.auto.commit` = false, thì `auto.commit.interval.ms` ko được xét tới
+- Tham khảo các properties: https://jaceklaskowski.gitbooks.io/apache-kafka/kafka-properties.html
 // end
