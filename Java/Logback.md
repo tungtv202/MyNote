@@ -111,3 +111,4 @@ logging.file=${logging.path}/log.log
 logging.pattern.file=%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
 logging.pattern.console=  
 ```
+.

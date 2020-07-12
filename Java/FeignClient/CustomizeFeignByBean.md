@@ -116,5 +116,29 @@ public class FeignDecode extends JacksonDecoder {
 }
 
 ```
+## 2. Handler Error
+```java
+@Configuration
+public class BeanConfig {
+    @Bean
+    public ErrorDecoder errorDecoder() {
+        return new FeignErrorHanlder();
+    }
+}
+    
 
+@CommonsLog(topic = "feign-client")
+public class FeignErrorHanlder implements ErrorDecoder {
+    @Override
+    public Exception decode(String methodKey, Response response) {
+        var request = response.request();
+        FeignException result = errorStatus(methodKey, response);
+        log.error(String.format("---%s---%s\n---ResponseStatus=%s\n---Reason=%s\n---Response=%s\n---RequestUrl=%s\n---RequestBody=%s", request.httpMethod(),
+                methodKey, response.status(), response.reason(), result.contentUTF8()
+                , request.url(), request.body() == null ? "null" : new String(request.body(), StandardCharsets.UTF_8)));
+        return result;
+    }
+}
+
+```
 // end

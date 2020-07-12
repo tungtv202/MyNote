@@ -2,7 +2,7 @@
 paste to VagrantFile
 
 ## 1. Tạo 1 server
-```bash
+```shell script
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -37,7 +37,7 @@ end
 
 ## 2. Tạo nhiều server cùng lúc
 
-```bash
+```shell script
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
