@@ -88,6 +88,26 @@
     </root>
 </configuration>
 ```
+- 4. Set biến theo springProfile
+```xml
+<springProfile name="staging">
+		<property name="LOG_ROOT" value="/sapo-logs" />
+	</springProfile>
+	<springProfile name="live">
+		<property name="LOG_ROOT" value="/sapo-logs" />
+	</springProfile>
+	<springProfile name="debug">
+		<property name="LOG_ROOT" value="sapo-logs" />
+	</springProfile>
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>${LOG_ROOT}/app-name/service.log</file>
+		<encoder>
+			<pattern>"%date" %level [%thread] %logger{10} [%file : %line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+```
+
 
 ## 2. Chú thích
 ```java
