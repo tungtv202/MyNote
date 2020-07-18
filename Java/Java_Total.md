@@ -47,4 +47,3 @@ is not limited. That's the maximum number of buckets. Each bucket uses a form of
 
 ## MappedSuperclass
 Không thể sử dụng @MappedSuperclass và @Entity cùng lúc
-.
