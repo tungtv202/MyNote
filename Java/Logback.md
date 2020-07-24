@@ -34,8 +34,7 @@
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="defaultPattern"
-              value="%date %level [%thread] %logger{10} - %msg%n"/>
+    <property name="defaultPattern" value="%date [%thread] %highlight(%-5level) %cyan(%logger{15}) [%file : %line] %msg%n" />
 
     <appender name="Sentry" class="io.sentry.logback.SentryAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -132,3 +131,4 @@ logging.pattern.file=%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.
 logging.pattern.console=  
 ```
 .
+http://logback.qos.ch/manual/layouts.html
