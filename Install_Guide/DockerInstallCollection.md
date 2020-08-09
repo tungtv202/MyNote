@@ -1,7 +1,7 @@
 # Tổng hợp các lệnh để install đã từng dùng
 - Postgresql
 ```bash
- docker run --name postgres-crawler1688-s2 \
+ docker run --name postgres-crawler1688 \
     -e POSTGRES_PASSWORD=crawler1688a@ \
     -v /home/ubuntu/docker/postgres_data:/var/lib/postgresql/data  \
     -p 5432:5432 \
@@ -22,3 +22,5 @@ echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" 
 sudo apt update
 sudo apt-get install postgresql-client
 ```
+
+pg_dump -h crawler1688-s2.tungexplorer.me -U postgres -d crawler1688  --exclude-table=exclude_id_seq > backup_crawler1688_`date +%Y_%m_%d`.sql
