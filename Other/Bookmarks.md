@@ -1,4 +1,7 @@
 # BLog/Website
+- [http://tutorials.jenkov.com/](http://tutorials.jenkov.com/)
+- [Mike Møller Nielsen](https://www.youtube.com/channel/UCxWCnBPnLrCBsMg-0TWTzpQ)
+- [Amigoscode](https://www.youtube.com/channel/UC2KfmYEM4KCuA1ZurravgYw)
 - [bloghoctap.com](http://bloghoctap.com/) 
 - [Youtube Tom Gregory Tech](https://www.youtube.com/channel/UCxOVEOhPNXcJuyfVLhm_BfQ/videos)
 - [asmed.com](https://asmed.com/)
@@ -26,16 +29,9 @@
 - [Kipalog Nghia Minh Le](https://kipalog.com/users/NghiaMinhLe/mypage)
 - [Connection pool](https://www.youtube.com/watch?v=nwBBd9GrcqI)
 - [Trang tính toán file cấu hình postgresql theo resource của instance](https://pgtune.leopard.in.ua/?fbclid=IwAR2-s6Lqh_Q-8CI24InxwUwjbEFg4Go5E7LmImbi5t4HKNLVWfYITWNueCw#/)
-# TODO
-- [Spring Boot Admin](https://www.baeldung.com/spring-boot-admin)
-- [Spring Boot Actuator metrics monitoring with Prometheus and Grafana](https://www.callicoder.com/spring-boot-actuator-metrics-monitoring-dashboard-prometheus-grafana/)
 - at least once at most once exactly once
-- websocket vs kafka benchmark
 - [Why should you use a tool for your CI/CD workflow, and which one is the right tool for you?](https://blog.overops.com/jenkins-vs-travis-ci-vs-circle-ci-vs-teamcity-vs-codeship-vs-gitlab-ci-vs-bamboo/)
-- [Tìm hiểu về Kubernetes](https://viblo.asia/p/tim-hieu-ve-kubernetes-Ljy5VWy9Kra)
-- [AWS API Gateway intergrate with Network Load Balancer (NLB)](https://www.youtube.com/watch?v=A0jMIXldYAw)
 - [Architecture data warehouse at Zitga](https://trinhhieu668.wordpress.com/2020/02/08/architechture-dataware-house-at-zitga/?fbclid=IwAR2lbEEBiWRWnyd0T4zD22_VLe_yPJVn4hPJNj0xaGlXF4ZD_Mmze2Hr9Sw)
-- git subdomain
 - mamoto
 
 ## Setup/install
