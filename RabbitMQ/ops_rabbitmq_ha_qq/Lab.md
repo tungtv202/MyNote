@@ -28,6 +28,7 @@
 - Khi 1 node fail, xong quay lại, thì nó chỉ đồng bộ các message mới. Mà ko phải sync lại từ đầu. Và quá trình sync các message mới này không bị blockking.
 - Nếu broker bị lỗi gì đó làm mất dữ liệu, thì toàn bộ messge trên broker đó sẽ mất vĩnh viễn. Khi broker đó online trở lại, thì không thể đồng bộ lại data từ leader từ đầu.
 - Khi xây dựng cluster để triển khai Quorum Queue, các định nghĩa như 1 node master, các node khác slave hay replicates sẽ không còn đúng nữa.
+- Quorum queues do not currently support priorities, including consumer priorities.
 ### 2.2 So sánh Quorum Queue vs Mirror Queue
 - Mirror Queue => Mình nghĩ là nó đã Depreciation (quan điểm chủ quan). Tiền thân là Replicated queue
 - Quorum queue dữ message mãi mãi trên disk. Còn Mirror Queue, thì với các lựa chọn Durable Queue và Persistent Message sẽ có các cách tính khác nhau:
@@ -38,6 +39,7 @@
 - Khi có 1 node lỗi, và sau đó quay trở lại bình thường. Với Mirror Queue, sẽ block cả cluster. Vì nó cần đồng bộ lại toàn bộ message trong khoảng thời gian sự cố. Ngược lại với Quorum Queue thì nó không block. Nó chỉ đồng bộ các message mới.
 - Khi gặp sự cố Network Partition. (mạng các node không kết nối được với nhau). Với Mirror Queue sẽ xảy ra tình huống `split-brain`. (1 queue/cluster > 1 master). Với Quorum Queue, cung cấp các policy `autoheal`, `pause_minority`, `pause_if_all_down`, để người quản trị tự cấu hình hướng xử lý.
 - Với Mirror Queue, node master sẽ nhận tất cả các request đọc/ghi. Các node mirror sẽ nhận tất cả message từ node master và ghi vào disk. Các node mirror không có nhiệm vụ giảm tải "read"/"write" cho node master. Nó chỉ mirror message để phụ vụ việc HA. Với Quorum Queue, Queue A có thể master trên Node 1. Nhưng Queue B có thể master trên Node 1.
+
 
 ## 3. Xây dựng hệ thống cluster rabbitmq
 ### 3.1 Sơ đồ thiết kế
@@ -310,6 +312,16 @@
 
 ## 4. Setup Nginx
 - Khi mình sử dụng java springboot cấu hình rabbitmq client. Mình chỉ cần khai báo danh sách các broker các rabbitmq1, rabbitmq2, rabbitmq3 là được. Và thư viện tự động route cho mình tới broker đang "available".
+    - Đây là log của application khi có node bị down. Như bạn thấy thì nó ERROR báo shutdown, xong lập tức restart lại để kết nối tới broker khác 
+    ![https://tungexplorer.s3.ap-southeast-1.amazonaws.com/rabbitmq/rbmq_spring.PNG](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/rabbitmq/rbmq_spring.PNG)
+    - Nếu sử dụng spring boot cấu hình rabbit, thì rất đơn giản
+    ```
+    spring:
+          rabbitmq:
+            addresses: 192.168.1.225:5775,192.168.1.245:5776,192.168.1.249:5777
+            username: tungtv
+            password: tungtv
+    ```
 - Trường hợp thư viện không hỗ trợ, chúng ta cần 1 endpoint đứng ngoài hứng. Và check trước khi route vào broker đang available.
 - Có thể sử dụng nginx. Với cấu hình đơn giản sau
     ```

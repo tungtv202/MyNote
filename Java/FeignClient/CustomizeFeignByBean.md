@@ -127,15 +127,34 @@ public class BeanConfig {
 }
     
 
-@CommonsLog(topic = "feign-client")
+@CommonsLog(topic = "topic.feign_client")
 public class FeignErrorHanlder implements ErrorDecoder {
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
     public Exception decode(String methodKey, Response response) {
         var request = response.request();
         FeignException result = errorStatus(methodKey, response);
-        log.error(String.format("---%s---%s\n---ResponseStatus=%s\n---Reason=%s\n---Response=%s\n---RequestUrl=%s\n---RequestBody=%s", request.httpMethod(),
-                methodKey, response.status(), response.reason(), result.contentUTF8()
-                , request.url(), request.body() == null ? "null" : new String(request.body(), StandardCharsets.UTF_8)));
+        try {
+            log.error(String.format("---%s---%s\n" +
+                            "---ResponseStatus=%s\n" +
+                            "---Reason=%s\n" +
+                            "---Response=%s\n" +
+                            "---ResponseHeader=%s\n" +
+                            "---RequestUrl=%s\n" +
+                            "---RequestBody=%s",
+                    request.httpMethod(),
+                    methodKey,
+                    response.status(),
+                    response.reason(),
+                    result.contentUTF8(),
+                    objectMapper.writeValueAsString(response.headers()),
+                    request.url(),
+                    request.body() == null ? "null" : new String(request.body(), StandardCharsets.UTF_8)));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 }
