@@ -6,8 +6,8 @@
 chạy trước đó, bởi chính Thread đấy.
 ### Code example
 - InheritableThreadLocal: 
-    - sử dụng thằng này để các ChildThread được tạo bởi ParentThread, có thể sử dụng chung "vùng nhớ" với ParentThread
-    - các ChildThread
+    - sử dụng thằng này để các ChildThread được tạo bởi ParentThread, có thể sử dụng "bản sao copy" từ ParentThread. (Tức là khi ChildThread sửa giá trị, thì giá trị ở ParentThread ko ảnh hưởng gì)
+    - các ChildThread không share chung vùng nhớ với nhau.
 
 ```java
 public static void main(String[] args) {
@@ -68,5 +68,123 @@ public static void main(String[] args) {
 //            System.out.println(inheritableThreadLocal.get());
 //        });
 //        thread2.start();
+    }
+```
+
+## ThreadSafe
+### XSync
+- Sử dụng thư viện xsync để hỗ trợ trong việc threadsafe, các thread sẽ phải đợi nhau, để cùng vào sử dụng 1 resource
+```xml
+        <dependency>
+            <groupId>com.antkorwin</groupId>
+            <artifactId>xsync</artifactId>
+            <version>1.1</version>
+        </dependency>
+```
+```java
+// method
+public void timeWaitLimit(String storeAlias) {
+        xSync.execute(storeAlias, () -> {
+            LeakyBucketModel model = BucketLeakyStatic.get(storeAlias);
+            if (model == null) {
+                log.debug(storeAlias + "-init");
+                BucketLeakyStatic.put(storeAlias, new LeakyBucketModel(bucketSize));
+            } else {
+                log.debug(storeAlias + "-" + model.getAllowCounter() + "/" + bucketSize);
+                if (model.getAllowCounter() <= 0) {
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(1200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    int diffSecond = (int) TimeUnit.SECONDS.convert(Util.getUTC().getTime() - model.getModifiedTime(), TimeUnit.MILLISECONDS);
+                    int reNewCounter = Math.min(diffSecond * drainRate, bucketSize);
+                    model.reInitCounter(reNewCounter);
+                }
+                model.decrementCounter();
+            }
+        });
+    }
+
+// LeakyBucketModel.class
+public class LeakyBucketModel {
+    private int allowCounter;
+    private long modifiedTime;
+
+    public LeakyBucketModel(int allowCounter) {
+        this.allowCounter = allowCounter;
+        this.modifiedTime = Util.getUTC().getTime();
+    }
+
+    public void decrementCounter() {
+        this.allowCounter -= 1;
+        this.modifiedTime = Util.getUTC().getTime();
+    }
+
+    public void reInitCounter(int allowCounter) {
+        this.allowCounter = allowCounter;
+        this.modifiedTime = Util.getUTC().getTime();
+    }
+
+    public int getAllowCounter() {
+        return this.allowCounter;
+    }
+    public long getModifiedTime() {
+        return this.modifiedTime;
+    }
+}
+
+```
+
+## CompletableFuture
+### Example api tính fee GHN
+```java
+ private GHNV2CalFeeDetailResponse calculator(int storeId, GHNV2CalculatorFeeRequest request) {
+        String token = getToken(storeId);
+        var clientResponse = client.calculatorFee(token, request);
+        try {
+            log.debug("--- calculator fee request --Token=" + token +
+                    ", " + json.writeValueAsString(request) + "\n --- response " + json.writeValueAsString(clientResponse));
+        } catch (Exception ignored) {
+        }
+        if (clientResponse == null || clientResponse.getCode() != 200) return null;
+        var result = mapper.toDetailResponse(clientResponse);
+        result.setRequest(request);
+        return result;
+    }
+
+    private CompletableFuture<GHNV2CalFeeDetailResponse> calculatorFeeAsync(int storeId, GHNV2CalculatorFeeRequest request) {
+        return CompletableFuture.supplyAsync(() -> calculator(storeId, request));
+    }
+
+    public List<GHNV2CalFeeDetailResponse> calculatorFee(int storeId, List<GHNV2CalculatorFeeRequest> requests) {
+        if (CollectionUtils.isEmpty(requests)) return null;
+        List<CompletableFuture<GHNV2CalFeeDetailResponse>> listAsync = new ArrayList<>();
+        requests.forEach(e -> {
+            listAsync.add(calculatorFeeAsync(storeId, e));
+        });
+        CompletableFuture<Void> allAsync = CompletableFuture
+                .allOf(listAsync.toArray(new CompletableFuture[listAsync.size()]));
+
+        CompletableFuture<List<GHNV2CalFeeDetailResponse>> allClientAsync = allAsync.thenApply(v -> listAsync.stream().map(CompletableFuture::join)
+                .collect(Collectors.toList()))
+                .handle((voidResult, throwable) ->
+                        (throwable == null ?
+                                listAsync.stream() :
+                                listAsync.stream().filter(f -> !f.isCompletedExceptionally()))
+                                .map(CompletableFuture::join)
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toList()));
+
+        List<GHNV2CalFeeDetailResponse> result = new ArrayList<>();
+        try {
+            var temp = allClientAsync.get();
+            if (!CollectionUtils.isEmpty(allClientAsync.get())) {
+                result = temp;
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 ```
