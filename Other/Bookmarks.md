@@ -1,12 +1,14 @@
 # BLog/Website
-- [http://tutorials.jenkov.com/](http://tutorials.jenkov.com/)
+- [jenkov](http://tutorials.jenkov.com/)
 - [Mike Møller Nielsen](https://www.youtube.com/channel/UCxWCnBPnLrCBsMg-0TWTzpQ)
 - [Amigoscode](https://www.youtube.com/channel/UC2KfmYEM4KCuA1ZurravgYw)
-- [bloghoctap.com](http://bloghoctap.com/) 
+- [https://vladmihalcea.com/](https://vladmihalcea.com/)
 - [Youtube Tom Gregory Tech](https://www.youtube.com/channel/UCxOVEOhPNXcJuyfVLhm_BfQ/videos)
+- [jamesdbloom](https://blog.jamesdbloom.com/)
+- [Virtual Pair Programmers](https://www.youtube.com/channel/UCAAom48XUeUMnmvTUlAoiHw)
 - [asmed.com](https://asmed.com/)
 - [vnhacker.blogspot.com](https://vnhacker.blogspot.com/)
-- [loda.me](https://loda.me/)
+- [bloghoctap.com](http://bloghoctap.com/) 
 - [ngochieu](https://ngochieu.com/)
 # Topic
 - [Transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html)

@@ -4,6 +4,9 @@
 - Thread nào lấy được dữ liệu của thread đó, nên có thể áp dụng trong việc thread safe
 - Cần cẩn thận khi sử dụng kèm vs ThreadPool, vì có thể sẽ xảy ra tình huống, 1 task mới, được chạy bởi 1 Thread trong "thread pool", thì nó sẽ lấy được dữ liệu cũ, do một task khác
 chạy trước đó, bởi chính Thread đấy.
+- [http://drunkkid2000.blogspot.com](http://drunkkid2000.blogspot.com/2013/07/thread-local_2564.html)
+- [jenkov](http://tutorials.jenkov.com/java-concurrency/threadlocal.html)
+
 ### Code example
 - InheritableThreadLocal: 
     - sử dụng thằng này để các ChildThread được tạo bởi ParentThread, có thể sử dụng "bản sao copy" từ ParentThread. (Tức là khi ChildThread sửa giá trị, thì giá trị ở ParentThread ko ảnh hưởng gì)
