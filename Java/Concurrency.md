@@ -73,7 +73,10 @@ public static void main(String[] args) {
 //        thread2.start();
     }
 ```
+## Volatile 
+- khai báo variable sẽ được đọc ghi trực tiếp từ main memory. (nếu không khai báo bình thường có thể nó sẽ đọc ghi từ CPU Cache để tăng performance. Dẫn tới vấn đề các thread đọc ghi giá trị không phải là mới nhất).
 
+![Volatile222](https://images.viblo.asia/59d1214d-4438-4f46-878f-5db8af35fa1c.png)
 ## ThreadSafe
 ### XSync
 - Sử dụng thư viện xsync để hỗ trợ trong việc threadsafe, các thread sẽ phải đợi nhau, để cùng vào sử dụng 1 resource
