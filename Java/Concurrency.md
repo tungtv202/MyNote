@@ -1,3 +1,18 @@
+---
+title: Java - Concurrency
+date: 2020-09-30 18:00:26
+tags:
+    - java
+    - concurrency
+    - thread local
+    - volatile
+    - thread safe
+    - completable future
+category: 
+    - java
+---
+
+
 ## ThreadLocal
 - Tư tưởng là mỗi thread, sẽ có 1 "vùng nhớ" riêng để chứa dữ liệu, khi các method ở các class khác nhau, được chạy trong cùng 1 thread, sẽ lấy được giá trị ở "vùng nhớ" đó.
 => Ví dụ có thể áp dụng trong case muốn tạo ra 1 Context, thay vì phải truyền các giá trị thông qua Parameter.
@@ -9,7 +24,7 @@ chạy trước đó, bởi chính Thread đấy.
 
 ### Code example
 - InheritableThreadLocal: 
-    - sử dụng thằng này để các ChildThread được tạo bởi ParentThread, có thể sử dụng "bản sao copy" từ ParentThread. (Tức là khi ChildThread sửa giá trị, thì giá trị ở ParentThread ko ảnh hưởng gì)
+    - sử dụng thằng này để các ChildThread được tạo bởi ParentThread, có thể sử dụng "bản sao copy" từ ParentThread. (Tức là khi ChildThread sửa giá trị, thì giá trị ở ParentThread không ảnh hưởng gì)
     - các ChildThread không share chung vùng nhớ với nhau.
 
 ```java
@@ -73,6 +88,7 @@ public static void main(String[] args) {
 //        thread2.start();
     }
 ```
+
 ## Volatile 
 - khai báo variable sẽ được đọc ghi trực tiếp từ main memory. (nếu không khai báo bình thường có thể nó sẽ đọc ghi từ CPU Cache để tăng performance. Dẫn tới vấn đề các thread đọc ghi giá trị không phải là mới nhất).
 
@@ -80,6 +96,7 @@ public static void main(String[] args) {
 ## ThreadSafe
 ### XSync
 - Sử dụng thư viện xsync để hỗ trợ trong việc threadsafe, các thread sẽ phải đợi nhau, để cùng vào sử dụng 1 resource
+
 ```xml
         <dependency>
             <groupId>com.antkorwin</groupId>
@@ -87,6 +104,7 @@ public static void main(String[] args) {
             <version>1.1</version>
         </dependency>
 ```
+
 ```java
 // method
 public void timeWaitLimit(String storeAlias) {
@@ -144,6 +162,7 @@ public class LeakyBucketModel {
 
 ## CompletableFuture
 ### Example api tính fee GHN
+
 ```java
  private GHNV2CalFeeDetailResponse calculator(int storeId, GHNV2CalculatorFeeRequest request) {
         String token = getToken(storeId);

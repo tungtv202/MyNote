@@ -1,3 +1,13 @@
+---
+title: Install Guide - Mount an EBS volume to EC2 Linux
+date: 2020-01-25 18:00:26
+tags:
+  - EBS
+  - install
+category:
+  - install_guide
+---
+
 # Mount an EBS volume to EC2 Linux
 
 In this tutorial, we will teach you how to  attach and mount an EBS volume to ec2 linux instances. Follow the steps given below carefully for the setup.

@@ -1,3 +1,8 @@
+---
+title: My Bookmarks
+date: 2020-02-19 18:00:26
+---
+
 # BLog/Website
 - [jenkov](http://tutorials.jenkov.com/)
 - [Mike Møller Nielsen](https://www.youtube.com/channel/UCxWCnBPnLrCBsMg-0TWTzpQ)

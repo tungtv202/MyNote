@@ -1,3 +1,14 @@
+---
+title: AWS - LAB- Beanstalk
+date: 2020-01-27 18:00:26
+tags:
+    - aws
+    - elastic beanstalk
+    - beanstalk
+category: 
+    - aws
+---
+
 # Elastic Beanstalk - một service để deploy web trên AWS  
 Tìm hiểu Elastic Beanstalk bằng cách demo deploy webapp.
 

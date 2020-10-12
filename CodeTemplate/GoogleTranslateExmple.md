@@ -1,3 +1,14 @@
+---
+title: Code Template - Google Translate
+date: 2020-03-10 18:00:26
+tags:
+    - code template
+    - google translate
+    - translate
+category: 
+    - code_template
+---
+
 ```java
 package com.mservice;
 
@@ -41,5 +52,3 @@ public class TestGoogleTranslate {
 
 }
 ```
-
-end

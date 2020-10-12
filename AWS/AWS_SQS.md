@@ -1,3 +1,14 @@
+---
+title: AWS - SQS
+date: 2018-09-11 18:00:26
+tags:
+    - aws
+    - sqs
+    - simple queue service
+category: 
+    - aws
+---
+
 # Amazon Simple Queue Service (SQS)
  là 1 dịch vụ hàng đợi message queue, giống như message queue của Redis hay ActiveMQ
 

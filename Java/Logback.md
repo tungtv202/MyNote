@@ -1,6 +1,18 @@
+---
+title: Java - Logback
+date: 2020-06-09 18:00:26
+tags:
+    - log
+    - logback
+category: 
+    - java
+---
+
+
 # Cấu hình Logback.xml trong Spring
 ## 1. Template
 - 1
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
@@ -31,6 +43,7 @@
 </configuration>
 ```
 - 2 
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
@@ -55,6 +68,7 @@
 </configuration>
 ```
 - 3
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
@@ -88,6 +102,7 @@
 </configuration>
 ```
 - 4. Set biến theo springProfile
+
 ```xml
 <springProfile name="staging">
 		<property name="LOG_ROOT" value="/sapo-logs" />
@@ -115,13 +130,14 @@
         return new Slf4jLogger("exception");
     }
 ```
-- 
+
 ```xml
 <logger name="com.lankydan.service.MyServiceImpl" additivity="false" level="debug">
   <appender-ref ref="STDOUT" />
 </logger>
 ```
 - Có thể cấu hình trong file .yml hoặc .properties
+
 ```properties
 logging.level.root=info
 logging.level.com.lankydan.service=error
@@ -130,5 +146,4 @@ logging.file=${logging.path}/log.log
 logging.pattern.file=%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
 logging.pattern.console=  
 ```
-.
-http://logback.qos.ch/manual/layouts.html
+- ref: http://logback.qos.ch/manual/layouts.html

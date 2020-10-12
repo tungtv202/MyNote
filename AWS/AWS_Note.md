@@ -1,3 +1,13 @@
+---
+title: AWS - Note Total
+date: 2020-06-18 18:00:26
+tags:
+    - aws
+    - note total
+category: 
+    - aws
+---
+
 # AWS ElastiCache 
 // Dịch vụ cung cấp Redis, NameCached trên AWS
 
@@ -132,7 +142,7 @@ Một vài điểm nổi bật của Lambda
 - You can add the IAM role while the instance is running 
 
 ## EC2 - Charge
-- Được tính tiền từ lúc bắt đầu boot ec2 (ko phải là sau khi instand đã start xong). Tới lúc shutdown hoàn toàn
+- Được tính tiền từ lúc bắt đầu boot ec2 (không phải là sau khi instand đã start xong). Tới lúc shutdown hoàn toàn
 - Mỗi lần bật tắt instance, sẽ bị tính tiền tối thiểu cho 1 tiếng. Ví dụ trong 10 phút, bật tắt instance 2 lần, thì bị tính tiền 2 tiếng sử dụng.
 ## Error
 - Một vài lỗi khiến EC2 bị terminate khi launch:
@@ -147,7 +157,7 @@ Một vài điểm nổi bật của Lambda
 
 # Elastic Network Interface
 - Là card mạng ảo, được đính vào EC2 (vd: eth0, eth1...)
-- Khi EC2 bị terminated => Nếu ENI tạo bằng console thì cũng terminate theo, nếu tạo bằng command line thì ko bị terminated
+- Khi EC2 bị terminated => Nếu ENI tạo bằng console thì cũng terminate theo, nếu tạo bằng command line thì không bị terminated
 - Có thể được cấu hình khi: instance running, stopped, launched
 - 1 ENI chỉ được cho 1 Insntace, nhưng 1 instance có thể attached nhiều ENI
 - Subnet có thể khác nhau nhưng phải chung VPC, chung AZ
@@ -160,7 +170,7 @@ Một vài điểm nổi bật của Lambda
 - Read Replicas có thể được sử dụng để scale READ performance, tuy nhiên
     - Không thể với WRITE
     - Có sự bất đồng bộ giữa các node
-- AWS quản lý fully managed service, tức là dev ko thể can thiệp được vào OS, instance chạy RDS => chỉ access được vào RDS enginer
+- AWS quản lý fully managed service, tức là dev không thể can thiệp được vào OS, instance chạy RDS => chỉ access được vào RDS enginer
 - Primary và standby có thể khác AZs (nhưng phải cùng chung region)
 - Không nên sử dụng IP address làm point để kết nối, mà nên sử dụng endpoint 
 - Có thể sử dụng CloudWatch Alarm để monitor metric, và alarm
@@ -181,7 +191,7 @@ Một vài điểm nổi bật của Lambda
 - Không thể thay đổi Storage type (magnetic, Provisioned IOPS, General purpose) trong suốt quá trình restore thực thi
 - Nếu set retention period = 0, tương đương tắt chế độ automatic backups. 
 - Khi bạn restore 1 DB instance, chỉ có các tham số mặc định và Security groups đã được liên kết mới có thể restore
-- Sau lưu tự động hiện tại chỉ support InnoDB , MySQL (ko support cho MyISAM)
+- Sau lưu tự động hiện tại chỉ support InnoDB , MySQL (không support cho MyISAM)
 - Tính năng khôi phục theo thời gian Point-In-Time chỉ được hỗ trợ cho MySQL, InnoDB
 - InnoDB có vẻ là chiến lược của AWS
 - Aurora là RDS mà tự động HA tới 3 AZ
@@ -206,9 +216,9 @@ Một vài điểm nổi bật của Lambda
 - Glacier: chỉ có thể read
 
 ## Performance 
-- Nếu bucket có lượng truy cập dưới 100 PUT/LIST/DELETE cho mỗi giây, hoặc dưới 800 GET request mỗi giây, thì ko cần phải cấu hình gì cho S3 để nâng performance cả
+- Nếu bucket có lượng truy cập dưới 100 PUT/LIST/DELETE cho mỗi giây, hoặc dưới 800 GET request mỗi giây, thì không cần phải cấu hình gì cho S3 để nâng performance cả
 - Ngược lại: 
-    - Random prefix để chúng được lưu vào các phân vùng khác nhau (hình như version mới nhất thì ko cần phải random nữa, mà S3 tự động performance)
+    - Random prefix để chúng được lưu vào các phân vùng khác nhau (hình như version mới nhất thì không cần phải random nữa, mà S3 tự động performance)
     - Sử dụng CloudFront để phân phối tải tới S3
 - Versioning is disable default
 
@@ -255,14 +265,14 @@ Một vài điểm nổi bật của Lambda
 - Tốn tiền hơn, 1 object có thể có nhiều version khác nhau, 
 - Cách để vào mỗi version là url có thêm 1 parameter `versionId=xxx`
 - Xóa logic là chỉ đánh dấu delete marker
-- Xóa vĩnh viễn thì ko khôi phục được
+- Xóa vĩnh viễn thì không khôi phục được
 ## S3 Transfer Acceleration
 - Khi upload object, sử dụng 1 endpoint khác với endpoint trực tiếp. Lúc đó aws sẽ route traffic sao cho upload được đưa tới `edgate location` để có tốc độ cao nhất
 - Có nét tương đồng với CloudFront, nhưng có lẽ Cloudfront hợp cho việc download hơn. Theo khuyến cáo thì khi data nhiều tới GB,TB thì nên sử dụng S3 Transfer Acceleration
 - [https://stackoverflow.com/questions/36882595/are-there-any-difference-between-amazon-cloudfront-and-amazon-s3-transfer-accele/36927340](https://stackoverflow.com/questions/36882595/are-there-any-difference-between-amazon-cloudfront-and-amazon-s3-transfer-accele/36927340)
 
 ## S3 Intelligent-Tiering
-- Object được lưu đồng thời trên cả 2 tier. 1 cho frequent, 1 cho infrequent, sau 1 khoảng thời gian aws theo dõi, nó sẽ tự động move các object ít truy cập về tier infrequent. Và ngược lại. (ko tốn phí, nhưng tốn fee trước đó)
+- Object được lưu đồng thời trên cả 2 tier. 1 cho frequent, 1 cho infrequent, sau 1 khoảng thời gian aws theo dõi, nó sẽ tự động move các object ít truy cập về tier infrequent. Và ngược lại. (không tốn phí, nhưng tốn fee trước đó)
 # Storage Gateway
 - dùng cho hệ thống lai (on premises vs on demand)
 - hay đi kèm vs NFS (base on S3) (ngoài ra có VolumeGateway (base on EBS)...)
@@ -330,16 +340,16 @@ Một vài điểm nổi bật của Lambda
 - Khi config VPC sử dụng VPC wizard và khai báo VPN-Only and VPN access implies (tức chỉ có VPN mới truy cập vào được). Sẽ có các thông số sau:
     - Không có public subnet
     - Không có NAT instance/gateway
-    - Tạo 1 Virtual Private Gateway (ko có EIP)
+    - Tạo 1 Virtual Private Gateway (không có EIP)
     - Tạo 1 VPN connection
 ## 6. VPC CIDR Block 
 - Không thể thay đổi size CIDR Block sau khi tạo. Nếu muốn tăng size thì tạo 1 VPC mới (cần thiết kế cẩn thận từ đầu)
 
 ### 7. VPC Folow log
-- Nếu VPC Peering đang được bật, và chủ peering là Account khác, thì ko thể bật `flow logs`
+- Nếu VPC Peering đang được bật, và chủ peering là Account khác, thì không thể bật `flow logs`
 - cannot tag a flow log
 - after flow log is created, you canot change its configuration
-- (1 số IP đặc biệt, DHCP) sẽ ko được monitor
+- (1 số IP đặc biệt, DHCP) sẽ không được monitor
 ### 8. Nat gateway
 - 1 cải tiến của Nat Instance
 
@@ -355,8 +365,8 @@ Một vài điểm nổi bật của Lambda
     - get client IP address
     - get previous Request IP Address
     - get Load Balancer IP Address
-- Trả về `504` nếu EC2 ko có response
-- ko có IPv4
+- Trả về `504` nếu EC2 không có response
+- không có IPv4
 ## 1. Các cách để monitoring ELB
 - AWS Cloud Watch:
     - ELB gửi ELB metric tới Cloud Watch mỗi 1 phút 
@@ -509,7 +519,7 @@ ELB Scaling:
 - Provisioned IOPS SSD cũng support OLTP, performance cao hơn
 - HDD st1 hợp cho log-processing, nhưng throughput từ 250-500
 - AWS Trusted Advisor phân tích môi trường AWS của bạn và đưa ra khuyến nghị về phương pháp thực hành tốt nhất theo năm hạng, 1 kiểu như thư ký ảo
-- ko sử dụng Redshift như 1 OLTP Database, nó chỉ nên dùng như OLAP Database
+- không sử dụng Redshift như 1 OLTP Database, nó chỉ nên dùng như OLAP Database
 - Cloudwatch cannot remove EC2 instance from rotation but Route53 health check can do this
 - With Amazon Kinesis Data Analytics for SQL Applications, you can process and analyze streaming data using standard SQL
 - data in 8 KB chunks ==> NoSQL DB
@@ -521,10 +531,10 @@ ELB Scaling:
 - Sử dụng AWS Organizations có thể set policy như IAM được, nhưng trong 1 số case, thao tác IAM tốn nhiều effort hơn
 - AWS Batch is not to be confused for AWS Backup.
 - AWS Batch plans, schedules, and executes your batch computing workloads using Amazon EC2 and Spot Instances and its not used to take backups. AWS Backup can perform backups.
-- Nếu tạo Nat Gateway dùng chung cho 2 AZ, thì case AZ đang chạy Nat gateway down, sẽ làm cho AZ còn lại cũng ko có NatGateway dùng
+- Nếu tạo Nat Gateway dùng chung cho 2 AZ, thì case AZ đang chạy Nat gateway down, sẽ làm cho AZ còn lại cũng không có NatGateway dùng
 - Aurora allows its read replicas to be easily promoted to the master and typically only has 100ms of replication lag 
 - AWS Premium support: Basic, Developer, Business, Enterprise
-- 3 level support của AWS : Enterprise, Business, Developer (ko có gói Free Tier)
+- 3 level support của AWS : Enterprise, Business, Developer (không có gói Free Tier)
 - RDS supports SOAP only through HTTPS (not HTTP)
 - Create the IAM roles with cross account access
 - "Domain" refer to in Amazon SWF : A Collection of related workflows
@@ -539,23 +549,23 @@ AWS STS sẽ cung cấp 1 temporary AWS access credential. Được quyền như
 - 1 Public subnet trong 1 VPC được định nghĩa là trong bảng định tuyến của nó, có ít nhất 1 route IGW
 - Khi nào nên chọn Provisioned IOPS trên Standard RDS? 
     - Khi cần db OLTP
-- Để lấy thông tin metadata của ec2, `curl http://169.254.169.254/latest/meta-data` (lưu ý 169.254.169.254 là địa chỉ IP cố định, ko phải thay đổi)
+- Để lấy thông tin metadata của ec2, `curl http://169.254.169.254/latest/meta-data` (lưu ý 169.254.169.254 là địa chỉ IP cố định, không phải thay đổi)
 - AWS Direct Connect: 1Gbps - 10Gbps
 - The maximum size of an Amazon EBS snapshot is 1TB 
-- Provisioned IOPS sẽ được charge phí ngay cả khi ko dùng, mỗi tháng
+- Provisioned IOPS sẽ được charge phí ngay cả khi không dùng, mỗi tháng
 - Storage size increments of at least 10% 
-- Muốn bắn mail khi Instance được start/terminate khi chạy Auto Scaling thì phải config (nó ko tự gửi mail)
+- Muốn bắn mail khi Instance được start/terminate khi chạy Auto Scaling thì phải config (nó không tự gửi mail)
 - Cần phải shutdown EC2 trước khi tạo snapshot 
 
 - Route 53 không thể tạo hosted zone for a top-level domain 
 - Không thể tạo IAM account giống nhau để login vào các AWS Account khác nhau
-- RDS ko hỗ trợ giảm size db, nhưng với Dynamo DB (NOSQL) thì có support cả tăng và giảm 
-- SQS ko support priority queue
+- RDS không hỗ trợ giảm size db, nhưng với Dynamo DB (NOSQL) thì có support cả tăng và giảm 
+- SQS không support priority queue
 - Security group sẽ merge các policy conflict lại với nhau (cái nào to hơn xài cái đó, ví dụ có 2 cái, 1 cái chỉ cho phép vào port 80 với IP xxx, và 1 cái cho phép vào port 80 với mọi IP, thì kết quả cuối sẽ là cho phép all) 
 - AWS using SQS to store the message from mobile apps, and using AWS Mobile Push to send offers to mobile apps. 
 - EC2 sẽ không bị terminate nếu tính năng "terminate protection" đang được enabled. Chế độ Auto Scaling, khi scale-in sẽ không thể terminate được instance
 - AuTO Scaling support Manual scaling, và Dynamic Scaling 
-- Trong một Region, thì việc user sử dụng AZ khác nhau ko giảm được latency. AZ mục đích chính để fault toleration hoặc HA 
+- Trong một Region, thì việc user sử dụng AZ khác nhau không giảm được latency. AZ mục đích chính để fault toleration hoặc HA 
 - EBS Magnetic: 1 loại ổ đĩa HDD
 - Amazon Redshift: 1 service phục vụ data warehouse,lưu data theo dạng COLUMNAR 
 - Cross-account: account sau khi đăng nhập, có thể switch sang role khác của 1 tài khoản khác, mà không cần phải login/logout đăng nhập tài khoản đó. 

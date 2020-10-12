@@ -1,3 +1,15 @@
+---
+title: Java - Jhipster
+date: 2020-04-25 18:00:26
+tags:
+    - java
+    - jhipster
+    - auto tool
+    - gen code
+category: 
+    - java
+---
+
 # JHipster
 ## 1. Mục đích
 Tạo nhanh project java:
@@ -63,7 +75,8 @@ https://www.jhipster.tech/installation/
     ```
     https://github.com/mraible/jhipster6-demo
 
-- Customize Repository  (Sử dụng trong trường hợp JPA ko default sẵn)
+- Customize Repository  (Sử dụng trong trường hợp JPA không default sẵn)
+
 ```java
     @Query("select p from Product p where p.status =:status and p.fFirstId =:f1Id order by p.createdDate desc")
     Page<Product> findAllByStatusAndFFirstIdOrderByCreatedDateDesc(Pageable pageable, @Param("status") String status, @Param("f1Id") Long f1Id);
@@ -73,6 +86,7 @@ https://www.jhipster.tech/installation/
     void updateF2(@Param("f1Id") Long f1Id, @Param("f2Id") Long f2Id);
 ```
 - Customize DAOImpl
+
 ```java
 @Override
     public List<F2summaryDto> getF2SummaryList() {
@@ -108,14 +122,16 @@ https://www.jhipster.tech/installation/
     }
 ```
 - Trong 1 số trường hợp không muốn chạy app qua proxy (ví dụ reactjs, proxy 9000, 9060). Muốn chạy trực tiếp trên port java, cần config security 
-    ```text
+
+```text
     // config/SecurityConfiguration.java
     Sửa format `default-src 'self'` thành `default-src *`
-    ```
+```
 - Thêm script/css common tại: `src/main/webapp/index.html`
 - Config accept Javascript trong reactjs .ts file `.eslintrc.json`
-    ```json
+
+```json
     "rules": {
         "no-console": 0
     }
-    ```
+```

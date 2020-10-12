@@ -1,3 +1,13 @@
+---
+title: AWS - Lambda - Case study
+date: 2018-10-14 18:00:26
+tags:
+    - aws
+    - lambda
+category: 
+    - aws
+---
+
 # Các case study nổi tiếng về Lambda
 ### 2.1 Cocacola với bài toán máy bán hàng tự động
 - a. Bài toán   
