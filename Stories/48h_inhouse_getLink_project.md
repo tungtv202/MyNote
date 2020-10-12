@@ -1,3 +1,15 @@
+---
+title: Stories - Get Link Fshare
+date: 2020-02-11 18:00:26
+tags:
+    - fshare
+    - get link
+    - stories
+category: 
+    - stories
+---
+
+
 # Nhật ký làm hệ thống getLink vip Fshare trong 48h
 Nhật ký ngày tháng năm...       
 Vào một ngày đẹp trời, mình thấy các website cung cấp dịch vụ `getlink VIP fshare` đồng loạt thông báo lỗi, không thể getlink VIP download `maxbandwith`. Và mình cũng thấy rất nhiều bài viết mới được tạo trong 1 group (chuyên chia sẻ về IT), về việc sharing Fcode (fshare code) mà họ mới mua, và không dùng hết. Các `fcode` thì có hạn về số lượng, và thời gian sử dụng.   
@@ -34,9 +46,10 @@ Thật may mắn, sau đó mình search trên `github` thì lại thấy có rep
 Đó là repo này: https://github.com/tudoanh/get_fshare   (dùng python)    
 Để chắc chắn API trong repo đúng, mình dùng phần mềm `PostMan` để test lại. Và kết quả các API vẫn tốt.     
 Cơ bản có 2 API: 
-1. Sử dụng `user_email` + `password` trên fshare, để lấy `session_id` và `token`
+1. Sử dụng `user_email` + `password` trên fshare, để lấy `session_id` và `token` 
     - Request example:
-    ```bash
+    
+```bash
     curl --location --request POST 'https://api.fshare.vn/api/user/login' \
     --header 'Content-Type: application/json' \
     --data-raw '{
@@ -45,33 +58,38 @@ Cơ bản có 2 API:
                 "app_key": "L2S7R6ZMagggC5wWkQhX2+aDi467PPuftWUMRFSn"
             }
     '
-    ```
-    - Response example: 
-    ```bash
+```
+
+- Response example: 
+    
+```bash
     {
     "code": 200,
     "msg": "Login successfully!",
     "token": "483f5bb8ab3812070f95b2f52d0ff5645a4f4",
     "session_id": "f35jj7d0q5v91dt6b4r3vns"
     }
-    ```
+```
 
 2. Sử dụng `token` để request link download
     - Request example:
-    ```bash
+    
+```bash
     curl --location --request POST 'https://api.fshare.vn/api/session/download' \
     --header 'Content-Type: application/json' \
     --data-raw '{
                 "token": "483f5bb8ab3812070f95b2f52d0ff5645a4f4",
                 "url": "https://www.fshare.vn/file/VG8998AQNPB"
     }'
-    ```
+```
     - Response example:
-    ```bash
+    
+```bash
     {
         "location": "http://download022.fshare.vn/dl/g1igLGM7IScOwdkwo3iwyPmJPDJk1roRViiVDbNszLZwk4k2xb-6TogmIK9Rjxq4y+Ggl2V0Z/ipz0g78hhb.wmv"
     }
-    ```
+
+```
 // Các example trên mình export từ Postman. Mình đã dùng `Postman` thì thấy luôn ok. Nhưng không hiểu sao khi dùng `curl` lại lỗi. Khá khó hiểu. Hơn nữa, lại chỉ thấy sử dụng `token` chứ không thấy ở đâu sử dụng `session_id`. Về sau khi mình convert sang code Java, thì request thứ 2 luôn báo lỗi là "chưa đăng nhập". Sau đó mình phát hiện ra, trong request thứ 2, mình phải truyền thêm `header` chứa `Cookie`, trong đó giá trị `Cookie` có `session_id` thì mới pass.
 
 ## 4. Lựa chọn tech stack vòng 2
@@ -88,6 +106,7 @@ Việc dựng project `spring boot` có backend và frontend trong 1 repo khá n
 
 ### 4.2 Quick code
 - Spring RestTemplate
+
 ```java
  public void setToken() {
         LoginRequest loginRequest = new LoginRequest();
@@ -102,6 +121,7 @@ Việc dựng project `spring boot` có backend và frontend trong 1 repo khá n
     }
 ```
 - CommandLineRunner
+
 ```java
 @Component
 public class GetToken implements CommandLineRunner {
@@ -115,6 +135,7 @@ public class GetToken implements CommandLineRunner {
 }
 ```
 - Spring Scheduled
+
 ```java
 @Component
 public class RefreshToken {
@@ -128,6 +149,7 @@ public class RefreshToken {
 }
 ```
 - Spring Websocket
+
 ```java
 @Configuration
 @EnableWebSocketMessageBroker
@@ -147,6 +169,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 ```
 
 - ThreadPoolTaskExecutor
+
 ```java
     @Bean
     @Primary
@@ -167,6 +190,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 ```
 
 - sockjs-client + stomp-websocket
+
 ```js
 function initSocket() {
     var socket = new SockJS('/websocket-receive-link');
@@ -193,6 +217,7 @@ Mình đã google rất nhiều về cách này, nhưng khá là rối với ski
 Trong lúc trầm tư suy ngẫm, mình sực nhớ ra `NGINX`, 1 thằng mà mình từng dùng, có thể làm được điều này, 1 điều mà mình lại quên béng mất.     
 => Ý tưởng:     
 Nôm na thì linkdownload của fshare trả về đại loại format sau
+
 ```
 http://download022.fshare.vn/dl/g1igLGM7IScOwdkwo3iwyPmJPDJk1roRViimGIL8t7VDbNxb-6TogmIK9Rjxq4y+Ggl2V0Z/ipz0g78hhb.wmv
 ```
@@ -202,6 +227,7 @@ http://download022.tungexplorer.me/dl/g1igLGM7IScOwdkwo3iwyPmJPDJk1roRViimGIL8t7
 ```
 - Việc replace chuỗi String này trong java chỉ 1 nốt nhạc. 
 - Cấu hình `Nginx` tham khảo:
+
 ```bash
 server {
   listen 80;
@@ -226,6 +252,7 @@ Mình không thể config 1 cách bị động cho từng endpoint như vậy đ
 => Config với `regex` để dynamic việc route proxy. 
 Việc này khiến mình mất khá nhiều thời gian, vì mình không quá thành thục về việc này. Nó làm mình mất 3-4 tiếng để thử nghiệm regex, và google debug.      
 Cuối cùng format hoạt động tốt:
+
 ```bash
 server {
   listen 80;

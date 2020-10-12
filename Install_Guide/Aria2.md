@@ -1,3 +1,13 @@
+---
+title: Install Guide - Aria2
+date: 2020-01-24 18:00:26
+tags:
+    - aria2
+    - script
+category: 
+    - install_guide
+---
+
 ## Aria2 - tool hỗ trợ download trên server 
 - `aria2`: tool download
 - `webui-aria2`: cung cấp giao diện webui cho aria2
@@ -5,6 +15,7 @@
 ### 1. Install 
 ref: https://hub.docker.com/r/timonier/webui-aria2
 - install `aria2`
+
 ```bash
 # Define installation folder
 
@@ -21,6 +32,7 @@ curl --location "https://gitlab.com/timonier/aria2/raw/master/bin/installer" | s
 aria2c --help
 ```
 - run aria2
+
 ```bash
 # 1. plain
 aria2c --dir /home/ubuntu/torrents --enable-rpc --rpc-listen-all
@@ -29,9 +41,9 @@ nohup  aria2c --dir /home/ubuntu/torrents --enable-rpc --rpc-listen-all >> /tmp/
 # chỉnh "/home/ubuntu/torrents" thành đường dẫn mà file sau khi download sẽ được lưu vào
 # lưu ý sau khi run, thì 1 container docker mới sẽ được chạy
 ```
+
 - install `webui-aria2`
+
 ```bash
 docker run -d -p 9999:80 timonier/webui-aria2
 ```
-
-// end

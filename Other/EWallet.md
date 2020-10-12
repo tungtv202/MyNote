@@ -1,3 +1,13 @@
+---
+title: E-Wallet Note
+date: 2020-02-22 18:00:26
+tags:
+    - e-wallet
+    - momo
+category: 
+    - other
+---
+
 # Note về tích hợp ví điện tử
 ## ví MOMO
 ![Payment](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/payment/momo-payment-flow.jpg)
@@ -8,7 +18,8 @@
     - `Access Key`: Cấp quyền truy cập vào hệ thống MoMo.
     - `Secret Key`: Dùng để tạo chữ ký điện tử signature.
     - `Public Key`: Sử dụng để tạo mã hoá dữ liệu bằng thuật toán RSA.
-- Ý nghĩa của `Secret key`: khi nhận data từ `momo`, server tích hợp sẽ sử dụng nó để làm khóa cho hàm băm. (các thuật toán băm như md5, sha1, sha256...). đối tượng băm là `payload`. Sau khi có kết quả băm, sẽ compare với giá trị `hash` được gửi kèm trong payload. Nếu bằng nhau thì xác nhận là đúng momo gửi data. 
+- Ý nghĩa của `Secret key`: khi nhận data từ `momo`, server tích hợp sẽ sử dụng nó để làm khóa cho hàm băm. (các thuật toán băm như md5, sha1, sha256...). đối tượng băm là `payload`. Sau khi có kết quả băm, sẽ compare với giá trị `hash` được gửi kèm trong payload. Nếu bằng nhau thì xác nhận là đúng momo gửi data.
+ 
     ```java
     String signResponse = Encoder.signHmacSHA256(responserawData, getSecretKey());
     if (signResponse.equals(captureMoMoResponse.getSignature())) {

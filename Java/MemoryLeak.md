@@ -1,3 +1,13 @@
+---
+title: Java - Memory Leak
+date: 2019-03-17 18:00:26
+tags:
+    - java
+    - memory leak
+category: 
+    - java
+---
+
 # Memory leak trong Java    
 ![Context](https://www.baeldung.com/wp-content/uploads/2018/11/Memory-_Leak-_In-_Java.png)   
 ## 1. Cơ chế
@@ -5,12 +15,13 @@
 - Có 2 giá trị xms, và xmx, cấp size nhớ lúc start, và giá trị maximum. 
 - Dựa vào xmx, và kernel, os ..vvv, mà JVM sẽ tự tính toán ra size cho 2 vùng Old và Young (Eden). GC sẽ scan ở Eden trước, và thường xuyên hơn khi scan ở Old. 
 - Ngoài old và eden, có thể có thêm s0, s1... để phục vụ cho cơ chế phát hiện được Object không được ref ở đâu, ít phải scan hơn.
-- Có 2 pharse: Mark and sweep. Pharse Mark sẽ scan và đánh dấu các Object không được ref, Sweep sẽ scan các object ko được ref và release chúng.
+- Có 2 pharse: Mark and sweep. Pharse Mark sẽ scan và đánh dấu các Object không được ref, Sweep sẽ scan các object không được ref và release chúng.
 
 ## 2. Các code ví dụ
     Các ví dụ sau chỉ ra các lỗi thường gặp hay đẫn tới memory leak. Và cách phòng tránh.
 
 ### 2.1, Khai báo static cho biến
+
 ```java
 public class StaticTest {
     public static List<Double> list = new ArrayList<>();
@@ -37,6 +48,7 @@ Sau khi xóa khai báo static:
 ![vidu2](https://www.baeldung.com/wp-content/uploads/2018/11/memory-without-static.png)
 
 ### 2.2, Sử dụng wrapper class
+
 ```java
 public class Adder {
        public long addIncremental(long l)
@@ -65,6 +77,7 @@ Khi mở kết nối tới database, hay mở file nhưng sau khi sử dụng xo
 Giải pháp là luôn luôn khai báo close resources trong khối finally.     
 
 ### 2.4, Implement phương thức equals() và hashCode()   
+
 ```java
 public class Person {
     public String name;
@@ -74,6 +87,7 @@ public class Person {
     }
 }
 ```
+
 ```java
 @Test
 public void givenMap_whenEqualsAndHashCodeNotOverridden_thenMemoryLeak() {
@@ -90,7 +104,8 @@ Trong class Person này, đã không implement 2 method là equals() và hashCod
 ### 2.5, Một vài recommend
 - Nên sử dụng version Java mới nhất 
 - Nếu phải làm việc với biến String lớn, cần khai báo tăng size cho PermGem để tránh báo lỗi OutOfMemoryErrors
-```java
+
+```bash
 -XX:MaxPermSize=512m
 ```
 - Sử dụng WeakHashMap để init cache thay vì HashMap như truyền thống. Với các cặp <key,value> trong WeakHashMap, nếu key không bị tham chiếu bởi object nào thì cặp <key,value> đó sẽ được GC dọn dẹp. 

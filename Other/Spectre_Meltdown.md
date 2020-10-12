@@ -1,3 +1,13 @@
+---
+title: Spectre Meltdown
+date: 2018-02-09 18:00:26
+tags:
+    - spectre meltdown
+category: 
+    - other
+---
+
+
 Mới đây Google đã công bố 2 lỗ hổng bảo mật cực kỳ nghiêm trọng của Intel đó là Meltdown và Spectre.
 Cả 2 đều lợi dụng lỗ hổng bảo mật cơ bản trong các chip nói trên, về mặt lý thuyết mà nói thì chúng có thể được dùng để "đọc những thông tin nhạy cảm trong bộ nhớ của một hệ thống, như mật khẩu, khóa để mở nội dung được mã hóa hay bất kì thông tin nhạy cảm nào".
 Hiện nay lỗ hổng này đều đã có trong bản vá lỗi của Microsoft, nhưng điều này sẽ làm chậm tới 30% tốc độ của chíp xử lý. Và các bản vá lỗi này đều chỉ là vá lỗi dựa trên OS, chứ không phải vá lỗi ở tầng thiết bị phần cứng của chíp xử lý.
@@ -24,6 +34,7 @@ if (x < array1_size):
 ........y = array2[array1[x] * 256];
 ```
 Lần đầu function exploit được gọi với x < array1_size để CPU được dạy rằng khả năng cao là phép kiểm tra đó đúng, lần thứ 2 gọi lại với x là số lớn hơn, lúc này CPU tiếp tục thực hiện phép load x lên từ array1 và giá trị OOB ( ngoài khả năng của array1 ) này được sử dụng làm index cho việc load giá trị từ array2, khi thực hiện phép load CPU sẽ đưa giá trị này vào cache để cho tốc độ truy xuất lần tiếp sau sẽ nhanh hơn, dựa vào đó khi xem xét ví dụ tiếp theo:
+
 ```java
 struct array *arr1 = ...; /* small array */
 struct array *arr2 = ...; /* array of size 0x400 */

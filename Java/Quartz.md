@@ -1,3 +1,14 @@
+---
+title: Java - Implement Quartz
+date: 2020-06-03 18:00:26
+tags:
+    - java
+    - quartz
+    - auto scheduler
+category: 
+    - java
+---
+
 # Tích hợp Quartz vào Spring
 ![https://miro.medium.com/max/1400/1*TC0WiXrDTkYsLRdT2Sk9mg.png](https://miro.medium.com/max/1400/1*TC0WiXrDTkYsLRdT2Sk9mg.png)
 ## Use case
@@ -8,6 +19,7 @@
 ## Tích hợp
 ### 1. Config
 - Thư viện
+
 ```xml
  <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -15,6 +27,7 @@
   </dependency>
 ```
 - config .yml
+
 ```yml
 spring:
   datasource-main:
@@ -50,6 +63,7 @@ spring:
     - Khai báo, tạo scheduler
     - Execute job 
 - a). Khai báo/ tạo scheduler
+
 ```java
 @Autowired
 private  Scheduler scheduler;
@@ -72,6 +86,7 @@ private  Scheduler scheduler;
 - jobDetail có thể `.setJobData()` là 1 `JobDataMap`. (cho bên Job Excute lôi ra dùng)
 - `BackupQuartzJob.class` là class để execute job
 - b) Execute job 
+
 ```java
 @Component
 public class BackupQuartzJob extends QuartzJobBean {
@@ -84,12 +99,14 @@ public class BackupQuartzJob extends QuartzJobBean {
 }
 ```
 - c) Delete job
+
 ```java
 scheduler.deleteJob(new JobKey(storeConfig.getQuartzJobName(), storeConfig.getQuartzJobGroup()));
 ```
 ## Other
+
 - `scheduler` default support sẵn Transactional
-- Nếu threadpool = 2, và số job có `fire time` trùng nhau là 1000. Thì tại thời điểm `fire time` 2 schedule sẽ được excute, sau đó 996 schedule còn lại sẽ bị delay xử lý dần dần, chứ ko mất
+- Nếu threadpool = 2, và số job có `fire time` trùng nhau là 1000. Thì tại thời điểm `fire time` 2 schedule sẽ được excute, sau đó 996 schedule còn lại sẽ bị delay xử lý dần dần, chứ không mất
 - RISK: nếu time execute > circle time. (Ví dụ cron trigger 5s chạy 1 lần, và time exeute là 8s). Và có N schedule có time execute trùng nhau, thì có vẻ như có 1 local queue được sử dụng tạm thời, để N schedule đều được xử lý hết vòng. Nhưng khi tới 1 threshold nào đó (chưa rõ cách tính threshold), thì N schedule sẽ bị reset time next trigger. Khi  đó quartz sẽ có thông báo lỗi kiểu "Có N schedule bị miss"
 ![Risk](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/QuartzRisk.PNG)
 - Mỗi 1 instance (các instance chạy cùng db), nếu không set name, thì SCHEDULE_NAME = `quartzScheduler`

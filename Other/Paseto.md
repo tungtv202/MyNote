@@ -1,3 +1,14 @@
+---
+title: Paseto - Token base authentication
+date: 2020-04-19 18:00:26
+tags:
+    - paseto
+    - token
+    - authen
+category: 
+    - other
+---
+
 # 1. Bài toán / Best use case
 ## 1.1. Bài toán 1
 - Bạn xây dựng 1 hệ thống. Gồm 2 application:

@@ -1,3 +1,13 @@
+---
+title: AWS - LAB - Cognitor
+date: 2020-01-30 18:00:26
+tags:
+    - aws
+    - cognito
+category: 
+    - aws
+---
+
 # Sử dụng AWS Cognitor để identify
 AWS Cognito có 2 loại authentication là cho phép người dùng tự cấu hình (User Pool) hoặc dùng các dịch vụ có sẵn (Identity Pool).   
 Ở đây, mình sẽ dùng dạng User Pool. Công việc cần làm như sau:

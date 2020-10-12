@@ -1,3 +1,14 @@
+---
+title: Java - Spring Security
+date: 2020-07-18 18:00:26
+tags:
+    - java
+    - spring
+    - security
+category: 
+    - java
+---
+
 # 1. Lý thuyết
 - Nếu sử dụng đồng thời HttpSecurity  và dùng @PreAuthorize, thì HttpSecurity sẽ được chạy trước
 - HttpSecurity khai báo dựa trên endpoint url, còn @PreAuthorize khai báo trước method
@@ -13,6 +24,7 @@
     hasPermission
     ```
 - @PreFilter and @PostFilter
+
 ```java
 @PostFilter("filterObject.assignee == authentication.name")
 List<Task> findAll() {
@@ -33,6 +45,7 @@ Iterable<Task> save(Iterable<Task> entities) {
 # 2. Code template
 ## 2.1. Spring security vs JWT
 - `WebSecurityConfig.java`
+
 ```java
 @Configuration
 @EnableWebSecurity
@@ -111,7 +124,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    }
 }
 ```
+
 - `JwtAuthorizationTokenFilter.java`
+
 ```java
 public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
     private JwtTokenUtil jwtTokenUtil;
@@ -166,7 +181,9 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 }
 
 ```
+
 - `JwtTokenUtil.java`
+
 ```java
 @Component
 public class JwtTokenUtil implements Serializable {
@@ -269,9 +286,10 @@ public class JwtTokenUtil implements Serializable {
 .
 
 ## 2.2. Basic Security
-- `HttpBasicConfig.java`
-```java
 
+- `HttpBasicConfig.java`
+
+```java
 @Configuration
 @EnableWebSecurity
 @Order(2)
@@ -341,6 +359,7 @@ public class HttpBasicConfig extends WebSecurityConfigurerAdapter {
 }
 ```
 - `SessionUserServiceImpl.java`
+
 ```java
 @Service
 public class SessionUserServiceImpl implements SessionUserService {
@@ -398,6 +417,7 @@ public class SessionUserServiceImpl implements SessionUserService {
     }
 }
 ```
+
 ```java
 @Getter
 @Setter
@@ -409,6 +429,7 @@ public class SessionModel {
 }
 ```
 - `AuthenticationExceptionHandler.java`
+
 ```java
 @Component
 public class AuthenticationExceptionHandler implements AuthenticationEntryPoint, Serializable {
@@ -424,7 +445,9 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint,
     }
 }
 ```
+
 - `CustomAccessDeniedHandler.java`
+
 ```java
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
@@ -441,4 +464,3 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     }
 }
 ```
-.

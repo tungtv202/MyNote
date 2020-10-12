@@ -1,3 +1,14 @@
+---
+title: AWS - S3
+date: 2019-05-17 18:00:26
+tags:
+    - aws
+    - s3
+    - object storage
+category: 
+    - aws
+---
+
 # AWS S3 - một service Cloud Storage
 
 S3 là 1 service của AWS cho chức năng lưu trữ dữ liệu hướng Object

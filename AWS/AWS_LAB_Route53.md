@@ -1,3 +1,13 @@
+---
+title: AWS - Route 53
+date: 2020-01-27 18:00:26
+tags:
+    - aws
+    - route53
+category: 
+    - aws
+---
+
 # Amazon Route 53
 ## LAB
 

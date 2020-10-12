@@ -1,6 +1,15 @@
+---
+title: Domain Driver Design & Event Driven Architecture
+date: 2020-01-26 18:00:26
+tags:
+    - ddd
+    - domain driver design
+category: 
+    - other
+---
 # Domain Driver Design và Event Driven Architecture
 - Đặt đơn hàng trong giờ cao điểm, cái khách hàng quan tâm là đặt đúng hàng họ cần, đúng số lượng, và có thông báo thành công => quá trình xử lý lúc đặt giờ cao điểm nó `khác với quá trình xử lý đơn hàng cho người vận hành tại thời điểm sau đó` => thiết kế
-- Hệ thống chạy nhanh ko bằng hệ thống chạy ổn định 
+- Hệ thống chạy nhanh không bằng hệ thống chạy ổn định 
 - Ví dụ: nói về đơn hàng, sẽ có order và order item. Database sẽ có 2 table, order và order item, nhưng sẽ chỉ có 1 object Order. Vì khi đã nói tới đơn hàng, thì sẽ có order và order item, không thể có 1 đơn hàng, mà đơn hàng đó không có sản phẩm, và không thể nói về sản phẩm đơn hàng, mà không biết đơn hàng nào.  
 - Giả sử cần lấy 2 field thông tin, thì dùng 2 query khác nhau (đã được global trong hệ thống), rồi dùng code tổng hợp lại, còn hơn là viết 1 query mới lấy ra 2 field chỉ để giải quyết 1 nhu cầu.
 - `Model` không phải là `Table`. 
