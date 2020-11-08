@@ -1,3 +1,14 @@
+---
+title: SQL - Command
+date: 2017-12-03 18:00:26
+tags:
+    - sql
+    - db
+    - script
+category: 
+    - database
+---
+
 ## Command dump db kèm sequence
 ```bash
 pg_dump -h localhost:5432 -U postgres -d database_name --exclude-table=exclude_id_seq > backup_`date +%Y_%m_%d`.sql
