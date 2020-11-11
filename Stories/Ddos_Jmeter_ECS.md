@@ -1,13 +1,13 @@
 ---
 title: DDos, Stress test, distribution test với Jmeter, Docker, AWS ECS
-date: 2017-12-03 18:00:26
+date: 2020-11-08 18:00:26
 tags:
     - jmeter
     - aws
     - ecs
     - test
 category: 
-    - other
+    - stories
 ---
 
 # Ddos, Stress Test, Distributional Test với combo Jmeter, Docker, AWS ECS 
@@ -55,8 +55,9 @@ bash ~/jmeter/apache-jmeter-5.3/bin/jmeter.sh -n -t ~/jmeter/01/test.jmx -j tmp1
     - tmp2.xml là file result của jmeter (call http request 200, 404, 403 sẽ show hết ở đây)
     - Lưu ý khi chạy trên server cần thêm parameter `-n` là chạy với mode NONE GUI
 ## 3.3 Dockerfile
-- Sau khi test cli thấy mọi thứ oke, mình thực hiện build Dockerfile
-```Dockerfile
+- Sau khi test cli thấy mọi thứ oke, mình thực hiện build Dockerfile    
+
+```Dockerfile   
 FROM openjdk:8-jre-alpine3.7
 
 RUN apk update && \
@@ -90,6 +91,7 @@ CMD export PATH=~/.local/bin:$PATH && \
     echo -e "\n\n======TEST RESULTS========\n\n"  && \
     cat $TEST_RESULTS_FILE
 ```
+
 - Vì mình sử dụng AWS ECS, nên sử dụng luôn docker repository ECR luôn cho tiện. 
 ![ecr](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/jmeter/ecr.JPG)
 
