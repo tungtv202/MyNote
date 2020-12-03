@@ -147,3 +147,59 @@ logging.pattern.file=%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.
 logging.pattern.console=  
 ```
 - ref: http://logback.qos.ch/manual/layouts.html
+
+## 3. AWS CloudWatch Logback Apender
+- Maven
+```xml
+        <dependency>
+            <groupId>ca.pjer</groupId>
+            <artifactId>logback-awslogs-appender</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+```
+- Logback.xml
+    - Lưu ý cần set 2 env để credential
+    AWS_ACCESS_KEY=123456;
+    AWS_SECRET_KEY=123456;
+```xml
+<appender name="ASYNC_AWS_LOGS1" class="ca.pjer.logback.AwsLogsAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <logStreamName>topic.test1</logStreamName>
+        <logRegion>ap-east-1</logRegion>
+        <logGroupName>/sapo/web-pos-channel-v2</logGroupName>
+        <layout>
+            <pattern>%date %level [%thread] %logger{10} [%file : %line] %msg%n</pattern>
+        </layout>
+    </appender>
+```
+Ref: https://github.com/pierredavidbelanger/logback-awslogs-appender
+## 4. Loki log Appender
+- maven
+```xml
+        <dependency>
+            <groupId>com.github.loki4j</groupId>
+            <artifactId>loki-logback-appender</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+
+```
+- logback.xml
+```xml
+    <appender name="LOKI" class="com.github.loki4j.logback.LokiJavaHttpAppender">
+        <url>http://192.168.13.249:3100/loki/api/v1/push</url>
+        <batchSize>100</batchSize>
+        <batchTimeoutMs>10000</batchTimeoutMs>
+        <encoder class="com.github.loki4j.logback.JsonEncoder">
+            <label>
+                <pattern>app=tung-test-can-remove-whenever,host=${HOSTNAME},level=%level</pattern>
+            </label>
+            <message>
+                <pattern>l=%level h=${HOSTNAME} c=%logger{20} t=%thread | %msg %ex</pattern>
+            </message>
+            <sortByTime>true</sortByTime>
+        </encoder>
+    </appender>
+```
+Ref: https://github.com/tungtv202/loki-logback-appender
