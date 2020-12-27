@@ -48,3 +48,10 @@ https://tecadmin.net/setup-selenium-chromedriver-on-ubuntu/
 https://support.hidemyass.com/hc/en-us/articles/202721546-OpenVPN-via-terminal-using-openvpn-binary-the-manual-way-
 - Install PostgreSQL 12 on linux    
 https://computingforgeeks.com/install-postgresql-12-on-ubuntu/
+
+
+## Java
+- Donald Raab - https://donraab.medium.com/
+- https://thesmartcoder.dev/  Simon Holdorf
+- https://javachallengers.com/ Rafael Chinelato Del Nero
+- https://sizovs.net/ Eduards Sizovs
