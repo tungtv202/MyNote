@@ -79,3 +79,193 @@ public class Test implements CommandLineRunner {
     }
 }
 ```
+## NumberUtils      
+```java
+public class NumberUtils {
+    public static boolean isNotBlank(final Number number) {
+        return !(number == null ||
+                (
+                        number instanceof Integer ? number.intValue() == 0 :
+                                number instanceof Long ? number.longValue() == 0 :
+                                        number instanceof Double ? number.doubleValue() == 0 :
+                                                number instanceof Short ? number.shortValue() == 0 :
+                                                        number.floatValue() == 0
+                ));
+    }
+
+    public static boolean isBlank(final Number number) {
+        return !isNotBlank(number);
+    }
+
+    public static boolean isEqual(int v1, Integer v2) {
+        if (v2 == null) return false;
+        return v1 == v2;
+    }
+}
+```
+
+## CompressHelper
+```java
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+
+public class CompressHelper {
+
+    public static byte[] gzipCompress(byte[] input) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            InputStream inputStream = new ByteArrayInputStream(input);
+            GZIPOutputStream gzipOS = new GZIPOutputStream(outputStream);
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = inputStream.read(buffer)) != -1) {
+                gzipOS.write(buffer, 0, len);
+            }
+            gzipOS.close();
+            inputStream.close();
+            outputStream.close();
+            return outputStream.toByteArray();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public static byte[] gzipDecompress(byte[] input) {
+        try {
+            GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(input));
+            ByteArrayOutputStream fos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = gis.read(buffer)) != -1) {
+                fos.write(buffer, 0, len);
+            }
+            //close resources
+            fos.close();
+            gis.close();
+            return fos.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+```
+
+## Spring valid enum
+```java
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Constraint(validatedBy = DoTypeValidator.class)
+public @interface DoTypeValid {
+    DoSomethingType[] anyOf();
+    String message() default "must be any of {anyOf}";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
+}
+```
+```java
+public class DoTypeValidator implements ConstraintValidator<DoTypeValid, DoSomethingType> {
+    private DoSomethingType[] doSomethingTypes;
+
+    @Override
+    public void initialize(DoTypeValid constraintAnnotation) {
+        this.doSomethingTypes = constraintAnnotation.anyOf();
+    }
+
+    @Override
+    public boolean isValid(DoSomethingType doSomethingType, ConstraintValidatorContext constraintValidatorContext) {
+        return doSomethingType == null || Arrays.asList(doSomethingTypes).contains(doSomethingType);
+    }
+}
+```
+Sử dụng
+```java
+    @DoTypeValid(anyOf = {DoSomethingType.re_sync})
+    @NotNull
+    private DoSomethingType doType;
+```
+
+## MapConverter - cho hibernate, java hashmap, db string
+```java
+@Converter
+public class MapConverter implements AttributeConverter<Map<String, String>, String> {
+
+    @Override
+    public String convertToDatabaseColumn(Map<String, String> attribute) {
+        return Util.convertMapToString(attribute);
+    }
+
+    @Override
+    public Map<String, String> convertToEntityAttribute(String dbData) {
+        return Util.convertStringToMap(dbData);
+    }
+}
+```
+Sử dụng tại class Entity
+```java
+    @Convert(converter = MapConverter.class)
+    private Map<String, String> metaData;
+```
+## Valid - String in List
+```java
+@Documented
+@Constraint(validatedBy = StringInListValidator.class)
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Order(value = Ordered.LOWEST_PRECEDENCE)
+public @interface StringInList {
+    String[] array() default {};
+
+    boolean allowBlank() default false;
+
+    String message() default "invalid";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
+}
+```
+```java
+public class StringInListValidator implements
+        ConstraintValidator<StringInList, String> {
+    private StringInList stringInList;
+
+    @Override
+    public void initialize(StringInList stringInList) {
+        this.stringInList = stringInList;
+    }
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        boolean isValid = false;
+        if (stringInList.allowBlank()) {
+            if (StringUtils.isEmpty(value)) {
+                isValid = true;
+            }
+        }
+
+        if (!isValid) {
+            isValid = ArrayUtils.contains(stringInList.array(), value);
+        }
+
+        if (!isValid) {
+            context.disableDefaultConstraintViolation();
+
+            String message = String.format("is not in %s",
+                    Arrays.asList(stringInList.array()));
+
+            context.buildConstraintViolationWithTemplate(message)
+                    .addConstraintViolation();
+        }
+        return isValid;
+    }
+}
+```
+Sử dụng
+```java
+    @StringInList(array = {"product", "order"}, allowBlank = true)
+    private String errorType;
+```
