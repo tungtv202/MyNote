@@ -24,7 +24,9 @@ Xây dựng api backend cho 1 hệ thống e-commerce, api có nhiệm vụ lấ
 Cơ chế như sau:
 - Lấy ra 5 giao dịch gần nhất, bằng cách call api tới 3rd `GET /api/purchases/by_user/:username?limit=5`.  
 Example: `GET /api/purchases/by_user/Jasen64`   
-  Response:
+  Response:   
+
+
 ```json
 {
   "purchases": [
@@ -49,9 +51,13 @@ Example: `GET /api/purchases/by_user/Jasen64`
   ]
 }
 ```
+
+
 - Với mỗi sản phẩm, lấy ra danh sách tất cả những người đã mua sản phẩm đấy, bằng cách call api tới `GET /api/purchases/by_product/:product_id`.    
 Example: `GET /api/purchases/by_product/996330` 
   Response:
+
+
 ```json
   {
   "purchases": [
@@ -76,9 +82,13 @@ Example: `GET /api/purchases/by_product/996330`
   ]
 }  
 ```
+
+
 - Cùng thời điểm, lấy ra danh sách thông tin về Sản phẩm, bằng cách call api tới `GET /api/products/:product_id`.   
 Example: `GET /api/products/996330` 
   Response: 
+
+
 ```json
 {
     "product": {
@@ -90,6 +100,7 @@ Example: `GET /api/products/996330`
 }
 ```
 - Kết quả của api lấy thông tin `Popular Purchase` format như sau:
+
 ```json
 [
   {
@@ -107,13 +118,16 @@ Example: `GET /api/products/996330`
   ...
 ]
 ```
+
 - Dữ liệu của `Popular Purchase` phải được cache
 - Dữ liệu của `Popular Purchase` phải được sắp xếp theo product có số lượng người mua nhiều nhất lên đầu.
 ## Step by step
 ### First round
 1. Webclient
 - Để call tới hệ thống 3rd qua api, cần 1 http client. Trong Spring 5, có hỗ trợ reactive web client là `Webclient`. 
-Nó hỗ trợ function programming, syntax khá tiện, tiện như `openFeign client` trong spring cloud.        
+Nó hỗ trợ function programming, syntax khá tiện, tiện như `openFeign client` trong spring cloud.   
+
+
 ```java
 @Slf4j
 @Configuration
@@ -147,6 +161,7 @@ public class ClientConfig {
     }
 }
 ```     
+
 
 
 ```java
@@ -217,11 +232,14 @@ public class PurchaseClient {
 }
 ```     
 
+
 - Sử dụng `doOnNext` để xem log
 - Sử dụng `delayElement` để giả lập thời gian mà api 3rd trả về. 
 
 2. LocalCacheServiceImpl
-- Cache trực tiếp trên localmem     
+- Cache trực tiếp trên localmem   
+
+
 ```java
     public static final int MAX_AGE = 30000;
     public static Map<String, CacheValue> INMEMORY_DATABASE = new ConcurrentHashMap<>();
@@ -248,10 +266,13 @@ public class PurchaseClient {
         INMEMORY_DATABASE.put(username, new CacheValue(value));
     }
 ``` 
+
 - evict manual (có thể sử dụng Caffein Cache hoặc Redis, để cache auto evict, nếu muốn làm phức tạp hơn)
 
 3. Route Controller
-- Spring web Flux hỗ trợ việc khai báo các controller kiểu `HandlerFunction and RouterFunctions`        
+- Spring web Flux hỗ trợ việc khai báo các controller kiểu `HandlerFunction and RouterFunctions`  
+
+
 ```java
  @Bean
     RouterFunction<ServerResponse> routes(PurchaseHandler handler) {
@@ -260,6 +281,8 @@ public class PurchaseClient {
 ```
 
 4. Core logic
+
+
 ```java
     public Mono<ServerResponse> purchasesRecent(ServerRequest request) {
         final var username = request.pathVariable("username");
@@ -287,6 +310,7 @@ public class PurchaseClient {
         return result;
     }
 ```
+
 - Ý đồ code: sau khi lấy ra được danh sách 5 giao dịch gần nhất. Thì các api lấy danh sách user đã mua theo sản phẩm, và api lấy thông tin sản phẩm, có thể được call 1 cách song song, độc lập, đồng thời, để giảm tổng thời gian truy vấn.
 - Flow: get value từ cache -> có thì trả về, không có thì call từ api tới 3rd, tính toán ra DTO -> lưu vào cache -> trả về.
 
@@ -296,6 +320,7 @@ public class PurchaseClient {
 - Các api lấy thông tin sản phẩm, và api lấy danh sách người mua theo sản phẩm, được chạy ở các thread khác nhau (`ctor-http-nio-4`, `ctor-http-nio-5`, `parallel-4`, `parallel-1` ) => có vẻ đã chạy đúng ý đồ, none-blocking
 - Nhưng các `PurchaseClient` chỉ được run, khi các `ProductClient` đã done. Thực tế thì có thể triển khai 2 client này `run` cùng lúc. 
 - Chuyền `double flatMap` => `zip`
+
 ```java
     private Mono<List<PopularPurchasesDto>> getPopularPurchasesWithoutCache(String username) {
         log.info("getPopularPurchasesWithoutCache - username: {}", username);
@@ -313,6 +338,7 @@ public class PurchaseClient {
 
 2. Cold publisher problem
 - Old code:
+
 ```java
    public void setPopularPurchases(String username, Flux<PopularPurchasesDto> value) {
         List<PopularPurchasesDto> cacheValue = new ArrayList<>();
@@ -322,6 +348,8 @@ public class PurchaseClient {
 ```
 - Việc truyền vào 1 `Flux<PopularPurchasesDto>`, và Flux đang mặc định là `cold publisher`, sau đó thực hiện `.subscribe()` khiến cho toàn bộ các api được call lại 1 lần nữa. => BAD
 - New Cold: nhét method `setPopularPurchases` vào trong `doOnNext` của `publisher`
+
+
 ```java
     private Flux<PopularPurchasesDto> getPopularPurchasesDto3(String username) {
         var cacheValue = cacheService.getPopularPurchasesAsync(username)
@@ -349,6 +377,7 @@ public class PurchaseClient {
 </dependency>
 ```
 - Install blockhound
+
 ```java
     public static void main(String[] args) {
         BlockHound.install();
@@ -359,7 +388,8 @@ public class PurchaseClient {
 ![Blocking by 3rd](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/reactor/BlockingBy3rd.JPG)
 
 ## How to run source code?
-1. Maven clean & package    
+1. Maven clean & package   
+ 
 ```./mvnw clean package```
 2. Change config file
     - `src/main/resources/application.properties`
@@ -369,6 +399,7 @@ public class PurchaseClient {
 3. Run spring-boot 
 ```./mvnw spring-boot:run ```
 4. Test api - get recent purchases 
+
 ```bash
 curl --request GET 'http://127.0.0.1:8080/api/recent_purchases/Jasen64' 
 ```
@@ -377,3 +408,6 @@ curl --request GET 'http://127.0.0.1:8080/api/recent_purchases/Jasen64'
 - Bài lap forcus vào `reactive` nên sẽ `do it` mọi nơi có thể. Nhưng thực tế nhiều chỗ đang sử dụng nó 1 cách không hiệu quả.
   - Các api của 3rd không hỗ trợ reactive
   - Danh sách `Popular purchase` mà hệ thống query và trả về cho client thông qua api `/api/recent_purchases/{user}`, không cần stream, bởi kết quả là 1 danh sách, yêu cầu phải được `sort`. Việc sort này được thực hiện khi toàn bộ List DTO đã DONE.
+
+
+- Sourcecode: https://github.com/tungtv202/reactor_flux_001
