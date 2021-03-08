@@ -269,3 +269,62 @@ Sử dụng
     @StringInList(array = {"product", "order"}, allowBlank = true)
     private String errorType;
 ```
+
+
+## Optional.stream()
+1. Bad
+```java
+public BigDecimal getOrderPrice(Long orderId) {
+    List<OrderLine> lines = orderRepository.findByOrderId(orderId);
+    BigDecimal price = BigDecimal.ZERO;       
+    for (OrderLine line : lines) {
+        price = price.add(line.getPrice());   
+    }
+    return price;
+}
+```
+2. Bad
+```java
+public BigDecimal getOrderPrice(Long orderId) {
+    List<OrderLine> lines = orderRepository.findByOrderId(orderId);
+    return lines.stream()
+                .map(OrderLine::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+}
+```
+and ...
+```java
+public BigDecimal getOrderPrice(Long orderId) {
+    if (orderId == null) {
+        throw new IllegalArgumentException("Order ID cannot be null");
+    }
+    List<OrderLine> lines = orderRepository.findByOrderId(orderId);
+    return lines.stream()
+                .map(OrderLine::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+}
+```
+3. bad
+```java
+public BigDecimal getOrderPrice(Long orderId) {
+    return Optional.ofNullable(orderId)                            
+            .map(orderRepository::findByOrderId)                   
+            .flatMap(lines -> {                                    
+                BigDecimal sum = lines.stream()
+                        .map(OrderLine::getPrice)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                return Optional.of(sum);                           
+            }).orElse(BigDecimal.ZERO);                            
+}
+```
+4. perfect
+```java
+public BigDecimal getOrderPrice(Long orderId) {
+    return Optional.ofNullable(orderId)
+            .stream()
+            .map(orderRepository::findByOrderId)
+            .flatMap(Collection::stream)
+            .map(OrderLine::getPrice)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+}
+```

@@ -464,3 +464,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     }
 }
 ```
+
+## Other
+![15Filter](https://www.marcobehler.com/images/filterchain-1a.png)
+- [Spring Security: Authentication and Authorization In-Depth](https://www.marcobehler.com/guides/spring-security)
