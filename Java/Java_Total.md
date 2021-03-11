@@ -328,3 +328,42 @@ public BigDecimal getOrderPrice(Long orderId) {
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 }
 ```
+
+## check isPrivateIP
+```java
+public static boolean isPrivateIP(HttpServletRequest request) {
+        return isPrivateIP(getRemoteIP(request));
+    }
+
+    public static boolean isPrivateIP(String ip) {
+        InetAddress address;
+        try {
+            address = InetAddress.getByName(ip);
+        } catch (UnknownHostException exception) {
+            return false;
+        }
+        return address.isSiteLocalAddress() || address.isAnyLocalAddress() || address.isLinkLocalAddress()
+                || address.isLoopbackAddress() || address.isMulticastAddress();
+
+    }
+
+    public static String getRemoteIP(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (null != ip && !"".equals(ip.trim()) && !"unknown".equalsIgnoreCase(ip)) {
+            // get first ip from proxy ip
+            int index = ip.indexOf(',');
+            if (index != -1) {
+                return ip.substring(0, index);
+            } else {
+                return ip;
+            }
+        }
+
+        ip = request.getHeader("X-Real-IP");
+        if (null != ip && !"".equals(ip.trim()) && !"unknown".equalsIgnoreCase(ip)) {
+            return ip;
+        }
+
+        return request.getRemoteAddr();
+    }
+```
