@@ -213,3 +213,44 @@ public class LeakyBucketModel {
         return result;
     }
 ```
+
+## Striped Locks 
+Lấy ý tưởng từ việc nếu cứ 1 instance lại cần 1 Lock, thì 1000 instance cần 1000 Lock -> như vậy thì quá tốn memory.    
+Striped Lock của Guava là tư tưởng quản lý nhóm N element bởi 1 Lock. 
+Ví dụ instance từ 1-100 dùng 1 Lock, 101-200 dùng 1 Lock.   
+Vậy thì với 1000 instance dùng hết 10 Lock. 
+Việc sử dụng số Lock sẽ cân bằng được giữa performance và memory 
+```java
+private Striped<Lock> stripedLocks = Striped.lock(10);
+public void update(Bag bag){
+    Lock lock = stripedLocks.get(bag.getId());
+    lock.lock();
+    if (!bag.hasBlueCandy()){
+        bag.add(new Candy(color"blue"));
+    }
+    lock.unlock();
+}
+```
+- Many locks = More memory, good throughput
+- Less locks = Better memory, more contention
+- Striped locks = Middle ground 
+- Imp: Choose obj to retrieve the lock
+- Need to have hascode & equals 
+- Striped versions of Lock, Semaphore and ReadWriteLock
+- Guava also has corresponding weak versions for easy GC
+
+## ReadWriteLock
+- Lớp java.util.concurrent.locks.ReentrantLock là một implementation của Lock. Lớp này có một hàm khởi tạo: ReentrantLock(boolean fair). Trong đó, nếu fair bằng true thì các thread sẽ truy cập tài nguyên theo thứ tự FIFO: thread nào acquire khóa trước thì sẽ được truy cập tài nguyên trước (nếu khóa đã sẵn sàng).
+- Khác với Lock, ReadWriteLock duy trì một cặp khóa: một khóa chỉ dành cho thao tác đọc và một khóa chỉ dành cho thao tác ghi. Khóa đọc có thể đưọc acquire đồng thời bởi nhiều thread miễn là các thread này đang không acquire khóa ghi. Nhưng khóa ghi thì tại một thời điểm chỉ có duy nhất một thread được acquire mà thôi.
+
+## Lock vs synchronized 
+- Synchronized blocks must be contained within a single method. 
+lock.lock() and lock.unlock() can be called from different method 
+- lock.lock() and lock.unlock() provides the same visibility and happens before guarantees as entering 
+and exiting a synchronized block
+- Synchronized blocks are alway reentrant, Lock could decide not to be 
+- Synchronized blocks do not guarantee fairness. Lock can 
+(fairness là hiện tượng mà có thể 1 Thread ở trạng thái đợi chờ mãi mãi, mà không thể access được vào object được lock. Lý do vì các Thread khác luôn có ưu tiên cao hơn. (không đảm bảo được FIFO))
+ Ví dụ với `ReentrantLock`, khi init có thể truyền thêm parameter `true` để fair 
+ `ReentrantLock lock = new ReentrantLock(true);` 
+ 

@@ -193,4 +193,28 @@ mvn clean source:jar deploy --settings $SETTINGS -DbuildNumber.version=$version 
     </repositories>
 ```
 
-.
+# Maven Note
+## Sự khác biệt giữa `dependencyManagement` và `dependencies` 
+Ví dụ pom parent 
+```xml
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8</version>
+    </dependency>
+ </dependencies>
+</dependencyManagement>
+```
+- pom child
+```xml
+<dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+ </dependencies>
+ ```
+ - Artifacts specified in the <dependencies> section will ALWAYS be included as a dependency of the child module(s).
+ - Artifacts specified in the <dependencyManagement> section, will only be included in the child module if they were also specified in the <dependencies> section of the child module itself. Why is it good you ask? Because you specify the version and/or scope in the parent, and you can leave them out when specifying the dependencies in the child POM. This can help you use unified versions for dependencies for child modules, without specifying the version in each child module.
