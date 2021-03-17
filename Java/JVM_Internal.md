@@ -128,3 +128,6 @@ JVM - JAVA VIRTUAL MACHINE
 - parallel
 - Concurrent Mark sweep
 - G1
+
+
+Other topic: https://tschatzl.github.io/2021/02/26/early-prune.html

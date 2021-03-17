@@ -124,3 +124,7 @@ a) JProfiler
 
     c) NetBeans Profiler    
 ![tool4](https://www.baeldung.com/wp-content/uploads/2017/10/8-netbeans-telemetry-view.png)
+
+
+## Other 
+- https://reflectoring.io/create-analyze-heapdump/
