@@ -41,3 +41,4 @@ category:
 - The app uses the token to make requests to the Shopify API.
 - Shopify returns the requested data.
 [ref](https://shopify.dev/tutorials/authenticate-with-oauth)
+
