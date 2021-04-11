@@ -1,6 +1,6 @@
 ---
 title: Cassandra Note
-date: 2020-04-11 12:04:26
+date: 2021-04-11 12:04:26
 tags:
     - cql
     - cassandra
@@ -75,7 +75,9 @@ WHERE id = '1'
 DELETE FROM table102 
 WHERE id = 'id1'
 ```
+
 - Deleting a column
+
 ```sql
 DELETE author FROM table101
 WHERE id = 'id1'
@@ -85,9 +87,12 @@ WHERE id = 'id1'
 
 INSERT INTO table101 (id, author)
 VALUES ('1', null)
+
 ```
-- **Expiring Data with TTLs**
+
+
 - Set the TTL for an entire row
+
 ```sql
 INSERT INTO table101 (id, token)
 VALUES ('id1', 'token2') USING TTL 10800;
@@ -583,7 +588,8 @@ FROM cassandra:3.11
 COPY cqlshrc /root/.cqlshrc
 ```
 - `.cqlshrc`
-```
+
+```config
 [connection]
 
 ;; A timeout in seconds for opening new connections
@@ -592,5 +598,6 @@ timeout = 60
 ;; A timeout in seconds for executing queries
 request_timeout = 60
 ```
+
 
 Ref: https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/cassandra-developers.zip
