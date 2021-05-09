@@ -1,0 +1,47 @@
+/*
+ 1. Create file in $HOME/.config/gtk-3.0/gtk.css
+ 2. Paste css below
+ 3. Reboot
+ 
+ Decrease the size of head bars for non-CSD applications
+ Gnome 20 (Fedora 24) compatible version
+ https://unix.stackexchange.com/questions/276951/how-to-change-the-titlebar-height-in-standard-gtk-apps-and-those-with-headerbars
+*/
+
+/* x11 and xwayland windows */
+window.ssd headerbar.titlebar {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    min-height: 0;
+    /* remove border between titlebar and window */
+    border: none;
+    background-image: linear-gradient(to bottom,
+     shade(@theme_bg_color, 1.05),
+     shade(@theme_bg_color, 1.00));
+    box-shadow: inset 0 1px shade(@theme_bg_color, 1.4);
+}
+
+window.ssd headerbar.titlebar button.titlebutton {
+    padding: 0px;
+    min-height: 0;
+    min-width: 0;
+}
+
+
+/* native wayland ssd windows */
+.default-decoration {
+    padding: 3px;
+    min-height: 0;
+    /* remove border between titlebar and window */
+    border: none;
+    background-image: linear-gradient(to bottom,
+     shade(@theme_bg_color, 1.05),
+     shade(@theme_bg_color, 1.00));
+    box-shadow: inset 0 1px shade(@theme_bg_color, 1.4);
+}
+
+.default-decoration .titlebutton {
+    padding: 0px;
+    min-height: 0;
+    min-width: 0;
+}
