@@ -318,3 +318,62 @@ Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
     }
 ```
 
+## Practice 
+### Practice 01
+
+```java
+public static class ClearEmailContent {
+        interface Builder {
+
+            @FunctionalInterface
+            interface RequireHtml {
+                RequirePreview html(String html);
+            }
+
+            @FunctionalInterface
+            interface RequirePreview {
+                RequireAttachments preview(Preview preview);
+            }
+
+            @FunctionalInterface
+            interface RequireAttachments {
+                ClearEmailContent attachments(List<ParsedAttachment> attachments);
+            }
+        }
+
+        public static Builder.RequireHtml builder() {
+            return html -> preview -> attachments
+                -> new ClearEmailContent(html, preview, !attachments.isEmpty(), attachments);
+        }
+
+        private Preview preview;
+        private boolean hasAttachment;
+        private String html;
+        private List<ParsedAttachment> attachments;
+
+        ClearEmailContent(String html, Preview preview,
+                          boolean hasAttachment,
+                          List<ParsedAttachment> attachments) {
+            Preconditions.checkNotNull(preview);
+            Preconditions.checkNotNull(html);
+            Preconditions.checkNotNull(attachments);
+            this.preview = preview;
+            this.hasAttachment = hasAttachment;
+            this.html = html;
+            this.attachments = attachments;
+        }
+    }
+```
+
+- usage
+
+```java
+ public ClearEmailContent extract(Message message) throws IOException {
+        return ClearEmailContent.builder()
+            .html(messageContentExtractor.extract(message)
+                .getHtmlBody()
+                .orElse(""))
+            .preview(previewFactory.fromMime4JMessage(message))
+            .attachments(messageParser.retrieveAttachments(message));
+    }
+```
