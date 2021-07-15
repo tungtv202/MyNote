@@ -218,3 +218,28 @@ Ví dụ pom parent
  ```
  - Artifacts specified in the <dependencies> section will ALWAYS be included as a dependency of the child module(s).
  - Artifacts specified in the <dependencyManagement> section, will only be included in the child module if they were also specified in the <dependencies> section of the child module itself. Why is it good you ask? Because you specify the version and/or scope in the parent, and you can leave them out when specifying the dependencies in the child POM. This can help you use unified versions for dependencies for child modules, without specifying the version in each child module.
+
+## Goal vs phase
+- Giả sử muốn 1 plugin A (được thêm vào) sẽ được chạy ở pharse `test-compile` 
+```xml
+                <plugin>
+                    <groupId>io.github.evis</groupId>
+                    <artifactId>scalafix-maven-plugin</artifactId>
+                    <version>0.1.6_0.9.29</version>
+                    <executions>
+                        <execution>
+                            <id>scala-check-style</id>
+                            <goals>
+                                <goal>scalafix</goal>
+                            </goals>
+                            <phase>process-test-classes</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+```
+- Trong đó `id` có thể tự đặt, và phải là unique, nếu ko đặt khi run maven, nó sẽ tự sinh tên là `default-abcxyz`
+- Nếu không khai báo `goal` thì maven sẽ tự hiểu là lấy `goal` default, (https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#built-in-lifecycle-bindings)
+Trường hợp plugin không có `goal` default mà maven hiểu, thì plugin sẽ ko chạy gì.
+- Ví dụ với plugin scalafix trên, thì goal là `scalafix` (goal này là đặc biệt của plugin này)
+- Khi maven chạy tới phase `process-test-classes` thì sẽ execute kèm plugin này. 
+- Danh sách [`phase`](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#lifecycle-reference)
