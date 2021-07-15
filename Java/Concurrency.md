@@ -254,3 +254,7 @@ and exiting a synchronized block
  Ví dụ với `ReentrantLock`, khi init có thể truyền thêm parameter `true` để fair 
  `ReentrantLock lock = new ReentrantLock(true);` 
  
+## Blocking Threads is Expensive
+(update 30/06/2021)
+- Entering a synchronized block is not that expensive - if the thread is allowed access. But if the thread is blocked because another thread is already executing inside the synchronized block - the blocking of the thread is expensive.
+![Blocking Threads is Expensive](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/BlockingThreadsisExpensive.png)
