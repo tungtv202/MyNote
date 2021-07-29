@@ -174,3 +174,19 @@ docker run --name file-server -p 8082:8080 -v /home/ubuntu/torrents:/torrents -w
 docker run -d -v /home/ubuntu/torrents:/downloads -p 9998:8080 --name torrent linuxserver/qbittorrent
 # account: admin/adminadmin
 ```
+
+### Set icon desktop for anyapp
+- `cd /usr/share/applications`
+- `sudo gedit outline.desktop`
+```
+[Desktop Entry]
+Name=Outline
+Comment=Outline VPN
+Exec="/home/tungtv/Downloads/opt/Outline-Client.AppImage" %U
+Terminal=false
+Type=Application
+Icon=/home/tungtv/Pictures/icon/outline.png
+StartupWMClass=Outline
+Categories=Utility;
+```
+- sudo updatedb
