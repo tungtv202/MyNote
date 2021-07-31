@@ -205,5 +205,13 @@ docker service update --limit-cpu="0.5"  --limit-memory=150MB testservice
 
 # Xóa dịch vụ testservice
 docker service rm servicename
+
+# Xóa nhiều docker image cùng lúc, dựa theo pattern 
+
+docker rmi $(docker image ls | grep none)
+
 ```
+
+
+
 
