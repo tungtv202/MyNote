@@ -13,7 +13,7 @@ alias dcu="docker-compose up"
 alias mvnfire="mvn clean install -Dmaven.javadoc.skip=true -DskipTests"
 
 # Git
-alias gitupdate="git pull origin HEAD && git submodule update --remote"
+alias gitupdate="git pull origin HEAD && git submodule update"
 alias gitreset="git reset --hard && git clean -fd && git submodule update --init && git submodule foreach git reset --hard"
 alias gitrsmd="git submodule update --init && git submodule foreach git reset --hard"
 alias gitlog="git log --graph --oneline --all"
