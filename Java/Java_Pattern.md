@@ -39,6 +39,9 @@ category:
 
 ## Adapter Pattern
 
+- Decrease the dependency between abstraction vs implementation
+- Decrease the child class
+
 ### Code Example
 
 ```java
