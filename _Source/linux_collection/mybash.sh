@@ -3,7 +3,7 @@ JAVA_HOME=/usr/local/jdk-11.0.2
 #JAVA_HOME=/usr/local/jdk1.8.0_231
 PATH=$PATH:$JAVA_HOME/bin
 # For mouse - scroll wheel
-alias ms="bash /home/tungtv/mousewheel.sh"
+alias ms="bash /home/tungtv/workplace/MyNote/_Source/linux_collection/mousewheel.sh"
 
 # Docker
 alias dcd="docker-compose down"
