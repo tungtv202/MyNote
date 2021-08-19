@@ -258,3 +258,14 @@ and exiting a synchronized block
 (update 30/06/2021)
 - Entering a synchronized block is not that expensive - if the thread is allowed access. But if the thread is blocked because another thread is already executing inside the synchronized block - the blocking of the thread is expensive.
 ![Blocking Threads is Expensive](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/BlockingThreadsisExpensive.png)
+
+## Threads Evaluation 
+(update 18/08/2021)
+
+Number of theards <= (Number of cores) / [1 -  Blocking Factor (BF)]
+- Blocking Factor is the fraction of time a thread is blocked on IO operations
+- If your tasks are computation intensive, BF is 0 and # of Thread <= # of Cores
+- If your tasks are IO intensive, and if BF is 0.9, # of Thread <= 10 * # of Cores
+- If your tasks are IO intensive, and if BF is 0.5, # of Thread <= 2 * # of Cores
+- Normaly the maximum number of requests that you can handle concurrently <=10k (2k, 4k, 5k)
+

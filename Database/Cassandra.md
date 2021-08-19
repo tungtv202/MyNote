@@ -601,3 +601,7 @@ request_timeout = 60
 
 
 Ref: https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/cassandra-developers.zip
+
+
+## Difference between partition key, composite key and clustering key?
+

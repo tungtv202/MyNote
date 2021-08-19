@@ -367,3 +367,13 @@ public static boolean isPrivateIP(HttpServletRequest request) {
         return request.getRemoteAddr();
     }
 ```
+
+## Pro tip
+- The statement return null; makes the lambda into a `Callable` instead of a `Runnable`, so that you don’t have to catch checked exceptions 
+
+```java
+exec.submit(() -> {
+    process(something);
+    return null;
+});
+```
