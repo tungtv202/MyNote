@@ -11,8 +11,10 @@ category:
 ---
 
 # Reactive - Reactor Note
-## Hot vs Cold
-- Sử dụng `.share()` để chuyển publisher cold sang hot, khi đó các pipeline evaluate sẽ không bị trigger chạy lại.  ` but only the elements that are emitted after these new subscriptions`    
+
+## Hot vs. Cold
+
+- Can using `.share()` for switching cold publisher to hot publisher. Then pipeline-evaluates will not retrigger. But only the elements that are emitted after these new subscriptions`.
 
 ```java
 Flux<Long> coldTicks = Flux.interval(Duration.ofSeconds(1));
@@ -40,29 +42,29 @@ clock1 6s
 ```
 
 ## How to debug better
-- `Hooks.onOperatorDebug();` - chỉ nên sử dụng trong môi trường `dev env` , vì tốn tài nguyên
+- `Hooks.onOperatorDebug();` - Should be using in `dev env`? (spent more resouce?)
 - `checkpoint`  
 
 ```java
 private static void checkpoint() {
-		int seconds = LocalTime.now().getSecond();
-		Mono<Integer> source;
-		if (seconds % 2 == 0) {
-			source = Flux.range(1, 10)
-			             .elementAt(5)
-			             .checkpoint("source range(1,10)");
-		}
-		else if (seconds % 3 == 0) {
-			source = Flux.range(0, 4)
-			             .elementAt(5)
-			             .checkpoint("source range(0,4)");
-		}
-		else {
-			source = Flux.just(1, 2, 3, 4)
-			             .elementAt(5)
-			             .checkpoint("source just(1,2,3,4)");
-		}
-		source.block(); //line 186
+        int seconds = LocalTime.now().getSecond();
+        Mono<Integer> source;
+        if (seconds % 2 == 0) {
+            source = Flux.range(1, 10)
+                         .elementAt(5)
+                         .checkpoint("source range(1,10)");
+        }
+        else if (seconds % 3 == 0) {
+            source = Flux.range(0, 4)
+                         .elementAt(5)
+                         .checkpoint("source range(0,4)");
+        }
+        else {
+            source = Flux.just(1, 2, 3, 4)
+                         .elementAt(5)
+                         .checkpoint("source just(1,2,3,4)");
+        }
+        source.block(); //line 186
 ```
 
 - `ReactorDebugAgent.init();`
@@ -136,6 +138,7 @@ public class SimpleApplication {
 - https://youtu.be/5tlZddM5Jo0
 
 ## Reactive Dos and DONTs
+
 - https://youtu.be/0rnMIueRKNU
 1. Dont 
 - ![Dont1](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/reactor/note/dont1.JPG)    
@@ -153,6 +156,7 @@ public class SimpleApplication {
         .transform(flux -> addLogging(flux))
         .subscribe();
 ```
+
 2. Dont
 - side effect are not welcomed
 - ![Dont2](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/reactor/note/dont2.JPG)
@@ -160,7 +164,7 @@ public class SimpleApplication {
 
 - use it for heavy computations
 - block non-blocking threads
-- dont use ThreadLocals  -> dùng `Context`          
+- don't use ThreadLocals  -> dùng `Context`          
 
 ```java
       Mono.deferContextual(ctx -> {
@@ -170,8 +174,7 @@ public class SimpleApplication {
                 .subscribe();
 ``` 
 
-- should not  care about thread (reactor care)
-
+- should not  care about the thread (reactor care)
 
 4. Do - check various operators
 - `flatMap` - transform every item `concurrently` into a sub-stream, and join the current and the sub-stream
@@ -190,20 +193,18 @@ public class SimpleApplication {
 - read about Hooks.onOperatorDebug()
 - use reactor-tools `ReactorDebugAgent`  
 
-
 ## Solution for blocking
 - ![solutionForBlocking1](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/reactor/note/solutionForBlocking1.JPG)  
 - ![solutionForBlocking2](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/reactor/note/solutionForBlocking2.JPG)
 - ![solutionForBlocking3](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/reactor/note/solutionForBlocking3.JPG)
 
-
 ### Terminology
 - Imposter Reactive Method
     - a method returning reactive types, but is implemented synchronously
-    - e.g. performing significant work before subscribing
+    - e.g., performing significant work before subscribing
 - Blocking Encapsulation
     - hiding knowledge of blocking from the caller
-    - e.g. blocking on the proper Scheduler without requiring the caller to do so   
+    - e.g., blocking on the proper Scheduler without requiring the caller to do so   
 
 https://youtu.be/xCu73WVg8Ps
 
@@ -214,7 +215,7 @@ https://youtu.be/xCu73WVg8Ps
 - pick the best threading model for each app
 - isolate blocking to separate service if/when possible
 - otherwise, isolate blocking to separate thread pool
-- avoid doing significant work before subscribe
+- avoid doing significant work before subscribing
 - encapsulate blocking at the lowest level possible
 - use `BlockHound` during testing
 
@@ -223,18 +224,18 @@ https://youtu.be/xCu73WVg8Ps
 - https://github.com/rstoyanchev/reactive-for-webmvc
 
 ### Best Practices
-- dont mix blocking and non-blocking APIs
+- don't mix blocking and non-blocking APIs
 - vertical non-blocking slices
-- dont put non-blocking code behind synchronous APIs
+- don't put non-blocking code behind synchronous APIs
 - compose single, deferred, request handling chain
-- dont use `block()`, `subscribe()` and the like
+- don't use `block()`, `subscribe()` and the like
 - let spring MVC handle it
 
 ## Servlet or Reactive Stacks
 - https://youtu.be/Dp_aJh-akkU
 - https://github.com/rstoyanchev/demo-reactive-spring
-- có thể có hàng trăm thread, hàng ngàn, hàng trăm ngàn, nhưng cũng sẽ tới 1 con số giới hạn...
-với reactive model thì sẽ rất khác, với 1 số ít đã fix sẵn number of threads 
+- We can have a hundred threads, thousand threads, but finally, it is limited. 
+- With the reactive module, we fixed the number of threads.
 - reactive paradigm is not necessarily for every application 
 
 - Reason for WebFlux
@@ -246,5 +247,4 @@ với reactive model thì sẽ rất khác, với 1 số ít đã fix sẵn numb
     - Immutability
 - ![Spring WebFlux flow](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/reactor/note/webFluxFlow.JPG)    
 
-- ![Spring MVC flow](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/reactor/note/mvcFlow.JPG)
-
+- ![Spring MVC flow](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/reactor/note/mvcFlow.JPG) 
