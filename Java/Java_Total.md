@@ -12,11 +12,13 @@ category:
 
 ## Collection Interface 
 ![CollectionInterface](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/CollectionInterface.PNG)
+
 ## SerialVersionUID 
-- Là giá trị dùng để định nghĩa thứ tự data của object khi serialize thành byte stream, chúng ta chỉ deserialize object chỉ khi SerialVersionUID của class đúng với SerialVersionUID của instance được lưu trữ.
-- Không định nghĩa SerialVersionUID thì sao?
-    - Cơ chế của Serializable sẽ tự động tạo SerialVersionUID trong quá trình runtime dựa vào các thuộc tính của class, nếu chúng ta không định nghĩa SerialVersionUID và lưu trữ object. Sau đó nếu chúng ta có một vài thay đổi của class và cơ chế của Serializable sẽ tạo ra một SerialVersionUID khác với SerialVersionUID  của instance đang được lưu trữ, chúng ta sẽ gặp lỗi InvalidClassException khi deserialize object (xem thêm về exception tại đây). Do đó phải luôn luôn nhớ định nghĩa SerialVersionUID cho class khi implement Serializable.
-    - Cài đặt warning mặc định của eclipse sẽ cảnh báo “The Serializable class User does not declare a static final SerialVersionUID field of type long” khi chúng ta không định nghĩa SerialVersionUID và suggest chúng ta tạo SerialVersionUID. Thực chất SerialVersionUID được tạo ra bởi serialver tool nằm trong thư mục bin cài đặt Java
+- It will help define the order data of objects when serializing to bytes stream. We can only deserialize objects when SerialVersionUID of a class is equal to `SerialVersionUID` of instance that storage
+
+- What happens if we don't define `SerialVersionUID`?
+    -   Mechanism of serializable will auto-creates the `SerialVersionUID` when runtime, that based on properties of this class. Suppose we did not define it and storage object. Then we modify some properties (add/remove...). We will get the `InvalidClassException` when trying to deserialize the object. 
+
 ## Double Brace
 - initialization syntax `({{ ... }}) `
 - potentially creating a memory leak    
@@ -52,15 +54,18 @@ https://stackoverflow.com/questions/1958636/what-is-double-brace-initialization-
     }
 ```
 
-- Lưu ý: `initialOffset` phải là số có thật trong kafka, chứ không phải logic set initialOffset 1 số bất kỳ bé hơn 1 offset nào đó mà mình mong muốn.
+- WARNING: `initialOffset` is the absolute offset that exits in Kafka. We will get an exception when try to set `initialOffset` as a random number, that smaller some offset, that we want 
 
 ## @Lazy 
+
 // TODO
+
 ## HashMap 
 is not limited. That's the maximum number of buckets. Each bucket uses a form of linked list which has no limitation except memory. So in theory a HashMap can hold an unlimited number of elements. In practice you won't even get to 2^30 because you will have run out of memory long before that.
 
 ## MappedSuperclass
-Không thể sử dụng @MappedSuperclass và @Entity cùng lúc
+
+Can not using both `@MappedSuperclass` and `@Entity` in same time.
 
 ## CommandLineRunner
 
@@ -154,6 +159,7 @@ public class CompressHelper {
 ```
 
 ## Spring valid enum
+
 ```java
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
@@ -181,14 +187,17 @@ public class DoTypeValidator implements ConstraintValidator<DoTypeValid, DoSomet
     }
 }
 ```
-Sử dụng
+
+Using: 
+
 ```java
     @DoTypeValid(anyOf = {DoSomethingType.re_sync})
     @NotNull
     private DoSomethingType doType;
 ```
 
-## MapConverter - cho hibernate, java hashmap, db string
+## MapConverter - for hibernate, java hashmap, db string
+
 ```java
 @Converter
 public class MapConverter implements AttributeConverter<Map<String, String>, String> {
@@ -204,12 +213,16 @@ public class MapConverter implements AttributeConverter<Map<String, String>, Str
     }
 }
 ```
-Sử dụng tại class Entity
+
+Using in Entity class
+
 ```java
     @Convert(converter = MapConverter.class)
     private Map<String, String> metaData;
 ```
+
 ## Valid - String in List
+
 ```java
 @Documented
 @Constraint(validatedBy = StringInListValidator.class)
@@ -228,6 +241,7 @@ public @interface StringInList {
     Class<? extends Payload>[] payload() default {};
 }
 ```
+
 ```java
 public class StringInListValidator implements
         ConstraintValidator<StringInList, String> {
@@ -264,14 +278,16 @@ public class StringInListValidator implements
     }
 }
 ```
-Sử dụng
+
+Using
+
 ```java
     @StringInList(array = {"product", "order"}, allowBlank = true)
     private String errorType;
 ```
 
-
 ## Optional.stream()
+
 1. Bad
 ```java
 public BigDecimal getOrderPrice(Long orderId) {
@@ -283,6 +299,7 @@ public BigDecimal getOrderPrice(Long orderId) {
     return price;
 }
 ```
+
 2. Bad
 ```java
 public BigDecimal getOrderPrice(Long orderId) {
@@ -292,8 +309,10 @@ public BigDecimal getOrderPrice(Long orderId) {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 }
 ```
+
 and ...
 ```java
+
 public BigDecimal getOrderPrice(Long orderId) {
     if (orderId == null) {
         throw new IllegalArgumentException("Order ID cannot be null");
@@ -304,6 +323,7 @@ public BigDecimal getOrderPrice(Long orderId) {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 }
 ```
+
 3. bad
 ```java
 public BigDecimal getOrderPrice(Long orderId) {
@@ -317,7 +337,9 @@ public BigDecimal getOrderPrice(Long orderId) {
             }).orElse(BigDecimal.ZERO);                            
 }
 ```
+
 4. perfect
+
 ```java
 public BigDecimal getOrderPrice(Long orderId) {
     return Optional.ofNullable(orderId)
@@ -330,6 +352,7 @@ public BigDecimal getOrderPrice(Long orderId) {
 ```
 
 ## check isPrivateIP
+
 ```java
 public static boolean isPrivateIP(HttpServletRequest request) {
         return isPrivateIP(getRemoteIP(request));
