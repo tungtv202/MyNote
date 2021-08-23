@@ -7,7 +7,6 @@ category:
     - other
 ---
 
-
 Mới đây Google đã công bố 2 lỗ hổng bảo mật cực kỳ nghiêm trọng của Intel đó là Meltdown và Spectre.
 Cả 2 đều lợi dụng lỗ hổng bảo mật cơ bản trong các chip nói trên, về mặt lý thuyết mà nói thì chúng có thể được dùng để "đọc những thông tin nhạy cảm trong bộ nhớ của một hệ thống, như mật khẩu, khóa để mở nội dung được mã hóa hay bất kì thông tin nhạy cảm nào".
 Hiện nay lỗ hổng này đều đã có trong bản vá lỗi của Microsoft, nhưng điều này sẽ làm chậm tới 30% tốc độ của chíp xử lý. Và các bản vá lỗi này đều chỉ là vá lỗi dựa trên OS, chứ không phải vá lỗi ở tầng thiết bị phần cứng của chíp xử lý.
