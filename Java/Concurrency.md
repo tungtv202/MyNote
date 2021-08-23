@@ -14,18 +14,21 @@ category:
 
 
 ## ThreadLocal
-- Tư tưởng là mỗi thread, sẽ có 1 "vùng nhớ" riêng để chứa dữ liệu, khi các method ở các class khác nhau, được chạy trong cùng 1 thread, sẽ lấy được giá trị ở "vùng nhớ" đó.
-=> Ví dụ có thể áp dụng trong case muốn tạo ra 1 Context, thay vì phải truyền các giá trị thông qua Parameter.
-- Thread nào lấy được dữ liệu của thread đó, nên có thể áp dụng trong việc thread safe
-- Cần cẩn thận khi sử dụng kèm vs ThreadPool, vì có thể sẽ xảy ra tình huống, 1 task mới, được chạy bởi 1 Thread trong "thread pool", thì nó sẽ lấy được dữ liệu cũ, do một task khác
-chạy trước đó, bởi chính Thread đấy.
-- [http://drunkkid2000.blogspot.com](http://drunkkid2000.blogspot.com/2013/07/thread-local_2564.html)
-- [jenkov](http://tutorials.jenkov.com/java-concurrency/threadlocal.html)
+- Mechanism is each thread has a "memory zone/separate". All methods of all classes/instances, if running in the same thread can access that "memory zone".
+
+- Example case: create the context for the application. (ApplicationContext.getCurrentSession). It is very flexible. Replace for a way to get value via a parameter of the method (that has a bit lengthy. IMO).
+
+- Improve thread-safe
+- WARNING: Be careful when using it with ThreadPool. A situation may happen Task A and Task B, both running in the same thread (support by ThreadPool). Then TaskA can get the value that makes by TaskB. 
+
+- Some reference: 
+    - [http://drunkkid2000.blogspot.com](http://drunkkid2000.blogspot.com/2013/07/thread-local_2564.html)
+    - [jenkov](http://tutorials.jenkov.com/java-concurrency/threadlocal.html)
 
 ### Code example
-- InheritableThreadLocal: 
-    - sử dụng thằng này để các ChildThread được tạo bởi ParentThread, có thể sử dụng "bản sao copy" từ ParentThread. (Tức là khi ChildThread sửa giá trị, thì giá trị ở ParentThread không ảnh hưởng gì)
-    - các ChildThread không share chung vùng nhớ với nhau.
+- `InheritableThreadLocal`: 
+    -   Using it when you want to ChildThread (created by ParentThread) can using "clone copy" from ParentThread. (When ChildThread modify the value - NO modified the ParentThread)
+    -   The different ChildThread does not share the same "memory zone".
 
 ```java
 public static void main(String[] args) {
@@ -90,12 +93,13 @@ public static void main(String[] args) {
 ```
 
 ## Volatile 
-- khai báo variable sẽ được đọc ghi trực tiếp từ main memory. (nếu không khai báo bình thường có thể nó sẽ đọc ghi từ CPU Cache để tăng performance. Dẫn tới vấn đề các thread đọc ghi giá trị không phải là mới nhất).
+- Volatile helps the variable will get read/write from the main memory. (Default, maybe it can read/write from CPU Cache, that designed for performance, that is a reason for threads read/write not a lastest value)
 
 ![Volatile222](https://images.viblo.asia/59d1214d-4438-4f46-878f-5db8af35fa1c.png)
+
 ## ThreadSafe
 ### XSync
-- Sử dụng thư viện xsync để hỗ trợ trong việc threadsafe, các thread sẽ phải đợi nhau, để cùng vào sử dụng 1 resource
+- This is a library that supports threadsafe, threads will waiting for each other for using the same resource. (It will helpful more `synchronization` tag)
 
 ```xml
         <dependency>
@@ -161,7 +165,8 @@ public class LeakyBucketModel {
 ```
 
 ## CompletableFuture
-### Example api tính fee GHN
+
+### Example: API for calculating the shipping-delivery fee
 
 ```java
  private GHNV2CalFeeDetailResponse calculator(int storeId, GHNV2CalculatorFeeRequest request) {
@@ -215,11 +220,11 @@ public class LeakyBucketModel {
 ```
 
 ## Striped Locks 
-Lấy ý tưởng từ việc nếu cứ 1 instance lại cần 1 Lock, thì 1000 instance cần 1000 Lock -> như vậy thì quá tốn memory.    
-Striped Lock của Guava là tư tưởng quản lý nhóm N element bởi 1 Lock. 
-Ví dụ instance từ 1-100 dùng 1 Lock, 101-200 dùng 1 Lock.   
-Vậy thì với 1000 instance dùng hết 10 Lock. 
-Việc sử dụng số Lock sẽ cân bằng được giữa performance và memory 
+
+Get an idea from each instance we need one Lock, so 1000 instances, you need 1000 Lock -> This is spent more memory.
+
+The mechanism of StripedLock (Guava) is managed by the group.  One Lock managed N element => Example: instances 1-100 using 1 Lock, instances 101-200 using 1 Lock => So, 1000 instances we just spent 10 Lock. This is the balancing between performance and memory.
+
 ```java
 private Striped<Lock> stripedLocks = Striped.lock(10);
 public void update(Bag bag){
@@ -231,28 +236,35 @@ public void update(Bag bag){
     lock.unlock();
 }
 ```
+
 - Many locks = More memory, good throughput
-- Less locks = Better memory, more contention
+- Fewer locks = Better memory, more contention
 - Striped locks = Middle ground 
 - Imp: Choose obj to retrieve the lock
-- Need to have hascode & equals 
+- Need to have hashcode & equals 
 - Striped versions of Lock, Semaphore and ReadWriteLock
 - Guava also has corresponding weak versions for easy GC
 
 ## ReadWriteLock
-- Lớp java.util.concurrent.locks.ReentrantLock là một implementation của Lock. Lớp này có một hàm khởi tạo: ReentrantLock(boolean fair). Trong đó, nếu fair bằng true thì các thread sẽ truy cập tài nguyên theo thứ tự FIFO: thread nào acquire khóa trước thì sẽ được truy cập tài nguyên trước (nếu khóa đã sẵn sàng).
-- Khác với Lock, ReadWriteLock duy trì một cặp khóa: một khóa chỉ dành cho thao tác đọc và một khóa chỉ dành cho thao tác ghi. Khóa đọc có thể đưọc acquire đồng thời bởi nhiều thread miễn là các thread này đang không acquire khóa ghi. Nhưng khóa ghi thì tại một thời điểm chỉ có duy nhất một thread được acquire mà thôi.
+
+- `java.util.concurrent.locks.ReentrantLock` is the one implementation of Lock interface. This class has a structural method called `ReentrantLock(boolean fair)`. While if `fair` is true, threads will access with FIFO sequence.
+- `ReadWriteLock` using two keys for the lock. One for `read` and one for `write`. Read key can acquire by many thread in the same time, while Write key can acquire by only one thread at the same time.
 
 ## Lock vs synchronized 
+
 - Synchronized blocks must be contained within a single method. 
 lock.lock() and lock.unlock() can be called from different method 
 - lock.lock() and lock.unlock() provides the same visibility and happens before guarantees as entering 
 and exiting a synchronized block
-- Synchronized blocks are alway reentrant, Lock could decide not to be 
+- Synchronized blocks are always reentrant, Lock could decide not to be 
 - Synchronized blocks do not guarantee fairness. Lock can 
-(fairness là hiện tượng mà có thể 1 Thread ở trạng thái đợi chờ mãi mãi, mà không thể access được vào object được lock. Lý do vì các Thread khác luôn có ưu tiên cao hơn. (không đảm bảo được FIFO))
- Ví dụ với `ReentrantLock`, khi init có thể truyền thêm parameter `true` để fair 
- `ReentrantLock lock = new ReentrantLock(true);` 
+(fairness is the happened when one thread keeps a waiting status forever, it can not access the object, that is locked.
+The reason is other threads always have higher priority. Not guarantee the FIFO)
+- Example: `ReentrantLock`, when initial, we can set `fair` parameter is true 
+
+```java
+ ReentrantLock lock = new ReentrantLock(true);
+```
  
 ## Blocking Threads is Expensive
 (update 30/06/2021)
@@ -262,10 +274,10 @@ and exiting a synchronized block
 ## Threads Evaluation 
 (update 18/08/2021)
 
-Number of theards <= (Number of cores) / [1 -  Blocking Factor (BF)]
+Number of threads <= (Number of cores) / [1 -  Blocking Factor (BF)]
 - Blocking Factor is the fraction of time a thread is blocked on IO operations
-- If your tasks are computation intensive, BF is 0 and # of Thread <= # of Cores
+- If your tasks are computation-intensive, BF is 0 and # of Thread <= # of Cores
 - If your tasks are IO intensive, and if BF is 0.9, # of Thread <= 10 * # of Cores
 - If your tasks are IO intensive, and if BF is 0.5, # of Thread <= 2 * # of Cores
-- Normaly the maximum number of requests that you can handle concurrently <=10k (2k, 4k, 5k)
+- Normally the maximum number of requests that you can handle concurrently <=10k (2k, 4k, 5k)
 
