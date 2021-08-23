@@ -191,16 +191,22 @@ ipPFZDboIzOCohRl4/RPe9I/IBQVn3esK+8mnGQO3yDKIPcatbnbl41SxC2oMUKPpt7WcG+toqk=
         return downloadLink;
     }
 ```
+
 Example 1 download link có token:
+
 ```
 https://xinchaovietna222me.s3.ap-southeast-1.amazonaws.com/188?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20180710T065913Z&X-Amz-SignedHeaders=host&X-Amz-Expires=299&X-Amz-Credential=AKIAIP7Y2FP3U3AJWLPQ%2F20180710%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=fc46c9d6cef32a94ee120dac5ab6a33c08e245256b979be977232b76c32e6926
 ```
 
 ## 4. Sử dụng SSE-C để encrypt/decrypt object 
+
 - Với cách này, chỉ có client chứa "key" mới có thể download/retrivew metadata của object được. Cho dù tài khoản root của AWS có full quyền, cũng không thể can thiệp, nếu không có key.
 ref: https://docs.aws.amazon.com/AmazonS3/latest/dev/sse-c-using-java-sdk.html
+
 ### 4.1 Code example
+
 ```java
+
 package tung.demo.ssec_s3;
 
 import com.amazonaws.AmazonServiceException;
@@ -317,3 +323,5 @@ public class ServerSideEncryptionUsingClientSideEncryptionKey {
     }
 }
 ```
+
+.
