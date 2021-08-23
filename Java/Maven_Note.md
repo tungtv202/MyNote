@@ -1,5 +1,5 @@
 ---
-title:  Maven build lib-common for other project  - DEMO
+title:  Maven Note
 date: 2021-02-08 18:00:26
 tags:
     - java
@@ -10,22 +10,27 @@ category:
 ---
 
 
-# Maven build lib-common for other project  - DEMO
-Các bước để build lib common, để import vào dự án khác, sử dụng maven
+# Maven Note
 
-## Repo: lib-common
-- Chuẩn bị source code
-### 1. file `pom.xml` 
-- để ý tới 3 thông số sau:
+## Maven build lib-common for another project - Tutorial
+
+This is a tutorial for build a common library that can import for another project. 
+
+### Repo: lib-common side
+
+#### 1. `pom.xml`file
+- Should attention to three parameters
+
 ```xml
-   <groupId>vn.sapo.web</groupId>
-    <artifactId>app-common</artifactId>
-    <version>0.0.5</version>
+<groupId>me.tungexplorer</groupId>
+<artifactId>app-common</artifactId>
+<version>0.0.5</version>
 ```
 
-- `version` có thể khai báo kiểu `<version>${buildNumber.version}</version>` để truyền vào dynamic lúc run command `mvn clean source:jar deploy --settings $SETTINGS -DbuildNumber.version=$version`
-- lưu ý với `version` có giá trị ở đuôi là SNAPSHOT, thì sẽ được đẩy vào maven repo snapshot (nếu khai báo đủ), còn bình thường sẽ đẩy vào repo release.
-- Khai báo 1 vài properties, nếu không có khai báo này, có thể mọi thứ vẫn oke, cho tới khi dự án import lib này vào, khi gọi các class từ lib-common báo lỗi là không tìm thấy.
+- `version`: We can using the format `<version>${buildNumber.version}</version>`, that will help we set version as dynamic when run command `mvn clean source:jar deploy --settings $SETTINGS -DbuildNumber.version=$version`
+- NOTICE: `version` has suffix is "SNAPSHOT" will push to snapshot maven repo (if define). Otherwise, it will push to release-repo.
+- Declare some properties. If not, it may do not happen anything, but when another project import it, it will throw not found exception 
+
 ```xml
     <properties>
         <java.version>11</java.version>
@@ -35,7 +40,7 @@ Các bước để build lib common, để import vào dự án khác, sử dụ
         <start-class>tung.explorer.appcommon.AppCommonApplication</start-class>
     </properties>
 ```
-- Khai báo `maven repo` (nơi sẽ chứa lib code của mình)     
+- Declare `maven repo` (where to store this source code - that has been compiled to `jar` file)       
 
 ```xml
     <distributionManagement>
@@ -49,11 +54,13 @@ Các bước để build lib common, để import vào dự án khác, sử dụ
         </snapshotRepository>
     </distributionManagement>
 ```
-- Có thể không cần khai báo `snapshotRepository` cũng được. 
-- Giá trị trong `id` sẽ phải được định danh ở trong file `settings.xml` 
-- Có thể sử dụng dịch vụ cung cấp maven repo `on cloud` : https://packagecloud.io
 
-- Có thể có hoặc không phải báo thêm extension để hỗ trợ việc upload code lên maven repo. Ví dụ như khi dùng `packagecloud` thì phải khai báo thêm extension này, nhưng khi dùng `nexus` thì không cần.
+-`snapshotRepository` is optional
+- `id` MUST BE define in `settings.xml` file (.m2 directory)
+- https://packagecloud.io : cloud repo service
+
+- `extensions` require or not with a different repository. Example: `packagecloud` is required, `nexus` is not 
+
 ```xml
 <build>
     <extensions>
@@ -66,7 +73,7 @@ Các bước để build lib common, để import vào dự án khác, sử dụ
 </build>
 ```
 
-- Mẫu code `build`  
+- Example `build`  
 ```xml
     <build>
         <extensions>
@@ -126,8 +133,8 @@ Các bước để build lib common, để import vào dự án khác, sử dụ
     </build>
 ```
 
-### 2. file `settings.xml`
-- thường file này được đặt mặc định ở thư mục `./m2` , tuy nhiên có thể đặt ở bất kỳ đâu, nhưng lúc maven deploy, thì cần khai báo `path` tại `--settings`
+#### 2. file `settings.xml`
+- Default storage in `./m2` directory, We can using absolute path with `--settings` parameter
 - Example:  
 ```xml
 <servers>
@@ -145,24 +152,26 @@ Các bước để build lib common, để import vào dự án khác, sử dụ
     </server>
 </servers>
 ```
-- Lưu ý properties `id` sẽ được sử dụng ở trong file `pom.xml` 
+- `id` will be using in `pom.xml` 
 
-### 3. Command  
+#### 3. Command  
+
 ```bash
 mvn clean source:jar deploy --settings $SETTINGS -DbuildNumber.version=$version -Dmaven.install.skip=true
 ```
 
-## Repo lib-common-dependencies
-- sau khi có `lib-common`, để import vào repo khác, chỉ cần khai báo dependency như bình thường
+### Repo lib-common-dependencies
+- import own's dependency like as any other dependencies
 ```xml
         <dependency>
             <groupId>me.tungexplorer</groupId>
             <artifactId>app-common</artifactId>
             <version>0.0.5</version>
+      
         </dependency>
 ```
-- nhưng có 1 nhược điểm là các repo import để chạy được, thì phải khai báo lại thêm các `dependency` - cái đã được khai báo ở `lib-common` rồi. Có lẽ để fix cái này có thể dùng cách là lúc export ra file .jar thì `lib-common` ko chỉ export mỗi source code của nó, mà còn export nhúng kèm theo tất cả các thư viện mà nó sử dụng vào nữa, đi kèm. (như vậy file .jar sẽ có dung lượng cao hơn nhiều) 
-- Cách thứ 2 là sử dụng `parent`. Tạo ra 1 `lib-common-dependencies`
+
+- Cons: we need import all `dependency` - that used in `lib-common`. Solution: when combine to jar file, we should combine all dependencies (more size). Otherway is create a `lib-common-dependencies`
 ```xml
     <parent>
         <groupId>me.tungexplorer</groupId>
@@ -170,14 +179,16 @@ mvn clean source:jar deploy --settings $SETTINGS -DbuildNumber.version=$version 
         <version>0.1.3</version>
     </parent>
 ```
-- `lib-common-dependencies` cũng sẽ được upload lên maven repo như `lib-common`, tuy nhiên khác là chỉ có file `pom.xml` mà ko có source code. Và trong file `pom.xml` đó sẽ có chứa khai báo các dependencies.
-- file `pom.xml` sẽ có khác ở 1 điểm
+- `lib-common-dependencies` will be upload to maven repo (like as `lib-common`), But it will only file `pom.xml` (without source code). In `pom.xml` file has define all dependencies 
+
+- NOTICE: 
+
 ```xml
    <packaging>pom</packaging>
 ```
 
-## How to import?
-- file `pom.xml`
+### How to import?
+- `pom.xml`
 ```xml
     <repositories>
         <repository>
@@ -193,9 +204,9 @@ mvn clean source:jar deploy --settings $SETTINGS -DbuildNumber.version=$version 
     </repositories>
 ```
 
-# Maven Note
-## Sự khác biệt giữa `dependencyManagement` và `dependencies` 
-Ví dụ pom parent 
+## What is different between `dependencyManagement` and `dependencies` 
+
+- Example: pom parent
 ```xml
 <dependencyManagement>
   <dependencies>
@@ -207,7 +218,9 @@ Ví dụ pom parent
  </dependencies>
 </dependencyManagement>
 ```
+
 - pom child
+
 ```xml
 <dependencies>
     <dependency>
@@ -216,11 +229,13 @@ Ví dụ pom parent
     </dependency>
  </dependencies>
  ```
- - Artifacts specified in the <dependencies> section will ALWAYS be included as a dependency of the child module(s).
- - Artifacts specified in the <dependencyManagement> section, will only be included in the child module if they were also specified in the <dependencies> section of the child module itself. Why is it good you ask? Because you specify the version and/or scope in the parent, and you can leave them out when specifying the dependencies in the child POM. This can help you use unified versions for dependencies for child modules, without specifying the version in each child module.
 
-## Goal vs phase
-- Giả sử muốn 1 plugin A (được thêm vào) sẽ được chạy ở pharse `test-compile` 
+ - Artifacts specified in the <dependencies> section will ALWAYS be included as a dependency of the child module(s).
+ - Artifacts specified in the <dependencyManagement> section will only be included in the child module if they were also specified in the <dependencies> section of the child module itself. Why is it good, you ask? Because you specify the version and/or scope in the parent, and you can leave them out when specifying the dependencies in the child POM. This can help you use unified versions for dependencies for child modules without specifying the version in each child module.
+
+## Goal vs. phase
+
+- Example: We want to plugin A will run at `test-compile` pharse
 ```xml
                 <plugin>
                     <groupId>io.github.evis</groupId>
@@ -237,9 +252,8 @@ Ví dụ pom parent
                     </executions>
                 </plugin>
 ```
-- Trong đó `id` có thể tự đặt, và phải là unique, nếu ko đặt khi run maven, nó sẽ tự sinh tên là `default-abcxyz`
-- Nếu không khai báo `goal` thì maven sẽ tự hiểu là lấy `goal` default, (https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#built-in-lifecycle-bindings)
-Trường hợp plugin không có `goal` default mà maven hiểu, thì plugin sẽ ko chạy gì.
-- Ví dụ với plugin scalafix trên, thì goal là `scalafix` (goal này là đặc biệt của plugin này)
-- Khi maven chạy tới phase `process-test-classes` thì sẽ execute kèm plugin này. 
-- Danh sách [`phase`](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#lifecycle-reference)
+- `id` is unique. If we don't define it, maven auto-create id has the format: `default-abcxyz`
+- If don't define exactly `goal`, maven will auto using `goal` default (https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#built-in-lifecycle-bindings)
+- If a plugin doesn't have `goal` default, this plugin will not run 
+- Previous example: plugin scalafix has `scalafix` default goal. When maven is running to `process-test-classes` phase, it will execute scalafix plugin.
+- [`phase list`](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#lifecycle-reference)
