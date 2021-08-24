@@ -101,7 +101,6 @@ Add User to sudo Group
 usermod -aG sudo deploy
 ``` 
 
-
 Set Permissions
 
 ```shell
@@ -160,19 +159,6 @@ ls | grep -v '.gz' >temp
 FILE_LOG=$(grep $DATE temp)
 echo $FILE_LOG
 tailf $FILE_LOG
-```
-
-## Install Node js http server
-
-```bash
-docker run --name file-server -p 8082:8080 -v /home/ubuntu/torrents:/torrents -w /torrents -t cannin/nodejs-http-server
-```
-
-### Install qbittorrent
-
-```bash
-docker run -d -v /home/ubuntu/torrents:/downloads -p 9998:8080 --name torrent linuxserver/qbittorrent
-# account: admin/adminadmin
 ```
 
 ### Set icon desktop for anyapp

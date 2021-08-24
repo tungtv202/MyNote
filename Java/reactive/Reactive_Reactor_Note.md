@@ -1,11 +1,13 @@
 ---
 title:  Reactive - Reactor Note
 date: 2021-02-02 22:00:26
+lastupdate: 2021-08-24 10:00:00
 tags:
     - java
     - reactive
     - reactor
     - spring webflux
+    - observable
 category: 
     - java
 ---
@@ -248,3 +250,10 @@ https://youtu.be/xCu73WVg8Ps
 - ![Spring WebFlux flow](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/reactor/note/webFluxFlow.JPG)    
 
 - ![Spring MVC flow](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/reactor/note/mvcFlow.JPG) 
+
+
+## Observable
+Has 3 channel 
+- data channel
+- error channel 
+- complete channel
