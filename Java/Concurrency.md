@@ -96,7 +96,7 @@ public static void main(String[] args) {
 ## Volatile 
 - Volatile helps the variable will get read/write from the main memory. (Default, maybe it can read/write from CPU Cache, that designed for performance, that is a reason for threads read/write not a lastest value)
 
-![Volatile222](https://images.viblo.asia/59d1214d-4438-4f46-878f-5db8af35fa1c.png)
+![Volatile](https://images.viblo.asia/59d1214d-4438-4f46-878f-5db8af35fa1c.png)
 
 ## ThreadSafe
 ### XSync
@@ -283,7 +283,19 @@ Number of threads <= (Number of cores) / [1 -  Blocking Factor (BF)]
 
 ## ForkJoinPool
 
-![ForkJoinPool](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/ForkJoinPool.png)
+```mermaid
+graph TD
+A(Object - java.lang)
+A --> B1(abstract AbstractExecutorService)
+A --> B2(abstract ForkJoinTask)
+B1 --> C1(ForkJoinPool)
+B1 --> C2(ThreadPoolExecutor)
+C2 --> D1(ScheduledThreadPoolExecutor)
+B2 --> E1(abstract CountedCompleter)
+B2 --> E2(abstract RecursiveAction)
+B2 --> E3(abstract RecursiveTask)
+
+```
 
 - `Work Stealing`:
 ```
