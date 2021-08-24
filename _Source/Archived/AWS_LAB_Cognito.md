@@ -1,12 +1,11 @@
 ---
-title: AWS - LAB - Cognitor
+title: AWS - LAB - Cognito
 date: 2020-01-30 18:00:26
 updated: 2020-01-30 18:00:26
 tags:
-    - aws
-    - cognito
+    - archived
 category: 
-    - aws
+    - z.archived
 ---
 
 # Sử dụng AWS Cognitor để identify

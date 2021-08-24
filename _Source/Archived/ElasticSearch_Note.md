@@ -3,9 +3,9 @@ title: Elastic Search - Some Note
 date: 2018-11-20 18:00:26
 updated: 2018-11-20 18:00:26
 tags:
-    - elastic search
+    - archived
 category: 
-    - elastic_search
+    - z.archived
 ---
 
 # Ghi chép về Elastic Search 

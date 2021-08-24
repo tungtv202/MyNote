@@ -1,6 +1,11 @@
 ---
 title: My Bookmarks
 date: 2020-02-19 18:00:26
+updated: 2020-02-19 18:00:26
+tags:
+   - archived
+category:
+   - z.archived
 ---
 
 # BLog/Website

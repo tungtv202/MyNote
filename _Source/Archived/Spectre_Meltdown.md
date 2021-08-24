@@ -1,10 +1,11 @@
 ---
 title: Spectre Meltdown
 date: 2018-02-09 18:00:26
+updated: 2018-02-09 18:00:26
 tags:
-    - spectre meltdown
+    - archived
 category: 
-    - other
+    - z.archived
 ---
 
 Mới đây Google đã công bố 2 lỗ hổng bảo mật cực kỳ nghiêm trọng của Intel đó là Meltdown và Spectre.

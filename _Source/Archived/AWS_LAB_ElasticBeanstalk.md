@@ -1,12 +1,11 @@
 ---
 title: AWS - LAB- Beanstalk
 date: 2020-01-27 18:00:26
+updated: 2020-01-27 18:00:26
 tags:
-    - aws
-    - elastic beanstalk
-    - beanstalk
+    - archived
 category: 
-    - aws
+    - z.archived
 ---
 
 # Elastic Beanstalk - một service để deploy web trên AWS  

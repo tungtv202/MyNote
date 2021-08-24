@@ -3,11 +3,9 @@ title: SQL - Command
 date: 2017-12-03 18:00:26
 updated: 2017-12-03 18:00:26
 tags:
-    - sql
-    - db
-    - script
+    - archived
 category: 
-    - database
+    - z.archived
 ---
 
 ## Command dump db kèm sequence

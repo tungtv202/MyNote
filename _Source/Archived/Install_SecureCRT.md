@@ -1,12 +1,11 @@
 ---
 title: Install Guide - SecureCRT
 date: 2019-12-03 18:00:26
+updated: 2019-12-03 18:00:26
 tags:
-  - secureCRT
-  - ssh tool
-  - install
+  - archived
 category:
-  - install_guide
+  - z.archived
 ---
 
 # Install SecureCRT có thuốc

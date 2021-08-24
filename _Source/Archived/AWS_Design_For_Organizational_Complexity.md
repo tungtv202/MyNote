@@ -1,10 +1,11 @@
 ---
 title: AWS - Design for organizational
 date: 2020-01-25 18:00:26
+updated: 2020-01-25 18:00:26
 tags:
-    - aws
+    - archived
 category: 
-    - aws
+    - z.archived
 ---
 
 ## 1. Multi-Account Strategy

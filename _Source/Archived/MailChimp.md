@@ -1,11 +1,11 @@
 ---
 title: MailChimp
 date: 2019-05-17 18:00:26
+updated: 2019-05-17 18:00:26
 tags:
-    - mail
-    - mailchimp
+    - archived
 category: 
-    - other
+    - z.archived
 ---
 # MailChimp - 1 service cho bài toán email marketing
 ## 1. Giới thiệu

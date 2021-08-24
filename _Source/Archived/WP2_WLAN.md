@@ -1,15 +1,12 @@
 ---
 title: WPA2 on WLAN
 date: 2019-02-18 18:00:26
+updated: 2019-02-18 18:00:26
 tags:
-    - network
-    - security
-    - wlan
-    - wpa
+    - archived
 category: 
-    - other
+    - z.archived
 ---
-
 
 # Hoạt động giao thức bảo mật WPA2 trong WLAN
 

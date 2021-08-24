@@ -1,11 +1,11 @@
 ---
 title: CICD - DroneIO
 date: 2019-05-17 18:00:26
+updated: 2019-05-17 18:00:26
 tags:
-    - cicd
-    - drone io
+    - archived
 category: 
-    - cicd_ops
+    - z.archived
 ---
 
 # Drone IO - tool hỗ trợ việc CICD
