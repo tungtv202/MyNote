@@ -1,6 +1,7 @@
 ---
 title: Java - Logback
 date: 2020-06-09 18:00:26
+updated: 2020-06-09 18:00:26
 tags:
     - log
     - logback

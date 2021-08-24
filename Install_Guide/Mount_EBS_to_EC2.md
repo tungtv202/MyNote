@@ -1,6 +1,7 @@
 ---
 title: Install Guide - Mount an EBS volume to EC2 Linux
 date: 2020-01-25 18:00:26
+updated: 2020-01-25 18:00:26
 tags:
   - EBS
   - install

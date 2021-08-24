@@ -1,6 +1,7 @@
 ---
 title: Functional Pattern
 date: 2021-04-25 18:00:26
+updated: 2021-04-25 18:00:26
 tags:
     - java
     - functional

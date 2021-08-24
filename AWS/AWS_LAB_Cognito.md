@@ -1,6 +1,7 @@
 ---
 title: AWS - LAB - Cognitor
 date: 2020-01-30 18:00:26
+updated: 2020-01-30 18:00:26
 tags:
     - aws
     - cognito

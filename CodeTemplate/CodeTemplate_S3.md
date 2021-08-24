@@ -1,6 +1,7 @@
 ---
 title: Code Template - AWS - S3
 date: 2019-12-27 18:00:26
+updated: 2019-12-27 18:00:26
 tags:
     - code template
     - aws

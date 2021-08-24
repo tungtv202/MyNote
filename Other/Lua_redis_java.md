@@ -1,6 +1,7 @@
 ---
 title: Run lua script on Java
 date: 2018-04-09 18:00:26
+updated: 2018-04-09 18:00:26
 tags:
     - script
     - lua

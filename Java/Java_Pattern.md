@@ -1,6 +1,7 @@
 ---
 title: Java Design Pattern
 date: 2021-08-04 00:05:26
+updated: 2021-08-04 00:05:26
 tags:
     - java
     - pattern

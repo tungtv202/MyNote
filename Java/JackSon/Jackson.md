@@ -1,6 +1,7 @@
 ---
 title: Jackson - Note
 date: 2019-12-21 18:00:26
+updated: 2019-12-21 18:00:26
 tags:
     - serialize
     - java

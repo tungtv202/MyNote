@@ -1,6 +1,7 @@
 ---
 title: AWS - Note Total
 date: 2020-06-18 18:00:26
+updated: 2020-06-18 18:00:26
 tags:
     - aws
     - note total
@@ -8,7 +9,7 @@ category:
     - aws
 ---
 
-# AWS ElastiCache 
+# AWS ElasticCache 
 // Dịch vụ cung cấp Redis, NameCached trên AWS
 
 ## 1.1 Sự khác biệt giữa Memcached với Redis

@@ -1,6 +1,7 @@
 ---
 title:  Maven Note
 date: 2021-02-08 18:00:26
+updated: 2021-02-08 18:00:26
 tags:
     - java
     - maven

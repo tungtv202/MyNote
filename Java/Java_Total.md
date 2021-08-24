@@ -1,6 +1,7 @@
 ---
 title: Java - Note Total
 date: 2020-02-05 18:00:26
+updated: 2020-02-05 18:00:26
 tags:
     - java
     - note
@@ -8,7 +9,6 @@ tags:
 category: 
     - java
 ---
-
 
 ## Collection Interface 
 ![CollectionInterface](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/CollectionInterface.PNG)

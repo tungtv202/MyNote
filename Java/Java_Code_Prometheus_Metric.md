@@ -1,6 +1,7 @@
 ---
 title: Java - Code Application expose Metric for Prometheus
 date: 2020-02-05 18:00:26
+updated: 2020-02-05 18:00:26
 tags:
     - java
     - prometheus

@@ -1,6 +1,7 @@
 ---
 title: AWS - SQS
 date: 2018-09-11 18:00:26
+updated: 2018-09-11 18:00:26
 tags:
     - aws
     - sqs

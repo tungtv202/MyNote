@@ -1,6 +1,7 @@
 ---
 title: AWS - LAB - ECR
 date: 2020-01-25 18:00:26
+updated: 2020-01-25 18:00:26
 tags:
     - aws
     - ecr

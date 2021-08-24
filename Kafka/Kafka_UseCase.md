@@ -1,6 +1,7 @@
 ---
 title: Kafka - Use case 
 date: 2020-01-02 18:00:26
+updated: 2020-01-02 18:00:26
 tags:
     - kafka
     - use case

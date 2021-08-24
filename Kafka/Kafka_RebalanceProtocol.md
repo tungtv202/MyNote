@@ -1,6 +1,7 @@
 ---
 title: Kafka - Rebalance Protocol
 date: 2020-07-13 18:00:26
+updated: 2020-07-13 18:00:26
 tags:
     - kafka
     - rebalance

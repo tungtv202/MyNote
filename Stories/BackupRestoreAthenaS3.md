@@ -1,6 +1,7 @@
 ---
 title: Stories - Query SQL on S3
 date: 2020-04-20 18:00:26
+updated: 2020-04-20 18:00:26
 tags:
     - s3
     - query sql

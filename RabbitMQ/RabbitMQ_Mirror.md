@@ -1,6 +1,7 @@
 ---
 title: Rabbitmq - Mirror Queue + Durable Message
 date: 2020-05-18 18:00:26
+updated: 2020-05-18 18:00:26
 tags:
     - ha
     - rabbitmq

@@ -1,6 +1,7 @@
 ---
 title: Java - Spring web Socket + StompJS
 date: 2020-01-15 18:00:26
+updated: 2020-01-15 18:00:26
 tags:
     - java
     - web socket

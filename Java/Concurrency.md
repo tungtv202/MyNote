@@ -1,6 +1,7 @@
 ---
 title: Java - Concurrency
 date: 2020-09-30 18:00:26
+updated: 2022-08-24 22:11:00
 tags:
     - java
     - concurrency
@@ -267,7 +268,6 @@ The reason is other threads always have higher priority. Not guarantee the FIFO)
 ```
  
 ## Blocking Threads is Expensive
-(update 30/06/2021)
 - Entering a synchronized block is not that expensive - if the thread is allowed access. But if the thread is blocked because another thread is already executing inside the synchronized block - the blocking of the thread is expensive.
 ![Blocking Threads is Expensive](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/BlockingThreadsisExpensive.png)
 
@@ -281,3 +281,30 @@ Number of threads <= (Number of cores) / [1 -  Blocking Factor (BF)]
 - If your tasks are IO intensive, and if BF is 0.5, # of Thread <= 2 * # of Cores
 - Normally the maximum number of requests that you can handle concurrently <=10k (2k, 4k, 5k)
 
+## ForkJoinPool
+
+![ForkJoinPool](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/ForkJoinPool.png)
+
+- `Work Stealing`:
+```
+Result solve(Problem problem) {
+    if (problem is small)
+        directly solve problem
+    else {
+        split problem into independent parts
+        fork new subtasks to solve each part
+        join all subtasks
+        compose result from subresults
+    }
+}
+```
+
+- `ExecutorService::newFixedThreadPool(int nThreads)`: Creates a thread pool that reuses a fixed number of threads operating off a shared unbounded queue.
+- `ScheduledExecutorService::newScheduledThreadPool(int corePoolSize)`: Creates a thread pool that can schedule commands to run after a given delay, or to execute periodically.
+- `ExecutorService::newCachedThreadPool(ThreadFactory threadFactory)`: Creates a thread pool that creates new threads as needed, but will reuse previously constructed threads when they are available, and uses the provided ThreadFactory to create new threads when needed
+- `ExecutorService::newWorkStealingPool(int parallelism)`: Creates a thread pool that maintains enough threads to support the given parallelism level, and may use multiple queues to reduce contention.
+
+### Some use cases
+1. If you want to process all submitted tasks in order of arrival, just use newFixedThreadPool(1)
+2. If you want to optimize performance of big computation of recursive tasks, use ForkJoinPool or newWorkStealingPool
+3. If you want to execute some tasks periodically or at certain time in future, use newScheduledThreadPool

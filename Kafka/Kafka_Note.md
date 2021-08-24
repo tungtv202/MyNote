@@ -1,6 +1,7 @@
 ---
 title: Kafka - Note 
 date: 2019-12-31 18:00:26
+updated: 2019-12-31 18:00:26
 tags:
     - kafka
     - segment

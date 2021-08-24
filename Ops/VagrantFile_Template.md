@@ -1,6 +1,7 @@
 ---
 title: Ops - Vagrant Template
 date: 2020-01-01 18:00:26
+updated: 2020-01-01 18:00:26
 tags:
     - template
     - vagrant

@@ -1,6 +1,7 @@
 ---
 title: Kafka - CLI Command 
 date: 2020-01-03 18:00:26
+updated: 2020-01-03 18:00:26
 tags:
     - kafka
     - kafka cli

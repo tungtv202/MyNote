@@ -1,6 +1,7 @@
 ---
 title: Feign Client - Multiple Configuration
 date: 2020-01-09 18:00:26
+updated: 2020-01-09 18:00:26
 tags:
     - http client
     - java

@@ -1,6 +1,7 @@
 ---
 title: Rabbitmq - Cluster High Availability
 date: 2020-07-26 18:00:26
+updated: 2020-07-26 18:00:26
 tags:
     - ha
     - rabbitmq

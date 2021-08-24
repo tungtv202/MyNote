@@ -1,6 +1,7 @@
 ---
 title: Cassandra Note
 date: 2021-04-11 12:04:26
+updated: 2021-04-11 12:04:26
 tags:
     - cql
     - cassandra

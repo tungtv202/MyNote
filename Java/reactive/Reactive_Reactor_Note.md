@@ -1,7 +1,7 @@
 ---
 title:  Reactive - Reactor Note
 date: 2021-02-02 22:00:26
-lastupdate: 2021-08-24 10:00:00
+updated: 2021-08-24 10:00:00
 tags:
     - java
     - reactive

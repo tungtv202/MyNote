@@ -1,6 +1,7 @@
 ---
 title: Signed URL
 date: 2019-05-12 18:00:26
+updated: 2019-05-12 18:00:26
 tags:
     - signed url
     - object storage

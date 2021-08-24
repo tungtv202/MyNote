@@ -1,6 +1,7 @@
 ---
 title: AWS - Lambda - Case study
 date: 2018-10-14 18:00:26
+updated: 2018-10-14 18:00:26
 tags:
     - aws
     - lambda

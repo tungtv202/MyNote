@@ -1,9 +1,10 @@
 ---
 title: Code Template - Google Translate
 date: 2020-03-10 18:00:26
+updated: 2020-03-10 18:00:26
 tags:
     - code template
-    - google translate
+    - Google Translate
     - translate
 category: 
     - code_template

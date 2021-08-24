@@ -1,6 +1,7 @@
 ---
 title: Java - JVM Internal
 date: 2020-08-10 18:00:26
+updated: 2020-08-10 18:00:26
 tags:
     - jvm internal
     - java

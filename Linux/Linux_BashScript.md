@@ -1,6 +1,7 @@
 ---
 title: Linux - Bash Script Collection
 date: 2020-01-22 18:00:26
+updated: 2020-01-22 18:00:26
 tags:
     - bash
     - script

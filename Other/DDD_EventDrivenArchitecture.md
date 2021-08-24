@@ -1,6 +1,7 @@
 ---
 title: Domain Driver Design & Event Driven Architecture
 date: 2020-01-26 18:00:26
+updated: 2020-01-26 18:00:26
 tags:
     - ddd
     - domain driver design

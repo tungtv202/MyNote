@@ -1,6 +1,7 @@
 ---
 title: Java - Equal method
 date: 2021-06-20 18:00:26
+updated: 2021-06-20 18:00:26
 tags:
     - java
     - equal

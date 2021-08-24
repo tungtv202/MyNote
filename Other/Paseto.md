@@ -1,6 +1,7 @@
 ---
 title: Paseto - Token base authentication
 date: 2020-04-19 18:00:26
+updated: 2020-04-19 18:00:26
 tags:
     - paseto
     - token

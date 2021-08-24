@@ -1,6 +1,7 @@
 ---
 title: AWS - LAB - ECS
 date: 2020-01-25 18:00:26
+updated: 2020-01-25 18:00:26
 tags:
     - aws
     - ecs

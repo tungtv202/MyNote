@@ -1,6 +1,7 @@
 ---
 title: Docker - Template File
 date: 2020-02-10 18:00:26
+updated: 2020-02-10 18:00:26
 tags:
     - docker
     - template

@@ -1,6 +1,7 @@
 ---
 title: AWS - STS
 date: 2020-01-26 18:00:26
+updated: 2020-01-26 18:00:26
 tags:
     - aws
     - sts

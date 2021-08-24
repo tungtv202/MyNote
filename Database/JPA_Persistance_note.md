@@ -1,6 +1,7 @@
 ---
 title: JPA - Hibernate - Persistance Note
 date: 2020-12-27 13:47:26
+updated: 2020-12-27 13:47:26
 tags:
     - jpa
     - hibernate
