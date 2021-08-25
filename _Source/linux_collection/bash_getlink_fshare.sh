@@ -36,3 +36,11 @@ export LINK_RESPONSE=$(curl -s --location --request POST 'https://api.fshare.vn/
 }')
 export LINK=$( echo "$LINK_RESPONSE" |  python3 -c "import sys, json; print(json.load(sys.stdin)['location'])")
 echo $LINK
+
+if [ "$2" == "v" ]; then
+ vlc $LINK
+fi
+
+if [ "$2" == "w" ]; then
+ wget $LINK
+fi
