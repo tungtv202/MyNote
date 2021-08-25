@@ -1,7 +1,7 @@
 ---
-title: Java - Junit + Mockito
+title: Java - Junit Test
 date: 2018-10-12 18:00:26
-updated: 2018-10-12 18:00:26
+updated: 2021-08-25 18:00:26
 tags:
     - junit
     - mockito
@@ -10,434 +10,383 @@ tags:
 category: 
     - java
 ---
+# Java - Junit Test
 
-## 1. Junit
-
-Là 1 thư viện testing của Java. Mục đích cuối cùng là để kiểm thử xem kết quả của các phương thức có chạy đúng với logic + kết quả mong muốn.
-
-*maven*
-
-```xml
-<dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <version>4.11</version>
-    <scope>test</scope>
-</dependency>
+## 1. Junit Anotation
+- Todo something before/after something
+```java
+//  org.junit
+@BeforeClass 
+@Before 
+@After  
+@AfterClass 
 ```
-
-* Cần annotation trước phương thức test. Ngoài ra còn có thể thêm các annotation chỉ định những việc phải làm trước và sau khi test.
 
 ```java
-@BeforeClass  // ví dụ tạo các biến static
-@Before    // gán, set, get, tính logic
-@Test    // test
-@After  //
-@AfterClass // ví dụ đóng kết nối database
+// org.junit.jupiter.api
+@BeforeEach
+@BeforeAll  
+@AfterEach
+@AfterAll
 ```
 
-* Các phương thức Assert()  - cái quyết định kết quả của Junit Test
+- Test
+```java
+@Test
+@RepeatTest(10) 
+@ParameterizedTest
+```
+
+- Group, Tag, Other...
+```java
+@Tag
+@Nested
+@Disabled
+@DisplayName
+@TempDir  
+```
+
+## 2. Assert action
+- Assert action
+    - assertEquals 
+    - assertFalse
+    - assertNotNull 
+    - assertNotSame 
+    - assertNull
+    - assertSame 
+    - assertTrue
+    - isTrue
+    - isFalse
+    - isNotNull
+
+
+- Assert for collection
+    - isEmpty
+    - containsOnly
+    - hasSameElementsAs
+    - hasSize
+    - containsExactlyInAnyOrder
+    - contains
+    - doesNotContain
+
+
+- Assert Exception
+```java
+        assertThatCode(() -> Mono.from(testee().clear(generateMailboxId())).block())
+            .doesNotThrowAnyException();
+```
 
 ```java
-assertEquals() // So sánh 2 giá trị để kiểm tra bằng nhau. Test sẽ được chấp nhận nếu các giá trị bằng nhau.
-assertFalse()  // Test sẽ được chấp nhận nếu biểu thức sai.
-assertNotNull() // Test sẽ được chấp nhận nếu tham chiếu đối tượng khác null.
-assertNotSame() // Test sẽ được chấp nhận nếu cả 2 đều tham chiếu đến các đối tượng khác nhau
-assertNull() // Test sẽ được chấp nhận nếu tham chiếu là null.
-assertSame() //  Test sẽ được chấp nhận nếu cả 2 đều tham chiếu đến cùng một đối tượng.
-assertTrue() //Test sẽ được chấp nhận nếu biểu thức đúng fail()
+        assertThatThrownBy(() -> blobStore.read(DEFAULT_BUCKET, blobId))
+            .isInstanceOf(ObjectNotFoundException.class)
 ```
 
-*Run As Junit Test*
+```java 
+        // expect message of exception
+        assertThatThrownBy(() -> testee().addUser(TestFixture.INVALID_USERNAME, "password"))
+            .isInstanceOf(InvalidUsernameException.class)
+            .hasMessageContaining("should not contain any of those characters");
+```
 
-* Muốn chạy nhiều Class Test liên tục, có thể tạo 1 class Test và khai báo như sau:
+- Assert softly
 
 ```java
-@RunWith(Suite.class)
-@SuiteClasses({CarTest.class, CompanyTest.class})
-public class SystemTest{
-}
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(imapUidDAO.retrieveAllMessages().collectList().block())
+                .containsExactlyInAnyOrder(MESSAGE_1);
+            softly.assertThat(Flux.from(pop3MetadataStore.listAllEntries()).collectList().block())
+                .containsExactlyInAnyOrder(new Pop3MetadataStore.FullMetadata(MAILBOX_ID, STAT_METADATA_1));
+        });
 ```
 
-# 2. Mockito
 
-* Dùng để giả lập hoạt động (kết quả trả về, action) của các interface. Nó không test trên real object, mà tạo ra một object "ảo" rồi instrument các method mà bạn muốn vào object ảo đó.
+# 3. Mockito
+- Manual way
 
 ```java
-Mockito.when(T methodCall)
-// dùng để giả lập một lời gọi hàm nào đó được sử dụng bên trong method đang được kiểm thử.  thường đi kèm với .thenReturn(), .thenAnswer(), .thenThrow() để chỉ định kết quả trả lại.
-Ví dụ:
-Mockito.when(method_A()).thenReturn("demoValue");
-Mockito.when(method_B()).thenThrow(new Exception("demoError"));
-Mockito.when(method_C()).thenAnswer(new Answer<String>(){ public String answer(InvocationOnMock invocation){ String str = “demoNewAnswer”; return str; } });
+BlobStoreDAO blobStoreDAO = mock(BlobStoreDAO.class);
+when(blobStoreDAO.listBlobs(DEFAULT_BUCKET)).thenReturn(Flux.just(blobId));
+when(blobStoreDAO.delete(DEFAULT_BUCKET, blobId)).thenThrow(new RuntimeException("test"));
 ```
-* Tham khảo các annotation
+
+- Annotation way
 
 ```java
 @InjectMocks 
 @Mock
-//@InjectMocks: yêu cầu MockitoJUnitRunner tạo đối tượng cho biến,  gán các đối tượng mock cho các thuộc tính bên trong đối tượng này.
+//@InjectMocks: require MockitoJUnitRunner 
 ```
-# 3. Unit Testing of Spring MVC Controllers: REST API
 
-* Maven lib
-
+## 4. RestAPI Testing
+### Using `io.rest-assured`
+- [io.rest-assured](https://mvnrepository.com/artifact/io.rest-assured/rest-assured)
 ```xml
-<dependency>
-    <groupId>org.hamcrest</groupId>
-    <artifactId>hamcrest-all</artifactId>
-    <version>1.3</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <version>4.11</version>
-    <scope>test</scope>
-    <exclusions>
-        <exclusion>
-            <artifactId>hamcrest-core</artifactId>
-            <groupId>org.hamcrest</groupId>
-        </exclusion>
-    </exclusions>
-</dependency>
-<dependency>
-    <groupId>org.mockito</groupId>
-    <artifactId>mockito-core</artifactId>
-    <version>1.9.5</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-test</artifactId>
-    <version>3.2.3.RELEASE</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>com.jayway.jsonpath</groupId>
-    <artifactId>json-path</artifactId>
-    <version>0.8.1</version>
-    <scope>test</scope>
-</dependency>
-<!-- thao tác với Json-->
-<dependency>
-    <groupId>com.jayway.jsonpath</groupId>
-    <artifactId>json-path-assert</artifactId>
-    <version>0.8.1</version>
-    <scope>test</scope>
-</dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+        </dependency>
 ```
-
-**a) Test get List**
-
-* Code phía Controller
-
+1. Build base
 ```java
-@Controller
-public class TodoController {
- 
-    private TodoService service;
- 
-    @RequestMapping(value = "/api/todo", method = RequestMethod.GET)
-    @ResponseBody
-    public List<TodoDTO> findAll() {
-        List<Todo> models = service.findAll();
-        return createDTOs(models);
+    public static RestAssuredConfig defaultConfig() {
+        return newConfig().encoderConfig(encoderConfig().defaultContentCharset(StandardCharsets.UTF_8));
     }
-}
-```
 
-Ví dụ kết quả trả về
-
-```json
-[
-    {
-        "id":1,
-        "description":"Lorem ipsum",
-        "title":"Foo"
-    },
-    {
-        "id":2,
-        "description":"Lorem ipsum",
-        "title":"Bar"
-    }
-]
-```
-
-Code class Test
-
-```java
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
- 
-import java.util.Arrays;
- 
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
- 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestContext.class, WebAppContext.class})
-@WebAppConfiguration
-public class TodoControllerTest {
- 
-    private MockMvc mockMvc;
- 
-    @Autowired
-    private TodoService todoServiceMock;
- 
-    @Test
-    public void findAll_TodosFound_ShouldReturnFoundTodoEntries() throws Exception {
-        Todo first = new TodoBuilder()
-                .id(1L)
-                .description("Lorem ipsum")
-                .title("Foo")
+    RestAssured.requestSpecification  = new RequestSpecBuilder()
+                .setContentType(ContentType.JSON)
+                .setAccept(ContentType.JSON)
+                .setConfig(defaultConfig())
+                .setPort(port)
+                .setBasePath("/")
+                .log(LogDetail.ALL)
                 .build();
-        Todo second = new TodoBuilder()
-                .id(2L)
-                .description("Lorem ipsum")
-                .title("Bar")
-                .build();
-        // khi service todoServiceMock.findAll được gọi, thì Mock sẽ giả lập trả về List do mình tự tạo ra để Test
-        when(todoServiceMock.findAll()).thenReturn(Arrays.asList(first, second));
- 
-        mockMvc.perform(get("/api/todo"))    // Execute a GET request to url ‘/api/todo’
-                .andExpect(status().isOk())  // Verify HTTP Status 200 returned
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].description", is("Lorem ipsum")))
-                .andExpect(jsonPath("$[0].title", is("Foo")))
-                .andExpect(jsonPath("$[1].id", is(2)))
-                .andExpect(jsonPath("$[1].description", is("Lorem ipsum")))
-                .andExpect(jsonPath("$[1].title", is("Bar")));
-        // xác minh phương thức findAll() chỉ được gọi 1 lần
-        verify(todoServiceMock, times(1)).findAll();
-        // xác minh rằng không có chỗ nào khác gọi tới service này
-        verifyNoMoreInteractions(todoServiceMock);
-    }
-}
 ```
 
-**b) Test get Entry**
+2. Using
 
-* code Controller
+- Check error (ex: 404)
+- Error response is Json
 
 ```java
-private TodoService service;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@RequestMapping(value = "/api/todo/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public TodoDTO findById(@PathVariable("id") Long id) throws TodoNotFoundException {
-        Todo found = service.findById(id);
-        return createDTO(found);
-    }
-```
-* Example result
-```json
-{
-    "id":1,
-    "description":"Lorem ipsum",
-    "title":"Foo"
-}
+Map<String, Object> errors = 
+            when()
+                .get("/user/myuser1")
+            .then()
+                .statusCode(NOT_FOUND_404)
+                .contentType(JSON)
+                .extract()
+                .body()
+                .jsonPath()
+                .getMap(".");
+
+            assertThat(errors)
+                .containsEntry("statusCode", NOT_FOUND_404)
+                .containsEntry("type", ERROR_TYPE_NOTFOUND)
+                .containsEntry("message", "Invalid get on user");
 ```
 
-* Code Test (case NotFound)
+
+- Check value of body
 
 ```java
+                given()
+                    .basePath("/basepath/")
+                .when()
+                    .get(taskId + "/await")
+                .then()
+                    .statusCode(HttpStatus.OK)
+                    .body("status", Matchers.is("completed"))
+                    .body("taskId", Matchers.is(notNullValue()))
+                    .body("type", Matchers.is(ClearMailboxContentTask.TASK_TYPE.asString()))
+                    .body("startedDate", Matchers.is(notNullValue()))
+                    .body("submitDate", Matchers.is(notNullValue()))
+                    .body("completedDate", Matchers.is(notNullValue()))
+                    .body("additionalInformation.username", Matchers.is(USERNAME.asString()));
+```
+
+- Get value of one property
+
+```java
+            String taskId = when()
+                .delete(MAILBOX_NAME + "/messages")
+            .then()
+                .statusCode(CREATED_201)
+                .extract()
+                .jsonPath()
+                .get("taskId");
+
+            assertThat(taskId)
+                .isNotEmpty();
+```
+
+- Compare json 
+
+```java
+val response: String = `given`
+      .body("json value here")
+    .when()
+      .post()
+    .`then`
+      .statusCode(HttpStatus.SC_OK)
+      .contentType(JSON)
+      .extract()
+      .body()
+      .asString()
+
+    assertThatJson(response)
+      .isEqualTo(
+        s"""
+           |{
+           |    "sessionState": "${SESSION_STATE.value}",
+           |    "methodResponses": [
+           |        [
+           |            "Email/send",
+           |            {
+           |                "accountId": "$ACCOUNT_ID",
+           |                "newState": "$${json-unit.ignore}",
+           |                "created": {
+           |                    "K87": {
+           |                        "emailSubmissionId": "$${json-unit.ignore}",
+           |                        "emailId": "$${json-unit.ignore}",
+           |                        "blobId": "$${json-unit.ignore}",
+           |                        "threadId": "$${json-unit.ignore}",
+           |                        "size": "$${json-unit.ignore}"
+           |                    }
+           |                }
+           |            },
+           |            "c1"
+           |        ]
+           |    ]
+           |}""".stripMargin)
+```
+    - `$${json-unit.ignore}` for ignore compare value
+
+- Set queryParam for request
+
+```java
+        given()
+            .queryParam("task", "purge")
+            .queryParam("olderThan", "15days")
+            .post()
+        .then()
+            .statusCode(HttpStatus.CREATED_201)
+            .body("taskId", notNullValue());
+```
+
+## 5. ConditionFactory
+
+```java
+    ConditionFactory CALMLY_AWAIT = Awaitility
+        .with().pollInterval(ONE_HUNDRED_MILLISECONDS)
+        .and().pollDelay(ONE_HUNDRED_MILLISECONDS)
+        .await()
+        .atMost(TEN_SECONDS);
+
     @Test
-    public void findById_TodoEntryNotFound_ShouldReturnHttpStatusCode404() throws Exception {
-        when(todoServiceMock.findById(1L)).thenThrow(new TodoNotFoundException(""));
- 
-        mockMvc.perform(get("/api/todo/{id}", 1L))
-                .andExpect(status().isNotFound());
- 
-        verify(todoServiceMock, times(1)).findById(1L);
-        verifyNoMoreInteractions(todoServiceMock);
-    }
+    void testConditionFactory() {
+        CALMLY_AWAIT.untilAsserted(() -> {
+            Random random = new Random();
+
+            assertThat(random.nextInt(10))
+                .isEqualTo(7);
+        });
+    }    
 ```
 
-* Code Test (case Found)
-
+## 6. RegisterExtension
+- Pojo
 ```java
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestContext.class, WebAppContext.class})
-@WebAppConfiguration
-public class TodoControllerTest {
- 
-    private MockMvc mockMvc;
- 
-    @Autowired
-    private TodoService todoServiceMock;
- 
-    @Test
-    public void findById_TodoEntryFound_ShouldReturnFoundTodoEntry() throws Exception {
-        Todo found = new TodoBuilder()
-                .id(1L)
-                .description("Lorem ipsum")
-                .title("Foo")
-                .build();
- 
-        when(todoServiceMock.findById(1L)).thenReturn(found);
- 
-        mockMvc.perform(get("/api/todo/{id}", 1L))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.description", is("Lorem ipsum")))
-                .andExpect(jsonPath("$.title", is("Foo")));
- 
-        verify(todoServiceMock, times(1)).findById(1L);
-        verifyNoMoreInteractions(todoServiceMock);
-    }
-}
-```
+class CombinedTestSystem {
+        private final boolean supportVirtualHosting;
+        private final SimpleDomainList domainList;
+        private final Username userAlreadyInLDAP;
+        private final Username userAlreadyInLDAP2;
+        private final Username userWithUnknowDomain;
+        private final Username invalidUsername;
 
-**c) Test ADD DTO via POST**
-
-* Code phía Controller
-```java
-private TodoService service;
- 
-    @RequestMapping(value = "/api/todo", method = RequestMethod.POST)
-    @ResponseBody
-    public TodoDTO add(@Valid @RequestBody TodoDTO dto) {
-        Todo added = service.add(dto);
-        return createDTO(added);
-    }
-```
-
-* Code Class DTO (có ràng buộc về độ dài, và not Empty)
-
-```java
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
- 
-public class TodoDTO {
- 
-    private Long id;
- 
-    @Length(max = 500)
-    private String description;
- 
-    @NotEmpty
-    @Length(max = 100)
-    private String title;
-    //Constructor and other methods are omitted.
-}
-```
-*Nếu valid faile, thì http trả về mã 400, và Json trả về lỗi, format Json lỗi:*
-
-```json
-{
-    "fieldErrors":[
-        {
-            "path":"description",
-            "message":"The maximum length of the description is 500 characters."
-        },
-        {
-            "path":"title",
-            "message":"The maximum length of the title is 100 characters."
+        public CombinedTestSystem(boolean supportVirtualHosting) throws Exception {
+            // todo
         }
-    ]
-}
+
+        private Username toUsername(String login) {
+            return toUsername(login, DOMAIN);
+        }
+    }
 ```
 
-* Class Test (Case valid lỗi)
+- Extension
 
 ```java
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestContext.class, WebAppContext.class})
-@WebAppConfiguration
-public class TodoControllerTest {
- 
-    private MockMvc mockMvc;
- 
-    @Autowired
-    private TodoService todoServiceMock;
- 
-    @Test
-    public void add_TitleAndDescriptionAreTooLong() throws Exception {
-        \\ tạo các chuỗi String có kích thước lần lượt là 101 và 501
-        String title = TestUtil.createStringWithLength(101); 
-        String description = TestUtil.createStringWithLength(501);
- 
-        TodoDTO dto = new TodoDTOBuilder()
-                .description(description)
-                .title(title)
-                .build();
- 
-        mockMvc.perform(post("/api/todo")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(dto))
-        )
-                .andExpect(status().isBadRequest())  //HTTP status code 400 is returned
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.fieldErrors", hasSize(2)))
-                .andExpect(jsonPath("$.fieldErrors[*].path", containsInAnyOrder("title", "description")))
-                .andExpect(jsonPath("$.fieldErrors[*].message", containsInAnyOrder(
-                        "The maximum length of the description is 500 characters.",
-                        "The maximum length of the title is 100 characters."
-                )));
- 
-        verifyZeroInteractions(todoServiceMock);
+class CombinedUserRepositoryExtension implements BeforeEachCallback, ParameterResolver {
+
+        private final boolean supportVirtualHosting;
+        private CombinedTestSystem combinedTestSystem;
+
+        private CombinedUserRepositoryExtension(boolean supportVirtualHosting) {
+            this.supportVirtualHosting = supportVirtualHosting;
+        }
+
+        @Override
+        public void beforeEach(ExtensionContext extensionContext) throws Exception {
+            combinedTestSystem = new CombinedTestSystem(supportVirtualHosting);
+        }
+
+        @Override
+        public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+            return parameterContext.getParameter().getType() == CombinedTestSystem.class;
+        }
+
+        @Override
+        public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+            return combinedTestSystem;
+        }
+
+        public boolean isSupportVirtualHosting() {
+            return supportVirtualHosting;
+        }
     }
-}
 ```
 
-* Case Test (add database thành công)
+- Using
+```java
+  @RegisterExtension
+  CombinedUserRepositoryExtension combinedExtension = CombinedUserRepositoryExtension...
+
+  @BeforeEach
+  void setUp(CombinedTestSystem testSystem) {
+          //todo
+  }
+
+  @Test
+  void test1(CombinedTestSystem testSystem) {
+      // todo
+  }
+```
+
+## 7. ParameterizedTest
+```java
+    static Stream<Arguments> storageStrategies() {
+        return Stream.of(
+            Arguments.of(DEDUPLICATION_STRATEGY),
+            Arguments.of(PASSTHROUGH_STRATEGY)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("storageStrategies")
+    void test(BlobStoreConfiguration blobStoreConfiguration) {
+        // todo something
+    }
+```
+
+## 8. Compare Json
 
 ```java
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestContext.class, WebAppContext.class})
-@WebAppConfiguration
-public class TodoControllerTest {
- 
-    private MockMvc mockMvc;
- 
-    @Autowired
-    private TodoService todoServiceMock;
- 
-    @Test
-    public void add_NewTodoEntry_ShouldAddTodoEntryAndReturnAddedEntry() throws Exception {
-        TodoDTO dto = new TodoDTOBuilder()
-                .description("description")
-                .title("title")
-                .build();
- 
-        Todo added = new TodoBuilder()
-                .id(1L)
-                .description("description")
-                .title("title")
-                .build();
- 
-        when(todoServiceMock.add(any(TodoDTO.class))).thenReturn(added);
- 
-        mockMvc.perform(post("/api/todo")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(dto))
-        )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.description", is("description")))
-                .andExpect(jsonPath("$.title", is("title")));
- 
-        ArgumentCaptor<TodoDTO> dtoCaptor = ArgumentCaptor.forClass(TodoDTO.class);
-        verify(todoServiceMock, times(1)).add(dtoCaptor.capture());
-        verifyNoMoreInteractions(todoServiceMock);
- 
-        TodoDTO dtoArgument = dtoCaptor.getValue();
-        assertNull(dtoArgument.getId());
-        assertThat(dtoArgument.getDescription(), is("description"));
-        assertThat(dtoArgument.getTitle(), is("title"));
-    }
-}
+import net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson
+
+ assertThatJson(response).isEqualTo(
+      s"""{
+         |  "sessionState":"${SESSION_STATE.value}",
+         |  "methodResponses": [
+         |    ["error", {
+         |      "type": "unknownMethod",
+         |      "description": "Missing capability(ies)"
+         |    },"c1"]
+         |  ]
+         |}""".stripMargin)
+
+
+    //
+     assertThatJson(response)
+      .whenIgnoringPaths("methodResponses[0][1].description")
+      .isEqualTo(...)
+
+    //
+     assertThatJson(response)
+      .inPath("methodResponses[0][1]")
+      .isEqualTo(...)
+
 ```
-URL tham khảo : https://www.petrikainulainen.net/programming/spring-framework/unit-testing-of-spring-mvc-controllers-rest-api/
+
