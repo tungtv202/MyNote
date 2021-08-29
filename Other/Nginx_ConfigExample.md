@@ -1,5 +1,5 @@
 ---
-title: Nginx - Config exmaple
+title: Nginx - Config example
 date: 2019-02-11 18:00:26
 updated: 2019-02-11 18:00:26
 tags:
@@ -10,7 +10,9 @@ category:
 ---
 
 # Tổng hợp các file cấu hình NGINX mẫu
+
 - File cấu hình mỗi site đặt tại `/etc/nginx/sites-enabled`
+
 ### 1. File normal
 
 ```bash
@@ -29,7 +31,9 @@ server {
   }
 }
 ```
+
 ### 2. File có basic authen
+
 - setting basic authen
 
 ```bash
@@ -42,6 +46,7 @@ sudo htpasswd -c /etc/nginx/.htpasswd nginx
 # 3, verify
 cat /etc/nginx/.htpasswd
 ```
+
 - file server
 
 ```bash

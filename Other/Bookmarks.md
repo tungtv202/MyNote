@@ -5,6 +5,7 @@ updated: 2020-02-19 18:00:26
 ---
 
 # Topic
+
 - [Transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html)
 - [Best Practices for Using Security Groups in AWS](https://www.threatstack.com/blog/101-aws-security-tips-quotes-part-3-best-practices-for-using-security-groups-in-aws)
 - [EC2 placement group](https://jayendrapatil.com/aws-ec2-placement-groups/)

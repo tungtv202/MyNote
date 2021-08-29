@@ -9,9 +9,10 @@ category:
     - java
 ---
 
-
 # Cấu hình Logback.xml trong Spring
+
 ## 1. Template
+
 - 1
 
 ```xml
@@ -43,7 +44,8 @@ category:
     </root>
 </configuration>
 ```
-- 2 
+
+- 2
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -68,6 +70,7 @@ category:
     </root>
 </configuration>
 ```
+
 - 3
 
 ```xml
@@ -102,7 +105,9 @@ category:
     </root>
 </configuration>
 ```
-- 4. Set biến theo springProfile
+
+-
+    4. Set biến theo springProfile
 
 ```xml
 <springProfile name="staging">
@@ -123,8 +128,8 @@ category:
 	</appender>
 ```
 
-
 ## 2. Chú thích
+
 ```java
     @Bean
     public Logger logger() {
@@ -137,6 +142,7 @@ category:
   <appender-ref ref="STDOUT" />
 </logger>
 ```
+
 - Có thể cấu hình trong file .yml hoặc .properties
 
 ```properties
@@ -147,10 +153,13 @@ logging.file=${logging.path}/log.log
 logging.pattern.file=%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
 logging.pattern.console=  
 ```
+
 - ref: http://logback.qos.ch/manual/layouts.html
 
 ## 3. AWS CloudWatch Logback Apender
+
 - Maven
+
 ```xml
         <dependency>
             <groupId>ca.pjer</groupId>
@@ -158,10 +167,10 @@ logging.pattern.console=
             <version>1.4.0</version>
         </dependency>
 ```
+
 - Logback.xml
-    - Lưu ý cần set 2 env để credential
-    AWS_ACCESS_KEY=123456;
-    AWS_SECRET_KEY=123456;
+    - Lưu ý cần set 2 env để credential AWS_ACCESS_KEY=123456; AWS_SECRET_KEY=123456;
+
 ```xml
 <appender name="ASYNC_AWS_LOGS1" class="ca.pjer.logback.AwsLogsAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -175,9 +184,13 @@ logging.pattern.console=
         </layout>
     </appender>
 ```
+
 Ref: https://github.com/pierredavidbelanger/logback-awslogs-appender
+
 ## 4. Loki log Appender
+
 - maven
+
 ```xml
         <dependency>
             <groupId>com.github.loki4j</groupId>
@@ -186,7 +199,9 @@ Ref: https://github.com/pierredavidbelanger/logback-awslogs-appender
         </dependency>
 
 ```
+
 - logback.xml
+
 ```xml
     <appender name="LOKI" class="com.github.loki4j.logback.LokiJavaHttpAppender">
         <url>http://192.168.13.249:3100/loki/api/v1/push</url>
@@ -203,4 +218,5 @@ Ref: https://github.com/pierredavidbelanger/logback-awslogs-appender
         </encoder>
     </appender>
 ```
+
 Ref: https://github.com/tungtv202/loki-logback-appender

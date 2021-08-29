@@ -11,25 +11,34 @@ category:
 ---
 
 ## Rebalancing
+
 - When do we rebalance?
     - Member "dies" (doesn't heartbeat for "long" period of time)
     - Member leaves
     - New member joins
     - Topic metada or subscription changes
 - How do we discover we need to reblance?
-    - While polling 
+    - While polling
         - HearbeatResponse (REBALANCE_IN_PROGRESS)
         - CommitOffset (REBALANCE_IN_PROGRESS)
     - Initiate a rebalance by re-joinning
 - When we rebalance - stop everything and rejoin
 - Sau khi process msg xong, sẽ `revokerd`, sau đó lại `assigned` lại 1 chu kỳ mới.
+
 ## Rebalance protocol
+
 - FindCoordinator
 - JoinGroup
-    - Config: 
-        - session.timeout.ms: The timeout used to detect consumer failures when using Kafka's group management facility. The consumer sends periodic heartbeats to indicate its liveness to the broker. If no heartbeats are received by the broker before the expiration of this session timeout, then the broker will remove this consumer from the group and initiate a rebalance
-        - max.poll.interval.ms: The maximum delay between invocations of poll() when using consumer group management. This places an upper bound on the amount of time that the consumer can be idle before fetching more records. If poll() is not called before expiration of this timeout, then the consumer is considered failed and the group will rebalance in order to reassign the partitions to another member.
-        (https://stackoverflow.com/questions/39730126/difference-between-session-timeout-ms-and-max-poll-interval-ms-for-kafka-0-10)
+    - Config:
+        - session.timeout.ms: The timeout used to detect consumer failures when using Kafka's group management facility.
+          The consumer sends periodic heartbeats to indicate its liveness to the broker. If no heartbeats are received
+          by the broker before the expiration of this session timeout, then the broker will remove this consumer from
+          the group and initiate a rebalance
+        - max.poll.interval.ms: The maximum delay between invocations of poll() when using consumer group management.
+          This places an upper bound on the amount of time that the consumer can be idle before fetching more records.
+          If poll() is not called before expiration of this timeout, then the consumer is considered failed and the
+          group will rebalance in order to reassign the partitions to another member.
+          (https://stackoverflow.com/questions/39730126/difference-between-session-timeout-ms-and-max-poll-interval-ms-for-kafka-0-10)
     - Được `coordinator` sử dụng để kick member ra khỏi group, nếu nó không có phản hồi
 - SyncGroup
 - Heartbeat
@@ -37,31 +46,41 @@ category:
 - LeaveGroup
     - Được consumer gửi tới coordinator trước khi stop
     - Sau khi leaveGroup, thì cần thực hiện lại JoinGroup, SyncGroup cho lần sau
+
 ## Công dụng Rebalance
+
 - Confluent Schema Registry sử dụng rebalace protocol để chọn leader node
 - Kafka Connect sử dụng rebalace protocol để phấn bố các tasks và connectors một cách phù hợp trên các workers node
 - Kafka Stream sử dụng rebalace protocol để gán tasks và partitions đến các instances
+
 ## Feature
- - Static Membership
-    - consumer instance sẽ được định danh bởi `group.instance.id` 
-    - Khi sảy ra sự cố tạm thời, làm `transient failures`, thì coordinator sẽ không reblance ngay lập tức cho các consumer khác, mà nó sẽ đợi cho tới khi hết `session timeout` của consumer đang xảy ra lỗi tạm thời. 
-    - Vì được đinh danh, nên khi consumer hết lỗi, comeback, sẽ không cần phải yêu cầu joinGroup, lại nữa. Bộ coordinator sẽ trả cache về cho consumer
-    - Yêu cầu là  consumer khi lỗi, không được gửi request `leaveGroup`, và nên tăng `sesssion timeout` lên
+
+- Static Membership
+    - consumer instance sẽ được định danh bởi `group.instance.id`
+    - Khi sảy ra sự cố tạm thời, làm `transient failures`, thì coordinator sẽ không reblance ngay lập tức cho các
+      consumer khác, mà nó sẽ đợi cho tới khi hết `session timeout` của consumer đang xảy ra lỗi tạm thời.
+    - Vì được đinh danh, nên khi consumer hết lỗi, comeback, sẽ không cần phải yêu cầu joinGroup, lại nữa. Bộ
+      coordinator sẽ trả cache về cho consumer
+    - Yêu cầu là consumer khi lỗi, không được gửi request `leaveGroup`, và nên tăng `sesssion timeout` lên
     - Ưu điểm: tránh việc rebalance không cần thiết
-    - Nhược điểm: tăng tính `unavailability` của `partition`, vì `coordinator` phải đợi tới hết session timeout mới phát hiện ra lỗi.
+    - Nhược điểm: tăng tính `unavailability` của `partition`, vì `coordinator` phải đợi tới hết session timeout mới phát
+      hiện ra lỗi.
 - Incremental Cooperative Rebalancing
     - The Incremental Cooperative Rebalancing attempts to solve this problem in two ways :
         - only stop tasks/members for revoked resources.
-        - handle temporary imbalances in resource distribution among members, either immediately or deferred (useful for rolling restart).
-    - For doing that, the Incremental Cooperative Rebalancing principal is actually declined into three concrete designs:
+        - handle temporary imbalances in resource distribution among members, either immediately or deferred (useful for
+          rolling restart).
+    - For doing that, the Incremental Cooperative Rebalancing principal is actually declined into three concrete
+      designs:
         - Design I: Simple Cooperative Rebalancing
         - Design II: Deferred Resolution of Imbalance
         - Design III: Incremental Resolution of Imbalance
 
 ## Coding Template
+
 - Quản lý việc commit offset manual
-     - Nếu không commitAsync manual chủ động trước
-     
+    - Nếu không commitAsync manual chủ động trước
+
 ```java
 @KafkaListener(
             topics = "${kafka.app.backup.product.manual.topic}",
@@ -73,6 +92,7 @@ category:
         productBackupStrategy.doBackup(backupLogDetailId);
     }
 ```
+
 - Cấu hình Consumer
 
 ```java
@@ -140,11 +160,15 @@ public class CustomRebalance implements ConsumerRebalanceListener {
     }
 }
 ```
+
 ## Linh tinh
+
 Chưa hiểu tại sao khi cấu hình
 
 ```
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, 5 * 1000);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
 ```
-tức 5s sẽ auto commit, nhưng nếu consumer xử lý msg hết hơn >5s, thì vẫn bị rebalance msg. Trong khi nếu chủ động `onsumer.commitAsync();` thì không bị reblance????
+
+tức 5s sẽ auto commit, nhưng nếu consumer xử lý msg hết hơn >5s, thì vẫn bị rebalance msg. Trong khi nếu chủ
+động `onsumer.commitAsync();` thì không bị reblance????

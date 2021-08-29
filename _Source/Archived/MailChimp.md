@@ -7,46 +7,59 @@ tags:
 category: 
     - z.archived
 ---
+
 # MailChimp - 1 service cho bài toán email marketing
+
 ## 1. Giới thiệu
-MailChimp là dịch vụ Email Marketing rất nổi tiếng. Ngoài ý nghĩa marketing chính ra thì MailChimp còn có thể sử dụng cho nhiều mục đích khác nữa. Ví dụ có thể phát triển làm hệ thống mail thông báo khi có event từ user…
+
+MailChimp là dịch vụ Email Marketing rất nổi tiếng. Ngoài ý nghĩa marketing chính ra thì MailChimp còn có thể sử dụng
+cho nhiều mục đích khác nữa. Ví dụ có thể phát triển làm hệ thống mail thông báo khi có event từ user…
 
 Việc sử dụng MailChimp cơ bản gồm các bước sau:
-### Step 1.	Tạo LIST
+
+### Step 1. Tạo LIST
+
 Tạo danh sách chứa các email người nhận. Ví dụ:
+
 - List SinhVien, chứa thông tin 1000 email của sinh viên
 - List ITCustomer, chứa thông tin 5000 email của người công tác, làm việc trong lĩnh vực CNTT.
 
-
 ### Step 2. Tạo Campaign
-Tạo chiến dịch marketting Bao gồm:
+
+Tạo chiến dịch marketing Bao gồm:
+
 - Chọn LIST
 - Setup title, subject email, email ngườ i gửi
 - Setup template, nội dung email
 - Setup lịch chạy
 
 ### Step 3. Send Campaign
+
 ### Step 4. Xem thống kê report
+
 - Số lượt open mail
 - Số lượt click
-- Số lượt unsubscribe   
+- Số lượt unsubscribe
 
-Các bước trên được thực hiện thông qua 2 cách:  
+Các bước trên được thực hiện thông qua 2 cách:
 
 - Thực hiện qua giao diện website https://mailchimp.com
-- Thực hiện thông qua MailChimp API (link https://developer.mailchimp.com ).    
+- Thực hiện thông qua MailChimp API (link https://developer.mailchimp.com ).
 
-Hiện tại MailChimp API cung cấp các API chuẩn Restful cho developer thao tác với hệ thống của họ, gần như toàn bộ thao tác user có thể làm trên web đều có thể được thực hiện thông qua API. MailChimp API mới nhất đang là version 3.0
-Với Java để thao tác với Restful này có thể sử dụng Jersey Client (link tham khảo https://o7planning.org/vi/11217/tao-ung-dung-java-restful-client-voi-jersey-client)
-Tuy nhiên cũng có thể sử dụng cách khác, đó là dùng các thư viện java do người khác đã dựng sẵn. Ví dụ như 1 thư viện google ra rất nhiều kết quả là:
+Hiện tại MailChimp API cung cấp các API chuẩn Restful cho developer thao tác với hệ thống của họ, gần như toàn bộ thao
+tác user có thể làm trên web đều có thể được thực hiện thông qua API. MailChimp API mới nhất đang là version 3.0 Với
+Java để thao tác với Restful này có thể sử dụng Jersey Client (link tham
+khảo https://o7planning.org/vi/11217/tao-ung-dung-java-restful-client-voi-jersey-client)
+Tuy nhiên cũng có thể sử dụng cách khác, đó là dùng các thư viện java do người khác đã dựng sẵn. Ví dụ như 1 thư viện
+google ra rất nhiều kết quả là:
 Ecwid/maleorang: MailChimp API 3.0 wrapper for Java
 
 ## 2. Thư viện Ecwid/maleorang
+
 Link ref: https://github.com/Ecwid/maleorang    
-Java doc: http://www.javadoc.io/doc/com.ecwid/maleorang/3.0-0.9.6   
+Java doc: http://www.javadoc.io/doc/com.ecwid/maleorang/3.0-0.9.6
 
 List package
-
 
 ```
 •	com.ecwid.maleorang
@@ -63,10 +76,13 @@ List package
 ```
 
 ## 3. Demo
+
 Đoạn code java demo dưới đây thực hiện + mô phỏng lại các bước cơ bản sử dụng MailChimp.    
-Recommend là nên xem các video hướng dẫn sử dụng Mailchimp thông qua web user trên youtube, google trước => để hiểu được dễ dàng hơn về ý nghĩa của các đoạn code.
+Recommend là nên xem các video hướng dẫn sử dụng Mailchimp thông qua web user trên youtube, google trước => để hiểu được
+dễ dàng hơn về ý nghĩa của các đoạn code.
 
 ### Step 1. Import thư viện
+
 Sử dụng maven để import
 
 ```xml
@@ -76,11 +92,14 @@ Sử dụng maven để import
     <version>3.0-0.9.6</version>
 </dependency>
 ```
+
 ### Step 2. Lấy API Key
+
 Để thao tác với MailChimp API, bạn cần phải có APIKey (1 đoạn mã hash, thay cho username + pass).   
 Để có APIKey bạn bắt buộc phải có account ở https://mailchimp.com.  
 Việc tạo account và lấy API có thể tham khảo tại đây:   
 https://wiki.chili.vn/huong-dan/huong-dan-lay-ma-api-mailchimp/
+
 ### Step 3. Tạo một LIST mới, Có tên là SinhVien
 
 ```java
@@ -126,16 +145,17 @@ public class CreateList {
     }
 }
 ```
-->	List ID = a1417c3117    
+
+->    List ID = a1417c3117    
 Vào website F5 xem có gì HOT ?
 ![MailChimp](https://images.viblo.asia/96d8ad72-3395-4feb-aefe-ec7567f56195.jpg)
 
 ### Step 4. Thêm danh sách email người nhận vào List SinhVien
 
 ```java
-      import com.ecwid.maleorang.MailchimpClient;
-        import com.ecwid.maleorang.MailchimpObject;
-        import com.ecwid.maleorang.method.v3_0.lists.members.EditMemberMethod;
+import com.ecwid.maleorang.MailchimpClient;
+import com.ecwid.maleorang.MailchimpObject;
+import com.ecwid.maleorang.method.v3_0.lists.members.EditMemberMethod;
 
 public class AddReceiverToList {
     public static void main(String[] args) throws Exception {
@@ -153,6 +173,7 @@ public class AddReceiverToList {
     }
 }
 ```
+
 ![MC2](https://images.viblo.asia/6bb5cbe8-02e0-449c-89d0-1f48113b6c7e.jpg)
 
 ### Step 5. Tạo Campaign
@@ -189,6 +210,7 @@ public class Campaign {
     }
 }
 ```
+
 -> Campaign ID: 87b2227f76      
 ![MC3](https://images.viblo.asia/6de625a2-3b64-46a2-b879-abf8e3a10ea8.jpg)
 
@@ -218,8 +240,10 @@ public class SetContentEmailAndSend {
     }
 }
 ```
+
 Vào inbox email cafeviet9x@gmail.com check kết quả
 ![MC4](https://images.viblo.asia/1e0ca7b2-a24f-4234-8815-d2d5fc84bf47.jpg)
 ![MC5](https://images.viblo.asia/57cb64d8-0b95-4a88-8340-4776dea9f5ba.jpg)
 
-Vì hiện tại email content Java mình code, đang để nội dung là plainText, vậy nên sẽ không thể report thống kê khi receiver open email hoặc click được! (Cái này mailchimp nói)
+Vì hiện tại email content Java mình code, đang để nội dung là plainText, vậy nên sẽ không thể report thống kê khi
+receiver open email hoặc click được! (Cái này mailchimp nói)

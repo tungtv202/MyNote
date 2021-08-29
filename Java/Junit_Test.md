@@ -10,34 +10,39 @@ tags:
 category: 
     - java
 ---
+
 # Java - Junit Test
 
-## 1. Junit Anotation
+## 1. Junit Annotation
+
 - Todo something before/after something
+
 ```java
 //  org.junit
-@BeforeClass 
-@Before 
-@After  
+@BeforeClass
+@Before
+@After
 @AfterClass 
 ```
 
 ```java
 // org.junit.jupiter.api
 @BeforeEach
-@BeforeAll  
+@BeforeAll
 @AfterEach
 @AfterAll
 ```
 
 - Test
+
 ```java
 @Test
-@RepeatTest(10) 
+@RepeatTest(10)
 @ParameterizedTest
 ```
 
 - Group, Tag, Other...
+
 ```java
 @Tag
 @Nested
@@ -47,13 +52,14 @@ category:
 ```
 
 ## 2. Assert action
+
 - Assert action
-    - assertEquals 
+    - assertEquals
     - assertFalse
-    - assertNotNull 
-    - assertNotSame 
+    - assertNotNull
+    - assertNotSame
     - assertNull
-    - assertSame 
+    - assertSame
     - assertTrue
     - isTrue
     - isFalse
@@ -71,6 +77,7 @@ category:
 
 
 - Assert Exception
+
 ```java
         assertThatCode(() -> Mono.from(testee().clear(generateMailboxId())).block())
             .doesNotThrowAnyException();
@@ -91,16 +98,16 @@ category:
 - Assert softly
 
 ```java
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(imapUidDAO.retrieveAllMessages().collectList().block())
-                .containsExactlyInAnyOrder(MESSAGE_1);
-            softly.assertThat(Flux.from(pop3MetadataStore.listAllEntries()).collectList().block())
-                .containsExactlyInAnyOrder(new Pop3MetadataStore.FullMetadata(MAILBOX_ID, STAT_METADATA_1));
-        });
+        SoftAssertions.assertSoftly(softly->{
+    softly.assertThat(imapUidDAO.retrieveAllMessages().collectList().block())
+    .containsExactlyInAnyOrder(MESSAGE_1);
+    softly.assertThat(Flux.from(pop3MetadataStore.listAllEntries()).collectList().block())
+    .containsExactlyInAnyOrder(new Pop3MetadataStore.FullMetadata(MAILBOX_ID,STAT_METADATA_1));
+    });
 ```
 
-
 # 3. Mockito
+
 - Manual way
 
 ```java
@@ -112,21 +119,27 @@ when(blobStoreDAO.delete(DEFAULT_BUCKET, blobId)).thenThrow(new RuntimeException
 - Annotation way
 
 ```java
-@InjectMocks 
+@InjectMocks
 @Mock
 //@InjectMocks: require MockitoJUnitRunner 
 ```
 
 ## 4. RestAPI Testing
+
 ### Using `io.rest-assured`
+
 - [io.rest-assured](https://mvnrepository.com/artifact/io.rest-assured/rest-assured)
+
 ```xml
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-        </dependency>
+
+<dependency>
+    <groupId>io.rest-assured</groupId>
+    <artifactId>rest-assured</artifactId>
+</dependency>
 ```
+
 1. Build base
+
 ```java
     public static RestAssuredConfig defaultConfig() {
         return newConfig().encoderConfig(encoderConfig().defaultContentCharset(StandardCharsets.UTF_8));
@@ -167,7 +180,6 @@ Map<String, Object> errors =
                 .containsEntry("message", "Invalid get on user");
 ```
 
-
 - Check value of body
 
 ```java
@@ -201,7 +213,7 @@ Map<String, Object> errors =
                 .isNotEmpty();
 ```
 
-- Compare json 
+- Compare json
 
 ```java
 val response: String = `given`
@@ -241,6 +253,7 @@ val response: String = `given`
            |    ]
            |}""".stripMargin)
 ```
+
     - `$${json-unit.ignore}` for ignore compare value
 
 - Set queryParam for request
@@ -258,42 +271,44 @@ val response: String = `given`
 ## 5. ConditionFactory
 
 ```java
-    ConditionFactory CALMLY_AWAIT = Awaitility
-        .with().pollInterval(ONE_HUNDRED_MILLISECONDS)
-        .and().pollDelay(ONE_HUNDRED_MILLISECONDS)
-        .await()
-        .atMost(TEN_SECONDS);
+    ConditionFactory CALMLY_AWAIT=Awaitility
+    .with().pollInterval(ONE_HUNDRED_MILLISECONDS)
+    .and().pollDelay(ONE_HUNDRED_MILLISECONDS)
+    .await()
+    .atMost(TEN_SECONDS);
 
     @Test
-    void testConditionFactory() {
-        CALMLY_AWAIT.untilAsserted(() -> {
-            Random random = new Random();
+    void testConditionFactory(){
+        CALMLY_AWAIT.untilAsserted(()->{
+        Random random=new Random();
 
-            assertThat(random.nextInt(10))
-                .isEqualTo(7);
+        assertThat(random.nextInt(10))
+        .isEqualTo(7);
         });
-    }    
+        }    
 ```
 
 ## 6. RegisterExtension
+
 - Pojo
+
 ```java
 class CombinedTestSystem {
-        private final boolean supportVirtualHosting;
-        private final SimpleDomainList domainList;
-        private final Username userAlreadyInLDAP;
-        private final Username userAlreadyInLDAP2;
-        private final Username userWithUnknowDomain;
-        private final Username invalidUsername;
+    private final boolean supportVirtualHosting;
+    private final SimpleDomainList domainList;
+    private final Username userAlreadyInLDAP;
+    private final Username userAlreadyInLDAP2;
+    private final Username userWithUnknowDomain;
+    private final Username invalidUsername;
 
-        public CombinedTestSystem(boolean supportVirtualHosting) throws Exception {
-            // todo
-        }
-
-        private Username toUsername(String login) {
-            return toUsername(login, DOMAIN);
-        }
+    public CombinedTestSystem(boolean supportVirtualHosting) throws Exception {
+        // todo
     }
+
+    private Username toUsername(String login) {
+        return toUsername(login, DOMAIN);
+    }
+}
 ```
 
 - Extension
@@ -301,64 +316,66 @@ class CombinedTestSystem {
 ```java
 class CombinedUserRepositoryExtension implements BeforeEachCallback, ParameterResolver {
 
-        private final boolean supportVirtualHosting;
-        private CombinedTestSystem combinedTestSystem;
+    private final boolean supportVirtualHosting;
+    private CombinedTestSystem combinedTestSystem;
 
-        private CombinedUserRepositoryExtension(boolean supportVirtualHosting) {
-            this.supportVirtualHosting = supportVirtualHosting;
-        }
-
-        @Override
-        public void beforeEach(ExtensionContext extensionContext) throws Exception {
-            combinedTestSystem = new CombinedTestSystem(supportVirtualHosting);
-        }
-
-        @Override
-        public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-            return parameterContext.getParameter().getType() == CombinedTestSystem.class;
-        }
-
-        @Override
-        public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-            return combinedTestSystem;
-        }
-
-        public boolean isSupportVirtualHosting() {
-            return supportVirtualHosting;
-        }
+    private CombinedUserRepositoryExtension(boolean supportVirtualHosting) {
+        this.supportVirtualHosting = supportVirtualHosting;
     }
+
+    @Override
+    public void beforeEach(ExtensionContext extensionContext) throws Exception {
+        combinedTestSystem = new CombinedTestSystem(supportVirtualHosting);
+    }
+
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return parameterContext.getParameter().getType() == CombinedTestSystem.class;
+    }
+
+    @Override
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return combinedTestSystem;
+    }
+
+    public boolean isSupportVirtualHosting() {
+        return supportVirtualHosting;
+    }
+}
 ```
 
 - Using
+
 ```java
-  @RegisterExtension
-  CombinedUserRepositoryExtension combinedExtension = CombinedUserRepositoryExtension...
+@RegisterExtension
+CombinedUserRepositoryExtension combinedExtension=CombinedUserRepositoryExtension...
 
-  @BeforeEach
-  void setUp(CombinedTestSystem testSystem) {
-          //todo
-  }
+@BeforeEach
+  void setUp(CombinedTestSystem testSystem){
+      //todo
+      }
 
-  @Test
-  void test1(CombinedTestSystem testSystem) {
+@Test
+  void test1(CombinedTestSystem testSystem){
       // todo
-  }
+      }
 ```
 
 ## 7. ParameterizedTest
+
 ```java
-    static Stream<Arguments> storageStrategies() {
-        return Stream.of(
-            Arguments.of(DEDUPLICATION_STRATEGY),
-            Arguments.of(PASSTHROUGH_STRATEGY)
-        );
+    static Stream<Arguments> storageStrategies(){
+    return Stream.of(
+    Arguments.of(DEDUPLICATION_STRATEGY),
+    Arguments.of(PASSTHROUGH_STRATEGY)
+    );
     }
 
-    @ParameterizedTest
-    @MethodSource("storageStrategies")
-    void test(BlobStoreConfiguration blobStoreConfiguration) {
+@ParameterizedTest
+@MethodSource("storageStrategies")
+    void test(BlobStoreConfiguration blobStoreConfiguration){
         // todo something
-    }
+        }
 ```
 
 ## 8. Compare Json
@@ -367,7 +384,7 @@ class CombinedUserRepositoryExtension implements BeforeEachCallback, ParameterRe
 import net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson
 
  assertThatJson(response).isEqualTo(
-      s"""{
+     s"""{
          |  "sessionState":"${SESSION_STATE.value}",
          |  "methodResponses": [
          |    ["error", {
@@ -378,15 +395,15 @@ import net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson
          |}""".stripMargin)
 
 
-    //
+     //
      assertThatJson(response)
-      .whenIgnoringPaths("methodResponses[0][1].description")
-      .isEqualTo(...)
+     .whenIgnoringPaths("methodResponses[0][1].description")
+     .isEqualTo(...)
 
-    //
+     //
      assertThatJson(response)
-      .inPath("methodResponses[0][1]")
-      .isEqualTo(...)
+     .inPath("methodResponses[0][1]")
+     .isEqualTo(...)
 
 ```
 

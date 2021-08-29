@@ -11,28 +11,34 @@ category:
     - java
 ---
 
-# Code example Spring WebSocket 
+# Code example Spring WebSocket
+
 ## 1. Target
+
 - Thử nghiệm websocket:
-    - Từ server gửi payload tới client thông qua websocket. 
+    - Từ server gửi payload tới client thông qua websocket.
     - Từ client gửi payload tới topic
+
 ## 2. Stack
+
 - Spring boot
 - Sprint web socket
 - Sockjs.js
 - Stomp.js
 
 ## 3. Code
+
 ### 3.1 Configuration
 
 ```java
+
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
         stompEndpointRegistry.addEndpoint("/websocket-example")
-                .withSockJS();
+            .withSockJS();
     }
 
     @Override
@@ -42,13 +48,16 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     }
 }
 ```
+
 - `@EnableWebSocketMessageBroker` : enabled a broker-backed messaging over WebSocket using STOMP
-- `registerStompEndpoints` : khai báo registerEndpoint, tất cả các socket client sẽ dùng url này để register, trước khi subscribe
+- `registerStompEndpoints` : khai báo registerEndpoint, tất cả các socket client sẽ dùng url này để register, trước khi
+  subscribe
 - `configureMessageBroker` ...
 
 ### 3.2 @Controller
 
 ```java
+
 @Controller
 public class TestController {
 
@@ -67,8 +76,10 @@ public class TestController {
     }
 }
 ```
+
 - ` @RequestMapping("/test")` : dùng để test từ server gửi payload tới client, thông qua RequestMapping
-- `@MessageMapping("/rm002")` : khi client gửi message tới "mapping" này, thì message sẽ được redirect tới `/topic/001`. Tham khảo đoạn code js bên dưới để hiểu hơn.
+- `@MessageMapping("/rm002")` : khi client gửi message tới "mapping" này, thì message sẽ được redirect tới `/topic/001`.
+  Tham khảo đoạn code js bên dưới để hiểu hơn.
 
 ### 3.3 Socket Client
 
@@ -106,6 +117,7 @@ test
     function onError(error) {
         console.log(error);
     }
+
     function sendMessage() {
         stompClient.send("/app/rm002", {}, "payload test 123");
     }
@@ -113,8 +125,10 @@ test
 ```
 
 ## 4. Demo
+
 - Source code: https://github.com/tungtv202/spring-boot-websocket-example
 - Sau khi build, truy cập vào url: http://localhost:8091/ , và F12 để theo dõi console
-![1](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/websocket/1.JPG)
-- Để test case server gửi payload tới client đã subscribe, thực hiện truy cập url http://localhost:8091/test?payload=123  (tạo 1 cửa sổ web browser khác)
+  ![1](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/websocket/1.JPG)
+- Để test case server gửi payload tới client đã subscribe, thực hiện truy cập
+  url http://localhost:8091/test?payload=123  (tạo 1 cửa sổ web browser khác)
 - Để test case client send message tới topic, gõ `sendMessage()` tại console F12 của web browser

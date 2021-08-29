@@ -10,10 +10,12 @@ category:
     - java
 ---
 
-# Javers  - Object auditing and diff framework for Java     
-Ref:    
-- https://www.baeldung.com/javers     
-- https://javers.org/   
+# Javers - Object auditing and diff framework for Java
+
+Ref:
+
+- https://www.baeldung.com/javers
+- https://javers.org/
 
 Source Code : https://github.com/tungtv202/javerdiff
 

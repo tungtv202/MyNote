@@ -10,7 +10,9 @@ category:
 ---
 
 # For `Springboot`
+
 ## Dockerfile
+
 - Template 1
 
 ```Dockerfile
@@ -36,7 +38,7 @@ EXPOSE 8080
 
 - Template 2
     - Dockerfile
-    
+
 ```Dockerfile
 FROM openjdk:8-jdk-alpine
 ENV TZ=Asia/Ho_Chi_Minh
@@ -47,8 +49,9 @@ ADD target/lib lib
 ADD target/applications.jar applications.jar
 CMD ["/run.sh"]
 ```
+
 - run.sh
-    
+
 ```bash
 #!/bin/sh
 export HOST_NAME=`hostname`
@@ -70,7 +73,14 @@ esac
 ```bash
 docker build -t springio/gs-spring-boot-docker .
 ```
+
 ## Ref
+
 - https://spring.io/guides/gs/spring-boot-docker/
-- What exactly does `-Djava.security.egd=file:/dev/./urandom` do when containerizing a Spring Boot application? 
-    - The purpose of that security property is to speed up tomcat startup. By default the library used to generate random number in JVM on Unix systems relies on /dev/random. On docker containers there isn't enough entropy to support /dev/random. See Not enough entropy to support /dev/random in docker containers running in boot2docker. The random number generator is used for session ID generation. Changing it to /dev/urandom will make the startup process faster. -> [Link](https://stackoverflow.com/questions/58853372/what-exactly-does-djava-security-egd-file-dev-urandom-do-when-containerizi)
+- What exactly does `-Djava.security.egd=file:/dev/./urandom` do when containerizing a Spring Boot application?
+    - The purpose of that security property is to speed up tomcat startup. By default the library used to generate
+      random number in JVM on Unix systems relies on /dev/random. On docker containers there isn't enough entropy to
+      support /dev/random. See Not enough entropy to support /dev/random in docker containers running in boot2docker.
+      The random number generator is used for session ID generation. Changing it to /dev/urandom will make the startup
+      process faster.
+      -> [Link](https://stackoverflow.com/questions/58853372/what-exactly-does-djava-security-egd-file-dev-urandom-do-when-containerizi)

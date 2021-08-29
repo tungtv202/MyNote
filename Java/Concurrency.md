@@ -13,23 +13,28 @@ category:
     - java
 ---
 
-
 ## ThreadLocal
-- Mechanism is each thread has a "memory zone/separate". All methods of all classes/instances, if running in the same thread can access that "memory zone".
 
-- Example case: create the context for the application. (ApplicationContext.getCurrentSession). It is very flexible. Replace for a way to get value via a parameter of the method (that has a bit lengthy. IMO).
+- Mechanism is each thread has a "memory zone/separate". All methods of all classes/instances, if running in the same
+  thread can access that "memory zone".
+
+- Example case: create the context for the application. (ApplicationContext.getCurrentSession). It is very flexible.
+  Replace for a way to get value via a parameter of the method (that has a bit lengthy. IMO).
 
 - Improve thread-safe
-- WARNING: Be careful when using it with ThreadPool. A situation may happen Task A and Task B, both running in the same thread (support by ThreadPool). Then TaskA can get the value that makes by TaskB. 
+- WARNING: Be careful when using it with ThreadPool. A situation may happen Task A and Task B, both running in the same
+  thread (support by ThreadPool). Then TaskA can get the value that makes by TaskB.
 
-- Some reference: 
+- Some reference:
     - [http://drunkkid2000.blogspot.com](http://drunkkid2000.blogspot.com/2013/07/thread-local_2564.html)
     - [jenkov](http://tutorials.jenkov.com/java-concurrency/threadlocal.html)
 
 ### Code example
-- `InheritableThreadLocal`: 
-    -   Using it when you want to ChildThread (created by ParentThread) can using "clone copy" from ParentThread. (When ChildThread modify the value - NO modified the ParentThread)
-    -   The different ChildThread does not share the same "memory zone".
+
+- `InheritableThreadLocal`:
+    - Using it when you want to ChildThread (created by ParentThread) can using "clone copy" from ParentThread. (When
+      ChildThread modify the value - NO modified the ParentThread)
+    - The different ChildThread does not share the same "memory zone".
 
 ```java
 public static void main(String[] args) {
@@ -93,14 +98,18 @@ public static void main(String[] args) {
     }
 ```
 
-## Volatile 
-- Volatile helps the variable will get read/write from the main memory. (Default, maybe it can read/write from CPU Cache, that designed for performance, that is a reason for threads read/write not a lastest value)
+## Volatile
+
+- Volatile helps the variable will get read/write from the main memory. (Default, maybe it can read/write from CPU
+  Cache, that designed for performance, that is a reason for threads read/write not the latest value)
 
 ![Volatile](https://images.viblo.asia/59d1214d-4438-4f46-878f-5db8af35fa1c.png)
 
 ## ThreadSafe
+
 ### XSync
-- This is a library that supports threadsafe, threads will waiting for each other for using the same resource. (It will helpful more `synchronization` tag)
+
+- This is a library that supports threadsafe, threads will wait for each other for using the same resource. (It will be helpful more `synchronization` tag)
 
 ```xml
         <dependency>
@@ -220,11 +229,13 @@ public class LeakyBucketModel {
     }
 ```
 
-## Striped Locks 
+## Striped Locks
 
 Get an idea from each instance we need one Lock, so 1000 instances, you need 1000 Lock -> This is spent more memory.
 
-The mechanism of StripedLock (Guava) is managed by the group.  One Lock managed N element => Example: instances 1-100 using 1 Lock, instances 101-200 using 1 Lock => So, 1000 instances we just spent 10 Lock. This is the balancing between performance and memory.
+The mechanism of StripedLock (Guava) is managed by the group. One Lock managed N element => Example: instances 1-100
+using 1 Lock, instances 101-200 using 1 Lock => So, 1000 instances we just spent 10 Lock. This is the balancing between
+performance and memory.
 
 ```java
 private Striped<Lock> stripedLocks = Striped.lock(10);
@@ -240,41 +251,47 @@ public void update(Bag bag){
 
 - Many locks = More memory, good throughput
 - Fewer locks = Better memory, more contention
-- Striped locks = Middle ground 
+- Striped locks = Middle ground
 - Imp: Choose obj to retrieve the lock
-- Need to have hashcode & equals 
+- Need to have hashcode & equals
 - Striped versions of Lock, Semaphore and ReadWriteLock
 - Guava also has corresponding weak versions for easy GC
 
 ## ReadWriteLock
 
-- `java.util.concurrent.locks.ReentrantLock` is the one implementation of Lock interface. This class has a structural method called `ReentrantLock(boolean fair)`. While if `fair` is true, threads will access with FIFO sequence.
-- `ReadWriteLock` using two keys for the lock. One for `read` and one for `write`. Read key can acquire by many thread in the same time, while Write key can acquire by only one thread at the same time.
+- `java.util.concurrent.locks.ReentrantLock` is the one implementation of Lock interface. This class has a structural
+  method called `ReentrantLock(boolean fair)`. While if `fair` is true, threads will access with FIFO sequence.
+- `ReadWriteLock` using two keys for the lock. One for `read` and one for `write`. Read key can acquire by many thread
+  in the same time, while Write key can acquire by only one thread at the same time.
 
-## Lock vs synchronized 
+## Lock vs synchronized
 
-- Synchronized blocks must be contained within a single method. 
-lock.lock() and lock.unlock() can be called from different method 
-- lock.lock() and lock.unlock() provides the same visibility and happens before guarantees as entering 
-and exiting a synchronized block
-- Synchronized blocks are always reentrant, Lock could decide not to be 
-- Synchronized blocks do not guarantee fairness. Lock can 
-(fairness is the happened when one thread keeps a waiting status forever, it can not access the object, that is locked.
-The reason is other threads always have higher priority. Not guarantee the FIFO)
-- Example: `ReentrantLock`, when initial, we can set `fair` parameter is true 
+- Synchronized blocks must be contained within a single method. lock.lock() and lock.unlock() can be called from
+  different method
+- lock.lock() and lock.unlock() provides the same visibility and happens before guarantees as entering and exiting a
+  synchronized block
+- Synchronized blocks are always reentrant, Lock could decide not to be
+- Synchronized blocks do not guarantee fairness. Lock can
+  (fairness is the happened when one thread keeps a waiting status forever, it can not access the object, that is
+  locked. The reason is other threads always have higher priority. Not guarantee the FIFO)
+- Example: `ReentrantLock`, when initial, we can set `fair` parameter is true
 
 ```java
  ReentrantLock lock = new ReentrantLock(true);
 ```
- 
-## Blocking Threads is Expensive
-- Entering a synchronized block is not that expensive - if the thread is allowed access. But if the thread is blocked because another thread is already executing inside the synchronized block - the blocking of the thread is expensive.
-![Blocking Threads is Expensive](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/BlockingThreadsisExpensive.png)
 
-## Threads Evaluation 
+## Blocking Threads is Expensive
+
+- Entering a synchronized block is not that expensive - if the thread is allowed access. But if the thread is blocked
+  because another thread is already executing inside the synchronized block - the blocking of the thread is expensive.
+  ![Blocking Threads is Expensive](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/BlockingThreadsisExpensive.png)
+
+## Threads Evaluation
+
 (update 18/08/2021)
 
-Number of threads <= (Number of cores) / [1 -  Blocking Factor (BF)]
+Number of threads <= (Number of cores) / [1 - Blocking Factor (BF)]
+
 - Blocking Factor is the fraction of time a thread is blocked on IO operations
 - If your tasks are computation-intensive, BF is 0 and # of Thread <= # of Cores
 - If your tasks are IO intensive, and if BF is 0.9, # of Thread <= 10 * # of Cores
@@ -298,6 +315,7 @@ B2 --> E3(abstract RecursiveTask)
 ```
 
 - `Work Stealing`:
+
 ```
 Result solve(Problem problem) {
     if (problem is small)
@@ -311,12 +329,18 @@ Result solve(Problem problem) {
 }
 ```
 
-- `ExecutorService::newFixedThreadPool(int nThreads)`: Creates a thread pool that reuses a fixed number of threads operating off a shared unbounded queue.
-- `ScheduledExecutorService::newScheduledThreadPool(int corePoolSize)`: Creates a thread pool that can schedule commands to run after a given delay, or to execute periodically.
-- `ExecutorService::newCachedThreadPool(ThreadFactory threadFactory)`: Creates a thread pool that creates new threads as needed, but will reuse previously constructed threads when they are available, and uses the provided ThreadFactory to create new threads when needed
-- `ExecutorService::newWorkStealingPool(int parallelism)`: Creates a thread pool that maintains enough threads to support the given parallelism level, and may use multiple queues to reduce contention.
+- `ExecutorService::newFixedThreadPool(int nThreads)`: Creates a thread pool that reuses a fixed number of threads
+  operating off a shared unbounded queue.
+- `ScheduledExecutorService::newScheduledThreadPool(int corePoolSize)`: Creates a thread pool that can schedule commands
+  to run after a given delay, or to execute periodically.
+- `ExecutorService::newCachedThreadPool(ThreadFactory threadFactory)`: Creates a thread pool that creates new threads as
+  needed, but will reuse previously constructed threads when they are available, and uses the provided ThreadFactory to
+  create new threads when needed
+- `ExecutorService::newWorkStealingPool(int parallelism)`: Creates a thread pool that maintains enough threads to
+  support the given parallelism level, and may use multiple queues to reduce contention.
 
 ### Some use cases
+
 1. If you want to process all submitted tasks in order of arrival, just use newFixedThreadPool(1)
 2. If you want to optimize performance of big computation of recursive tasks, use ForkJoinPool or newWorkStealingPool
-3. If you want to execute some tasks periodically or at certain time in future, use newScheduledThreadPool
+3. If you want to execute some tasks periodically or at certain time in the future, use newScheduledThreadPool

@@ -9,14 +9,20 @@ tags:
 category: 
     - other
 ---
+
 # Functional Pattern
+
 Groups:
-    - Behavioral patterns: strategy, visitor, chain of responsibility, the template method, observer, iterator...
-    - Creational patterns:  factory, builder, prototype, the factory method...
-    - Structural patterns: adapter, bridge, proxy, decorator...
+- Behavioral patterns: strategy, visitor, chain of responsibility, the template method, observer, iterator... 
+- Creation patterns:  factory, builder, prototype, the factory method... 
+- Structural patterns: adapter, bridge, proxy, decorator...
+
 ## The Factory Method Pattern
+
 ->  to create an instance of the object
-1. We has:
+
+1. We have:
+
 ```java
     enum VehicleColor {
             RED,
@@ -52,7 +58,8 @@ Groups:
     }
 ```
 
-2. Legacy 
+2. Legacy
+
 ```java
     public static Vehicle instanceOfType(VehicleType type, VehicleColor color) {
         if (type.equals(VehicleType.CAR)) {
@@ -65,12 +72,15 @@ Groups:
         throw new IllegalArgumentException("No support for type " + type);
     }
 ```
--> 
+
+->
+
 ```java
 Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
 ```
 
 3. Functional
+
 ```java
     enum VehicleType {
         CAR(Car::new),
@@ -86,16 +96,21 @@ Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
 ``` 
 
 ->
+
 ```java
  Vehicle vehicle = VehicleType.BUS.factory.apply(VehicleColor.RED);
  ```
 
-// The purpose of creating `Function` in enum to avoid forgetting to declare a new case. That maybe get `IllegalArgumentException` if use `legacy` way.
+// The purpose of creating `Function` in enum to avoid forgetting to declare a new case. That maybe
+get `IllegalArgumentException` if you use `legacy` way.
 
 ## The Template Method Pattern
-->  allows us to define some common steps for an algorithm. Then, the subclasses override some of these steps with their specific behaviors for a particular step
+
+->  allows us to define some common steps for an algorithm. Then, the subclasses override some of these steps with their
+specific behaviors for a particular step
 
 1. We have:
+
 ```java
     interface Vehicle {
     }
@@ -105,6 +120,7 @@ Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
 ```
 
 2. Legacy
+
 ```java
     abstract class AbstractVehicleLegacy implements Vehicle {
         public void start() {
@@ -123,13 +139,16 @@ Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
         }
     }
 ```
+
 ->
+
 ```java
         var busImpl = new BusImpl();
         busImpl.start();
 ```
 
 3. Functional
+
 ```java
     interface Vehicle {
         default void start(Consumer<Void> preStartCheck) {
@@ -138,20 +157,26 @@ Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
         }
     }
 ```
+
 ->
+
 ```java
         Bus bus = new Bus();
         bus.start(t -> System.out.printf("Start Bus modern \n"));
 ```
 
 ## The Builder Pattern
--> to provide a way of constructing an object in steps, separating the construction logic from its representation.
-// Can use `Lombok` to create `Builder` 
+
+-> to provide a way of constructing an object in steps, separating the construction logic from its representation. //
+Can use `Lombok` to create `Builder`
 
 ## The Strategy Pattern
--> is probably one of the most widely used design patterns; it’s normally used in every situation where we have to choose a different behavior based on some property or input
+
+-> is probably one of the most widely used design patterns; it’s normally used in every situation where we have to
+choose a different behavior based on some property or input
 
 1. We have
+
 ```java
     interface DeliveryCalculator {
         BigDecimal priceFor(Item item);
@@ -166,6 +191,7 @@ Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
 ```
 
 2. Legacy
+
 ```java
     class BasicDeliveryCalculator implements DeliveryCalculator {
 
@@ -183,13 +209,16 @@ Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
         }
     }
 ```
+
 ->
+
 ```java
         DeliveryCalculator factory = new PremiumDeliveryCalculator();
         var price = factory.priceFor(new Item(1, new BigDecimal("9.9")));
 ```
 
 3. Functional
+
 ```java
     enum PLAN_MODERN {
         BASIC(deliveryPriceWithPercentageSurplus("0.025")),
@@ -207,16 +236,19 @@ Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
         }
     }
 ```
--> 
+
+->
+
 ```java
         BigDecimal price = PLAN_MODERN.BASIC.deliveryPrice.apply( new Item(1, new BigDecimal("12.99")));
 ```
+
 // Is this very similar to `factory method pattern`?
 
 ## The Chain-of-Responsibility Pattern
 
-
 1. We have
+
 ```java
 
     enum WashState {
@@ -259,6 +291,7 @@ Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
 ```
 
 2. Legacy
+
 ```java
     @Test
     public void legacyTest() {
@@ -306,6 +339,7 @@ Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
 ```
 
 3. Functional
+
 ```java
     @Test
     public void modernTest() {
@@ -319,7 +353,8 @@ Vehicle vehicle = instanceOfType(VehicleType.BUS, VehicleColor.BLUE);
     }
 ```
 
-## Practice 
+## Practice
+
 ### Practice 01
 
 ```java

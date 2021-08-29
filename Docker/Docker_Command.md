@@ -11,14 +11,20 @@ category:
     - docker
 ---
 
-## 1. Install   
-- Sau khi cài đặt docker, cần lưu ý gán quyền user cho docker. Nếu không gán quyền, thì command trong docker sẽ bị permission
+## 1. Install
+
+- Sau khi cài đặt docker, cần lưu ý gán quyền user cho docker. Nếu không gán quyền, thì command trong docker sẽ bị
+  permission
+
 ```sh
 sudo usermod -aG docker $USER
 ```
+
 Logout sau đó login lại để có hiệu lực
+
 - docker và docker-compose là 2 package khác nhau. Nếu muốn xài docker-compose thì phải cài đặt riêng
-- Docker Machine là 1 package riêng, để sử dụng docker machine để tạo các máy ảo trên ubuntu, thì cần cài đặt riêng. Và phải cài đặt "virtual box" trước đó.
+- Docker Machine là 1 package riêng, để sử dụng docker machine để tạo các máy ảo trên ubuntu, thì cần cài đặt riêng. Và
+  phải cài đặt "virtual box" trước đó.
 
 ### Bash Script install docker
 
@@ -47,7 +53,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 sudo usermod -aG docker $USER
 ```
 
-## 2. Một số lệnh Docker 
+## 2. Một số lệnh Docker
 
 ```bash
 # Va`o 1 service java
@@ -72,7 +78,8 @@ docker ps
 docker ps -a
 ```
 
-### 2.1 Tạo/ Chạy container 
+### 2.1 Tạo/ Chạy container
+
 ```bash
 # Khi `bash` vào trong container, mà không thể chạy lệnh apt-get update, có thể thử với
 apk add curl
@@ -128,6 +135,7 @@ docker run --rm -v /mycode/swarm/:/home/ httpd:latest cp /usr/local/apache2/conf
 ```
 
 ### 2.2 Ít dùng
+
 ```bash
 # Lưu một container đang dừng thành Image
 docker commit containerid imagename:imageversion
@@ -167,7 +175,9 @@ docker stats container-name-or-id
 ```
 
 ## 3 Docker Swarm
+
 ### 3.1 Tạo Swarm
+
 ```bash
 # Tại node leader > khởi tạo
 docker swarm init --advertise-addr=192.168.99.117
@@ -180,6 +190,7 @@ docker node ls
 ```
 
 ### 3.2 Tạo service
+
 ```bash
 # Command example
 docker service create --replicas 5 -p 8085:8085 --name testservice ichte/swarmtest:node

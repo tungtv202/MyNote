@@ -12,7 +12,9 @@ category:
 ---
 
 # Multiple Configurations for Feign Clients
+
 Mục đích khi có nhiều FeignClient, và mỗi client có 1 config riêng biệt.
+
 - Tham khảo: https://medium.com/@shokri4971/multiple-configurations-for-feign-clients-aeaacb8f0edd
 
 ```java
@@ -54,6 +56,7 @@ public class FooRequestInterceptor implements RequestInterceptor {
     }
 }
 ```
+
 ## Sử dụng
 
 ```java

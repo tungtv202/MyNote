@@ -12,18 +12,24 @@ category:
 ---
 
 # JHipster
+
 ## 1. Mục đích
+
 Tạo nhanh project java:
+
 - build sẵn CRUD: service + repository + controller + entity
 - Tự động generator database = jdl file
-- cung cấp giao diện admin CRUD     
+- cung cấp giao diện admin CRUD
 
 // Có nét giống với Django Admin Module trong Python
+
 ## 2. Install
+
 - Java
 - Nodejs (nodejs + npm)
-    - Lưu ý về version 
-    - Khi tạo jhipster project, khi thực hiện command `mvnw`, có thể jhipster sẽ install lại nodejs + npm với version khác.
+    - Lưu ý về version
+    - Khi tạo jhipster project, khi thực hiện command `mvnw`, có thể jhipster sẽ install lại nodejs + npm với version
+      khác.
 - Install jhipster
     ```
     mkdir myapplication
@@ -34,7 +40,9 @@ Tạo nhanh project java:
 - `npm install`
 
 https://www.jhipster.tech/installation/
+
 ## 3. Note
+
 - Khi cài đặt jhipster, có thể chọn microservice, hoặc monothinic
 - Support reactjs + angularjs
 - Support deployment = docker
@@ -46,8 +54,8 @@ https://www.jhipster.tech/installation/
 - Chạy frontend = `npm start`. (code frontend auto hotswap)
 - Sử dụng liquibase để detect change database. (`src/main/resources/config/liquibase/master.xml`)
 - Dữ liệu mẫu để fake, là file .csv tại: `src/main/resources/config/liquibase/fake-data`
-- Cách khai báo file `jdl` quan hệ 1 - nhiều: 
-    ```
+- Cách khai báo file `jdl` quan hệ 1 - nhiều:
+```
     entity Blog {
     name String required minlength(3),
     handle String required minlength(2)
@@ -73,8 +81,8 @@ https://www.jhipster.tech/installation/
     }
 
     paginate Entry, Tag with infinite-scroll
-    ```
-    https://github.com/mraible/jhipster6-demo
+ ```
+  https://github.com/mraible/jhipster6-demo
 
 - Customize Repository  (Sử dụng trong trường hợp JPA không default sẵn)
 
@@ -86,6 +94,7 @@ https://www.jhipster.tech/installation/
     @Query("update Product p set p.fFirstId =:f1Id where p.fSecondId =:f2Id")
     void updateF2(@Param("f1Id") Long f1Id, @Param("f2Id") Long f2Id);
 ```
+
 - Customize DAOImpl
 
 ```java
@@ -122,12 +131,15 @@ https://www.jhipster.tech/installation/
         return result;
     }
 ```
-- Trong 1 số trường hợp không muốn chạy app qua proxy (ví dụ reactjs, proxy 9000, 9060). Muốn chạy trực tiếp trên port java, cần config security 
+
+- Trong 1 số trường hợp không muốn chạy app qua proxy (ví dụ reactjs, proxy 9000, 9060). Muốn chạy trực tiếp trên port
+  java, cần config security
 
 ```text
     // config/SecurityConfiguration.java
     Sửa format `default-src 'self'` thành `default-src *`
 ```
+
 - Thêm script/css common tại: `src/main/webapp/index.html`
 - Config accept Javascript trong reactjs .ts file `.eslintrc.json`
 

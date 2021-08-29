@@ -11,11 +11,12 @@ category:
     - feign
 ---
 
-
 # Customize lại FeignClient bằng cách tạo ra các Bean mặc định
+
 - Các class interface khai báo `@FeignClient` thì sẽ mặc định sử dụng các config customize này
 
 ## 1. Code
+
 - config
 
 ```java
@@ -85,6 +86,7 @@ public class FeignClientConfig {
 }
 
 ```
+
 - FeignDecode class
 
 ```java
@@ -131,6 +133,7 @@ public class FeignDecode extends JacksonDecoder {
 }
 
 ```
+
 ## 2. Handler Error
 
 ```java

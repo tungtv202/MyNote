@@ -15,16 +15,15 @@ category:
 
 ## False positive
 
-- If it return `false` => 100% believe
-- If it return `true` => Maybe it `really true` or `false` -> Then need using other way to check exactly the result.
+- If it returns `false` => 100% believe
+- If it returns `true` => Maybe it `really true` or `false` -> Then need using other way to check exactly the result.
 - Get benefit when:
-    - The entries are very big. 
+    - The entries are very big.
     - Want to decrease the request to "exactly checking"
-    - The percent of probabilistic `false` is very bigger than `true` 
+    - The percent of probabilistic `false` is very bigger than `true`
 
 - Use case in the world
     - Google using it to checking account_name is it exists or not when the user registers a new account.
-
 
 ## Understand via code sample
 

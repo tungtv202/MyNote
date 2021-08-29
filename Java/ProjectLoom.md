@@ -13,17 +13,24 @@ category:
 ---
 
 # Project Loom
+
 ## Why
-- Cann't have million Thread with traditional way. (Normaly, number of threads in 2_000-10_000). If lager, we will get the OutOfMemory, and JVM stack is expensive
+
+- Can't have a million Thread with traditional way. (Normally, number of threads in 2_000-10_000). If lager, we will get
+  the OutOfMemory, and JVM stack is expensive
 - Reactive is hard to study, reading, and debug
 
 ## Virtual Threads
+
 - Make the blocking is very cheap. Over 23 million virtual threads in 16 GB of memory
 - Way1
+
 ```
 Thread thread = Thread.startVirtualThread(runnable);
 ```
+
 - Way2
+
 ```java
 Thread thread = Thread.builder()
    .virtual()
@@ -31,7 +38,9 @@ Thread thread = Thread.builder()
    .task(runnable)
    .build();
 ```
-- Example: [https://horstmann.com/unblog/2020-12-05/dailyImages/ImageProcessor.java](https://horstmann.com/unblog/2020-12-05/dailyImages/ImageProcessor.java)
+
+-
+Example: [https://horstmann.com/unblog/2020-12-05/dailyImages/ImageProcessor.java](https://horstmann.com/unblog/2020-12-05/dailyImages/ImageProcessor.java)
 
 ### VirtualThread.getState()
 
@@ -44,10 +53,10 @@ Thread thread = Thread.builder()
 | PINNED, PARKED, PARKED_SUSPENDED | WAITING  | 
 |  TERMINATED | TERMINATED  | 
 
-
-
-## Structured concurrency 
+## Structured concurrency
 
 ## Note
-- Don't using `pool` in virtualThread. If using ExecutorService, Loom will create new thread for each task. In Loom, you are encouraged to use a separate executor service for each task set.
+
+- Don't use `pool` in virtualThread. If using ExecutorService, Loom will create new thread for each task. In Loom, you
+  are encouraged to use a separate executor service for each task set.
 - We can create virtual thread pool with deadline

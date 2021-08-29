@@ -15,34 +15,42 @@ category:
 S3 là 1 service của AWS cho chức năng lưu trữ dữ liệu hướng Object
 
 ## 1. Thư viện
+
 Tại thời điểm bài viết này, AWS đã cho ra bản SDK 2.0 cho Java, tuy nhiên đây là bản preview cho developer.
 
 ## 2. Tạo IAM
+
 Cũng giống như nhiều SDK khác, Amazon AWS sử dụng các secret key để developer implement vô code.    
 Sử dụng secret key để access tới service của Amazon, thay vì sử dụng username + password như trên giao diện web.    
-Service quản lý việc này của Amazon là IAM. 
-Để tạo và config role cho các secret key này bạn truy cập tại đây: https://console.aws.amazon.com/iam
+Service quản lý việc này của Amazon là IAM. Để tạo và config role cho các secret key này bạn truy cập tại
+đây: https://console.aws.amazon.com/iam
 
 ```java
 // Example
 String AWSAccessKeyId="AKIAIBGCWNEKIYZSKXTA";
 String AWSSecretKey="LZjMW4t/udiEu8UXupg++I0mQsaXsm8Jb99upJBi";
 ```
+
 ## 3. Demo
+
 ### Step 1. Khởi tạo kết nối
+
 Để thao tác được với AWS, Cần khởi tạo client trước.    
-Nôm na có thể hiểu nhanh là bước này để verify kết nối, xem access key, secret key có đúng không.   
+Nôm na có thể hiểu nhanh là bước này để verify kết nối, xem access key, secret key có đúng không.
+
 ```java
 BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
 AWSStaticCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(basicAWSCredentials);
 AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard().withRegion(awsRegion).withCredentials(credentialsProvider);
 AmazonS3 s3connect = s3ClientBuilder.build();
 ```
+
 Trong đó String awsRegion = "ap-southeast-1";   
 Amazon S3 cung cấp nhiều Region để chứa dữ liệu.    
 Có thể hiểu nhanh Region là vùng lưu trữ,Và AWS có hệ thống servers tại nhiều nơi trên thế giới.    
-Bạn có thể chọn lấy 1 Region, nơi mà bạn thích để chứa dữ liệu của bạn. (Dựa theo vị trí địa lý chẳng hạn). 
-Đây là danh sách các Regions AWS cung cấp:
+Bạn có thể chọn lấy 1 Region, nơi mà bạn thích để chứa dữ liệu của bạn. (Dựa theo vị trí địa lý chẳng hạn). Đây là danh
+sách các Regions AWS cung cấp:
+
 ```
     GovCloud("us-gov-west-1", "AWS GovCloud (US)"),
     US_EAST_1("us-east-1", "US East (N. Virginia)"),
@@ -63,11 +71,15 @@ Bạn có thể chọn lấy 1 Region, nơi mà bạn thích để chứa dữ l
     CN_NORTHWEST_1("cn-northwest-1", "China (Ningxia)"),
     CA_CENTRAL_1("ca-central-1", "Canada (Central)");
 ```
+
 // Có thể xem danh sách này trong com.amazonaws.regions .
 
 ### Step 2. Tạo bucketName
+
 BucketName là gì? Có thể hiểu nhanh nó là tên 1 folder để chứa tất cả các dữ liệu của mình.     
-Lưu ý: bucketName là unique với toàn hệ thống AWS (nhắc lại là toàn hệ thống aws, chứ không phải unique trong 1 tài khoản). 
+Lưu ý: bucketName là unique với toàn hệ thống AWS (nhắc lại là toàn hệ thống aws, chứ không phải unique trong 1 tài
+khoản).
+
 ```java
 public static Bucket createBucket(AmazonS3 amazonS3, String bucketName) {
         Bucket bucket = null;
@@ -90,14 +102,21 @@ public static Bucket createBucket(AmazonS3 amazonS3, String bucketName) {
         return bucket;
     }
 ```
+
 Thực ra nguyên đoạn code dài ngoằng trên chỉ cô đọng trong 1 dòng:
+
 ```java
  Bucket bucket = amazonS3.createBucket(bucketName);
 ```
+
 Cơ mà hãy cứ code sử dụng try catch như mình, để lấy được log lỗi cho chuẩn! Dễ debug.
+
 ### Step 3. Upload file to S3
-Thực ra thì dùng từ "file" nó không được đúng lắm, với 1 hệ thống lưu trữ Object Storage thì không có khái niệm là "file".      
-Họ sử dụng từ "object". Cơ mà trong khuôn khổ demo code này mình viết văn theo cách mình nghĩ người khác dễ hiểu nhất.      
+
+Thực ra thì dùng từ "file" nó không được đúng lắm, với 1 hệ thống lưu trữ Object Storage thì không có khái niệm là "
+file".      
+Họ sử dụng từ "object". Cơ mà trong khuôn khổ demo code này mình viết văn theo cách mình nghĩ người khác dễ hiểu nhất.
+
 ```java
 /**
      * upload file to s3
@@ -127,20 +146,25 @@ Họ sử dụng từ "object". Cơ mà trong khuôn khổ demo code này mình 
     }
     
 ```
+
 Trong đó PutObjectRequest được khởi tạo bởi các thuộc tính sau:
+
 ```java
 PutObjectRequest(String bucketName, String key, File file)
 ```
 
 Hoặc
+
 ```java
 PutObjectRequest(String bucketName, String key, InputStream input, ObjectMetadata metadata)
 ```
-- bucketName: đã giải thích bên trên.   
-- key: fileName, có thể hiểu nhanh là tên của file, nằm trong folder. Và nó cũng là unique trong mỗi bucket.    
-- CannedAccessControlList.Private : khi 1 file upload lên S3, nếu không có config gì đặc biệt, default nó sẽ là private.    
+
+- bucketName: đã giải thích bên trên.
+- key: fileName, có thể hiểu nhanh là tên của file, nằm trong folder. Và nó cũng là unique trong mỗi bucket.
+- CannedAccessControlList.Private : khi 1 file upload lên S3, nếu không có config gì đặc biệt, default nó sẽ là private.
 
 ### Step 4 Get link download file từ S3 (có token)
+
 (Thực tế kỹ thuật này được gọi là Signer URL)   
 Với những file config policy là PUBLIC thì thật dễ dàng dể download, chỉ cần copy URL theo format na ná như sau:
 
@@ -148,6 +172,7 @@ https://s3-us-west-2.amazonaws.com/my-tungtv202-avatar/MyObjectKey
 là có thể download được mọi lúc mọi nơi.
 
 Tuy nhiên với những file có policy là PRIVATE thì khi truy cập như vậy, sẽ gặp thông báo sau:
+
 ```xml
 Error>
 <Code>AccessDenied</Code>
@@ -158,7 +183,8 @@ ipPFZDboIzOCohRl4/RPe9I/IBQVn3esK+8mnGQO3yDKIPcatbnbl41SxC2oMUKPpt7WcG+toqk=
 </HostId>
 </Error>
 ```
-Đoạn code dưới đây để getlink download (link có kèm token, token có thời hạn available).  
+
+Đoạn code dưới đây để getlink download (link có kèm token, token có thời hạn available).
 
 ```java
 /**
@@ -199,10 +225,11 @@ Example 1 download link có token:
 https://xinchaovietna222me.s3.ap-southeast-1.amazonaws.com/188?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20180710T065913Z&X-Amz-SignedHeaders=host&X-Amz-Expires=299&X-Amz-Credential=AKIAIP7Y2FP3U3AJWLPQ%2F20180710%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=fc46c9d6cef32a94ee120dac5ab6a33c08e245256b979be977232b76c32e6926
 ```
 
-## 4. Sử dụng SSE-C để encrypt/decrypt object 
+## 4. Sử dụng SSE-C để encrypt/decrypt object
 
-- Với cách này, chỉ có client chứa "key" mới có thể download/retrivew metadata của object được. Cho dù tài khoản root của AWS có full quyền, cũng không thể can thiệp, nếu không có key.
-ref: https://docs.aws.amazon.com/AmazonS3/latest/dev/sse-c-using-java-sdk.html
+- Với cách này, chỉ có client chứa "key" mới có thể download/retrivew metadata của object được. Cho dù tài khoản root
+  của AWS có full quyền, cũng không thể can thiệp, nếu không có key.
+  ref: https://docs.aws.amazon.com/AmazonS3/latest/dev/sse-c-using-java-sdk.html
 
 ### 4.1 Code example
 

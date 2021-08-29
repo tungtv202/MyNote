@@ -11,14 +11,20 @@ category:
 ---
 
 # Code Application expose Metric for Prometheus
+
 ## 1. Solution
+
 2 cách
+
 - Dùng `micromiter` -> [SourceCode](https://github.com/tungtv202/micromiter-prometheus)
 - Dùng `prometheus-client` -> [SourceCode](https://github.com/tungtv202/prometheus-client-sdk)
 
 ## 2. Note
+
 ### 2.1 Prometheus Metric Type
+
 Có 4 type
+
 - Counter
     - When
         - you want to record a value that only goes up
@@ -39,7 +45,8 @@ Có 4 type
     - When
         - you want to take many measurements of a value, to later calculate averages or percentiles
         - you’re not bothered about the exact values, but are happy with an approximation
-        - you know what the range of values will be up front, so can use the default bucket definitions or define your own
+        - you know what the range of values will be up front, so can use the default bucket definitions or define your
+          own
     - Use Case
         - request duration
         - response size
@@ -53,6 +60,7 @@ Có 4 type
         - response size
 
 ### 2.2 Note for code
+
 - Đổi port endpoint metric, độc lập với port webservice logic. Nếu không có khai báo này thì sẽ chạy chung port 8080
 
     ```properties
@@ -62,7 +70,7 @@ Có 4 type
 - All metrics are exposed at `/actuator/prometheus`
 - Khai báo MetricFilter
     - Cách 1: tạo bean `MeterFilter`
-    
+
     ```java
         @Bean
         public MeterFilter meterFilter() 
@@ -71,11 +79,12 @@ Có 4 type
     ```properties
     management.metrics.enable.jvm=false
     ```
-- Lưu ý việc cập nhật metric được chạy ở 1 process khác với endpoint metric. (tức endpoint metric sẽ trả về kết quả đã được tính toán ở 1 process khác trước đó ).  
-Ex `BatchJobMetric` class file
+- Lưu ý việc cập nhật metric được chạy ở 1 process khác với endpoint metric. (tức endpoint metric sẽ trả về kết quả đã
+  được tính toán ở 1 process khác trước đó ).  
+  Ex `BatchJobMetric` class file
 - Chú ý `MeterRegistry`
 
-    ```java
+```java
         @Override
         public void trackTimerMetrics(String metricName, String... tags) {
             Timer timer = meterRegistry.timer(metricName, tags);
@@ -87,7 +96,8 @@ Ex `BatchJobMetric` class file
             meterRegistry.counter(metricName, tags).increment(value);
 
         }
-    ```
+```
+
 - Với kiểu metric `Gauges`, cần chú ý tới việc khai báo ref giá trị metric. Code example
 
 ```java
@@ -116,6 +126,7 @@ public class MailLagMetricJob implements CommandLineRunner {
 ```
 
 ## 3. Ref
+
 - [Youtube về metric type + demo dùng prometheus-client](https://www.youtube.com/watch?v=nJMRmhbY5hY)
 - [Blog về metric type + demo dùng prometheus-client = ](https://tomgregory.com/the-four-types-of-prometheus-metrics/)
 - [Hình ảnh về các prometheus-type, nhìn ảnh trực quan](https://blog.pvincent.io/2017/12/prometheus-blog-series-part-2-metric-types/)

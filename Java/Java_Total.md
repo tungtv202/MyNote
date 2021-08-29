@@ -10,19 +10,25 @@ category:
     - java
 ---
 
-## Collection Interface 
+## Collection Interface
+
 ![CollectionInterface](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/CollectionInterface.PNG)
 
-## SerialVersionUID 
-- It will help define the order data of objects when serializing to bytes stream. We can only deserialize objects when SerialVersionUID of a class is equal to `SerialVersionUID` of instance that storage
+## SerialVersionUID
+
+- It will help define the order data of objects when serializing to bytes stream. We can only deserialize objects when
+  SerialVersionUID of a class is equal to `SerialVersionUID` of instance that storage
 
 - What happens if we don't define `SerialVersionUID`?
-    -   Mechanism of serializable will auto-creates the `SerialVersionUID` when runtime, that based on properties of this class. Suppose we did not define it and storage object. Then we modify some properties (add/remove...). We will get the `InvalidClassException` when trying to deserialize the object. 
+    - Mechanism of serializable will auto-creates the `SerialVersionUID` when runtime, that based on properties of this
+      class. Suppose we did not define it and storage object. Then we modify some properties (add/remove...). We will
+      get the `InvalidClassException` when trying to deserialize the object.
 
 ## Double Brace
+
 - initialization syntax `({{ ... }}) `
 - potentially creating a memory leak    
-https://stackoverflow.com/questions/1958636/what-is-double-brace-initialization-in-java
+  https://stackoverflow.com/questions/1958636/what-is-double-brace-initialization-in-java
 
 ## KafkaListener - chỉ định vị trí offset + partition
 
@@ -54,14 +60,18 @@ https://stackoverflow.com/questions/1958636/what-is-double-brace-initialization-
     }
 ```
 
-- WARNING: `initialOffset` is the absolute offset that exits in Kafka. We will get an exception when try to set `initialOffset` as a random number, that smaller some offset, that we want 
+- WARNING: `initialOffset` is the absolute offset that exits in Kafka. We will get an exception when try to
+  set `initialOffset` as a random number, that smaller some offset, that we want
 
-## @Lazy 
+## @Lazy
 
 // TODO
 
-## HashMap 
-is not limited. That's the maximum number of buckets. Each bucket uses a form of linked list which has no limitation except memory. So in theory a HashMap can hold an unlimited number of elements. In practice you won't even get to 2^30 because you will have run out of memory long before that.
+## HashMap
+
+is not limited. That's the maximum number of buckets. Each bucket uses a form of linked list which has no limitation
+except memory. So in theory a HashMap can hold an unlimited number of elements. In practice, you won't even get to 2^30
+because you will have run out of memory long before that.
 
 ## MappedSuperclass
 
@@ -84,7 +94,9 @@ public class Test implements CommandLineRunner {
     }
 }
 ```
-## NumberUtils      
+
+## NumberUtils
+
 ```java
 public class NumberUtils {
     public static boolean isNotBlank(final Number number) {
@@ -110,6 +122,7 @@ public class NumberUtils {
 ```
 
 ## CompressHelper
+
 ```java
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -172,6 +185,7 @@ public @interface DoTypeValid {
     Class<? extends Payload>[] payload() default {};
 }
 ```
+
 ```java
 public class DoTypeValidator implements ConstraintValidator<DoTypeValid, DoSomethingType> {
     private DoSomethingType[] doSomethingTypes;
@@ -188,7 +202,7 @@ public class DoTypeValidator implements ConstraintValidator<DoTypeValid, DoSomet
 }
 ```
 
-Using: 
+Using:
 
 ```java
     @DoTypeValid(anyOf = {DoSomethingType.re_sync})
@@ -289,6 +303,7 @@ Using
 ## Optional.stream()
 
 1. Bad
+
 ```java
 public BigDecimal getOrderPrice(Long orderId) {
     List<OrderLine> lines = orderRepository.findByOrderId(orderId);
@@ -301,6 +316,7 @@ public BigDecimal getOrderPrice(Long orderId) {
 ```
 
 2. Bad
+
 ```java
 public BigDecimal getOrderPrice(Long orderId) {
     List<OrderLine> lines = orderRepository.findByOrderId(orderId);
@@ -311,6 +327,7 @@ public BigDecimal getOrderPrice(Long orderId) {
 ```
 
 and ...
+
 ```java
 
 public BigDecimal getOrderPrice(Long orderId) {
@@ -325,6 +342,7 @@ public BigDecimal getOrderPrice(Long orderId) {
 ```
 
 3. bad
+
 ```java
 public BigDecimal getOrderPrice(Long orderId) {
     return Optional.ofNullable(orderId)                            
@@ -392,7 +410,9 @@ public static boolean isPrivateIP(HttpServletRequest request) {
 ```
 
 ## Pro tip
-- The statement return null; makes the lambda into a `Callable` instead of a `Runnable`, so that you don’t have to catch checked exceptions 
+
+- The statement return null; makes the lambda into a `Callable` instead of a `Runnable`, so that you don’t have to catch
+  checked exceptions
 
 ```java
 exec.submit(() -> {

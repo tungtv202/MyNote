@@ -10,7 +10,8 @@ category:
     - kafka
 ---
 
-## 1. Install 
+## 1. Install
+
 ### 1.1 Thủ công Linux
 
 ```bash
@@ -34,6 +35,7 @@ advertised.listeners=PLAINTEXT://192.168.60.4:9092
 # Run broker server
 kafka-server-start.sh config/server.properties
 ```
+
 - Quick run by nohub
 
 ```bash
@@ -43,7 +45,8 @@ nohup bash zookeeper-server-start.sh config/zookeeper.properties >> /tmp/zookeep
 echo "run bootstrap server / broker server"
 nohup kafka-server-start.sh config/server.properties >> /tmp/kafkaserver.log 2>&1&
 ```
-### 1.2 Docker 
+
+### 1.2 Docker
 
 ```bash
 # docker hub: https://hub.docker.com/r/bitnami/kafka
@@ -71,7 +74,7 @@ docker run --name kafka-server -d \
 
 ```
 
-## 2.Topic 
+## 2.Topic
 
 ```bash
 # Create topic
@@ -139,6 +142,7 @@ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-first-appl
 ```
 
 # Kafka Tool
+
 - Kafka không cung cấp WEBUI đi kèm (rabbitmq có cung cấp webui đi kèm)
 - Để truy xuất tới kafka, có thể dùng tool Kafka tool (có UI)
-![Kafkatool](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/kafka_note/kafka_tool_1.JPG)
+  ![Kafkatool](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/kafka_note/kafka_tool_1.JPG)

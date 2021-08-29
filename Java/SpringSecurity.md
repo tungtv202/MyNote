@@ -11,10 +11,11 @@ category:
 ---
 
 # 1. Lý thuyết
-- Nếu sử dụng đồng thời HttpSecurity  và dùng @PreAuthorize, thì HttpSecurity sẽ được chạy trước
+
+- Nếu sử dụng đồng thời HttpSecurity và dùng `@PreAuthorize`, thì `HttpSecurity` sẽ được chạy trước
 - HttpSecurity khai báo dựa trên endpoint url, còn @PreAuthorize khai báo trước method
-- @PreAuthorize sử dụng SPEL (Spring Expression Language)
-- @PostAuthorize được assessed sau khi method được execute xong
+- `@PreAuthorize` sử dụng `SPEL` (Spring Expression Language)
+- `@PostAuthorize` được assessed sau khi method được execute xong
 - Expressions
     ```
     hasRole, hasAnyRole
@@ -28,26 +29,29 @@ category:
 
 ```java
 @PostFilter("filterObject.assignee == authentication.name")
-List<Task> findAll() {
+List<Task> findAll(){
     ...
-}
+    }
 ///
 @PostFilter("hasRole('MANAGER') or filterObject.assignee == authentication.name")
-List<Task> findAll() {
+List<Task> findAll(){
     // ...
-}
+    }
 ///
 @PreFilter("hasRole('MANAGER') or filterObject.assignee == authentication.name")
-Iterable<Task> save(Iterable<Task> entities) {
+Iterable<Task> save(Iterable<Task> entities){
     // ...
-}
+    }
 ```
 
 # 2. Code template
+
 ## 2.1. Spring security vs JWT
+
 - `WebSecurityConfig.java`
 
 ```java
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -66,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         //auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoderBean());
     }
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -75,14 +80,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and()
-                // we don't need CSRF because our token is invulnerable
-                .csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                // don't create session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests()
-                .antMatchers("/api/install/**").permitAll()
-                .anyRequest().authenticated();
+            // we don't need CSRF because our token is invulnerable
+            .csrf().disable()
+            .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+            // don't create session
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            .authorizeRequests()
+            .antMatchers("/api/install/**").permitAll()
+            .anyRequest().authenticated();
 
         // Custom JWT based security filter
         JwtAuthorizationTokenFilter authenticationTokenFilter = new JwtAuthorizationTokenFilter(storeDao, jwtTokenUtil, jwtProperty.getHeader());
@@ -186,6 +191,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 - `JwtTokenUtil.java`
 
 ```java
+
 @Component
 public class JwtTokenUtil implements Serializable {
 
@@ -217,9 +223,9 @@ public class JwtTokenUtil implements Serializable {
 
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtProperty.getSecret())
-                .parseClaimsJws(token)
-                .getBody();
+            .setSigningKey(jwtProperty.getSecret())
+            .parseClaimsJws(token)
+            .getBody();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -246,12 +252,12 @@ public class JwtTokenUtil implements Serializable {
         final Date expirationDate = calculateExpirationDate(createdDate);
 
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(createdDate)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS256, jwtProperty.getSecret())
-                .compact();
+            .setClaims(claims)
+            .setSubject(subject)
+            .setIssuedAt(createdDate)
+            .setExpiration(expirationDate)
+            .signWith(SignatureAlgorithm.HS256, jwtProperty.getSecret())
+            .compact();
     }
 
     public Boolean canTokenBeRefreshed(String token) {
@@ -267,9 +273,9 @@ public class JwtTokenUtil implements Serializable {
         claims.setExpiration(expirationDate);
 
         return Jwts.builder()
-                .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS256, jwtProperty.getSecret())
-                .compact();
+            .setClaims(claims)
+            .signWith(SignatureAlgorithm.HS256, jwtProperty.getSecret())
+            .compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
@@ -284,6 +290,7 @@ public class JwtTokenUtil implements Serializable {
 }
 
 ```
+
 .
 
 ## 2.2. Basic Security
@@ -291,21 +298,22 @@ public class JwtTokenUtil implements Serializable {
 - `HttpBasicConfig.java`
 
 ```java
+
 @Configuration
 @EnableWebSecurity
 @Order(2)
 public class HttpBasicConfig extends WebSecurityConfigurerAdapter {
     private static final String[] PUBLIC_RESOURCES = new String[]{
-            "/admin/payment-integrations/momo/ipn-listener",
-            "/admin/payment-integrations/momo/ipn-listener.json",
-            "/admin/payment-integrations/zpay/update_merchant",
-            "/admin/payment-integrations/zpay/update_merchant.json",
-            "/admin/momoaccuracy",
-            "/admin/momoaccuracy.json"
+        "/admin/payment-integrations/momo/ipn-listener",
+        "/admin/payment-integrations/momo/ipn-listener.json",
+        "/admin/payment-integrations/zpay/update_merchant",
+        "/admin/payment-integrations/zpay/update_merchant.json",
+        "/admin/momoaccuracy",
+        "/admin/momoaccuracy.json"
     };
 
     private static final String[] PRIVATE_RESOURCES = new String[]{
-            "/admin/payment-integrations/**"
+        "/admin/payment-integrations/**"
     };
 
     @Autowired
@@ -324,15 +332,15 @@ public class HttpBasicConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.requestMatcher(new BasicRequestMatcher(sessionUserService))
-                .authorizeRequests()
-                .antMatchers(HttpMethod.GET, PRIVATE_RESOURCES).access(genRole("read_orders"))
-                .antMatchers(HttpMethod.POST, PRIVATE_RESOURCES).access(genRole("write_orders"))
-                .antMatchers(HttpMethod.PUT, PRIVATE_RESOURCES).access(genRole("write_orders"))
-                .antMatchers(HttpMethod.DELETE, PRIVATE_RESOURCES).access(genRole("write_orders"))
-                .antMatchers("/**").hasRole(config.getRole())
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().csrf().disable().httpBasic()
-                .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler).authenticationEntryPoint(authenticationExceptionHandler);
+            .authorizeRequests()
+            .antMatchers(HttpMethod.GET, PRIVATE_RESOURCES).access(genRole("read_orders"))
+            .antMatchers(HttpMethod.POST, PRIVATE_RESOURCES).access(genRole("write_orders"))
+            .antMatchers(HttpMethod.PUT, PRIVATE_RESOURCES).access(genRole("write_orders"))
+            .antMatchers(HttpMethod.DELETE, PRIVATE_RESOURCES).access(genRole("write_orders"))
+            .antMatchers("/**").hasRole(config.getRole())
+            .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and().csrf().disable().httpBasic()
+            .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler).authenticationEntryPoint(authenticationExceptionHandler);
     }
 
     private String genRole(String role) {
@@ -342,9 +350,9 @@ public class HttpBasicConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         inMemoryConfigurer()
-                .passwordEncoder(passwordEncoder)
-                .withUser(config.getName()).password(config.getPassword()).roles(config.getRole()).and()
-                .configure(auth);
+            .passwordEncoder(passwordEncoder)
+            .withUser(config.getName()).password(config.getPassword()).roles(config.getRole()).and()
+            .configure(auth);
         auth.userDetailsService(userDetailsService);
     }
 
@@ -359,9 +367,11 @@ public class HttpBasicConfig extends WebSecurityConfigurerAdapter {
     }
 }
 ```
+
 - `SessionUserServiceImpl.java`
 
 ```java
+
 @Service
 public class SessionUserServiceImpl implements SessionUserService {
     @Autowired
@@ -388,7 +398,7 @@ public class SessionUserServiceImpl implements SessionUserService {
                     SessionModel sessionModel = json.readValue(jsonStr, SessionModel.class);
                     if (sessionModel != null) {
                         vn.z.service.generic.domain.User domainUser = userDao
-                                .getByEmail(sessionModel.getUsername(), sessionModel.getStoreId());
+                            .getByEmail(sessionModel.getUsername(), sessionModel.getStoreId());
 
                         if (domainUser != null) {
                             User user = new User();
@@ -420,6 +430,7 @@ public class SessionUserServiceImpl implements SessionUserService {
 ```
 
 ```java
+
 @Getter
 @Setter
 public class SessionModel {
@@ -429,9 +440,11 @@ public class SessionModel {
     private String employeeSource;
 }
 ```
+
 - `AuthenticationExceptionHandler.java`
 
 ```java
+
 @Component
 public class AuthenticationExceptionHandler implements AuthenticationEntryPoint, Serializable {
     @Autowired
@@ -442,7 +455,7 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint,
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.getWriter().write(jsonMain.writeValueAsString(
-                ErrorModel.newInstance().add("base", HttpStatus.UNAUTHORIZED.getReasonPhrase())));
+            ErrorModel.newInstance().add("base", HttpStatus.UNAUTHORIZED.getReasonPhrase())));
     }
 }
 ```
@@ -450,6 +463,7 @@ public class AuthenticationExceptionHandler implements AuthenticationEntryPoint,
 - `CustomAccessDeniedHandler.java`
 
 ```java
+
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
@@ -461,11 +475,13 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.getWriter().write(jsonMain.writeValueAsString(
-                ErrorModel.newInstance().add("base", HttpStatus.FORBIDDEN.getReasonPhrase())));
+            ErrorModel.newInstance().add("base", HttpStatus.FORBIDDEN.getReasonPhrase())));
     }
 }
 ```
 
 ## Other
+
 ![15Filter](https://www.marcobehler.com/images/filterchain-1a.png)
+
 - [Spring Security: Authentication and Authorization In-Depth](https://www.marcobehler.com/guides/spring-security)

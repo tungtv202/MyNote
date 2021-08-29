@@ -10,68 +10,93 @@ category:
     - database
 ---
 
-
 ## CQL
+
 ### 1. Keyspaces
+
 - Create
+
 ```SQL
 CREATE KEYSPACE keyspace101 WITH REPLICATION  = {
  'class' : 'NetworkTopologyStrategy', 'DC1': 3
 } AND DURABLE_WRITES = false;
 ```
+
 - Alter
+
 ```SQL
 ALTER KEYSPACE keyspace101 WITH REPLICATION  = {
  'class' : 'SimpleStrategy', 'replication_factor': 3
 } AND DURABLE_WRITES = true;
 ```
+
 - Drop
+
 ```sql
 DROP KEYSPACE keyspace101
 ```
 
 ### 2. Tables
-- Create 
+
+- Create
+
 ```SQL
 CREATE TABLE keyspace101.table101 (id varchar PRIMARY KEY);
 CREATE TABLE if not exists keyspace101.table101 (id varchar PRIMARY KEY);
 ```
+
 - Alter
+
 ```sql
 ALTER TABLE keyspace101.table101 ADD name varchar;
 ALTER TABLE keyspace101.table101 DROP title;
 ```
+
 - Truncate
+
 ```sql
 TRUNCATE keyspace101.table101;
 ```
+
 - Drop
+
 ```sql
 DROP TABLE keyspace101.table101
 ```
+
 - Description
+
 ```sql
 desc table table101;
 ```
+
 - Selecting Data
+
 ```sql
 SELECT id, title FROM table101;
 ```
+
 ```sql
 SELECT title, duration AS length FROM table101
 WHERE id = 'id101';
 ```
+
 - Insert
+
 ```sql
 INSERT INTO keyspace101.table102 (id, author)
 VALUES ('1','2')
 ```
+
 - Upate
+
 ```sql
 UPDATE keyspace101.table102 SET author ='3'
 WHERE id = '1' 
 ```
+
 - Deleteing a row
+
 ```sql
 DELETE FROM table102 
 WHERE id = 'id1'
@@ -91,21 +116,24 @@ VALUES ('1', null)
 
 ```
 
-
 - Set the TTL for an entire row
 
 ```sql
 INSERT INTO table101 (id, token)
 VALUES ('id1', 'token2') USING TTL 10800;
 ``` 
+
 - Set a table-wide, default TTL
+
 ```sql
 CREATE TABLE reset_tokens (
     id varchar PRIMARY KEY,
     token varchar
 ) WITH default_time_to_live = 10800;
 ```
+
 ## Table properties
+
     - comment
     - caching (keys, row_per_partition)
     - read_repair_chance
@@ -120,17 +148,23 @@ CREATE TABLE reset_tokens (
     - populate_io_cache_on_flush
     - speculative_retry
     - ...
+
 ```sql
 CREATE TABLE keyspace101.table102 (id varchar PRIMARY KEY)
 WITH comment='A table of xxx'
 ```
+
 ## Data Type
-### 1. Basic Data Types 
-- Numeric: bigint, decimal, double, float, int, varint
+
+### 1. Basic Data Types
+
+- Numeric: bigint, decimal, double, float, int, variant
 - String: ascii, text, varchar
 - Date: timestamp, timeuuid
 - Other: boolean. uuid, inet, blob
+
 ### 2. Complex Data Types
+
 - `2.1 Set`
     - Create
     ```sql
@@ -150,7 +184,7 @@ WITH comment='A table of xxx'
     ```sql
     UPDATE courses SET features = features + {'cc'} WHERE course_id = ‘nodejs-big-picture’;
     ```
-    - Removing from a set 
+    - Removing from a set
     ```sql
     UPDATE courses SET features = features - {'cc'} WHERE course_id = ‘nodejs-big-picture';
     ```
@@ -183,7 +217,7 @@ WITH comment='A table of xxx'
     UPDATE courses SET clips = clips + ['Considering Node.js'] 
     WHERE course_id = 'nodejs-big-picture' AND module_id = 2;
     ```
-    - Removeing from a list
+    - Removing from a list
     ```sql
     UPDATE courses SET clips = clips - [‘Course Overview'] 
     WHERE course_id = ‘nodejs-big-picture‘ and module_id = 1;
@@ -225,7 +259,7 @@ WITH comment='A table of xxx'
     UPDATE users SET last_login = last_login + {'7eb0a8997f39': 
     '2015-07-02 07:32:17'} WHERE user_id = 'john-doe';
     ```
-    - Removing from a map 
+    - Removing from a map
     ```sql
     DELETE last_login['383cc0867cd2'] FROM users 
     WHERE id = 'john-doe';
@@ -234,7 +268,7 @@ WITH comment='A table of xxx'
     UPDATE users SET last_login = last_login - {'7eb0a8997f39'} 
     WHERE id = 'john-doe';
     ```
-    - Emptying the entire map 
+    - Emptying the entire map
     ```sql
     UPDATE users SET last_login = {}
     WHERE id = 'john-doe';
@@ -259,10 +293,13 @@ WITH comment='A table of xxx'
     PRIMARY KEY (id) 
     )
     ```
+
 ### 3. User Defined Types
+
 ```sql
 CREATE TYPE person (name varchar, id varchar); 
 ```
+
 ```sql
 CREATE TABLE courses ( 
  id varchar, 
@@ -274,8 +311,10 @@ CREATE TABLE courses (
  PRIMARY KEY (id, module_id) 
 )
 ```
+
 ### 4. Data with JSON
-- Insert 
+
+- Insert
     - normal:
     ```sql
     INSERT INTO courses 
@@ -305,16 +344,23 @@ CREATE TABLE courses (
     }' 
     ```
 - Selecting
+
 ```sql
 SELECT JSON * FROM courses;
 ```
+
 ```sql
 SELECT DISTINCT id, name, toJson(released) FROM courses;
 ```
+
 ## Materialized Views
+
 ![MaterializedView](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/MaterializedViews.JPG)
+
 ## Secondary Indexes
+
 - If `dont secondary index`, you cant query on `collection` column
+
 ```sql
 CREATE TABLE users ( 
  id varchar, 
@@ -326,14 +372,17 @@ CREATE TABLE users (
  PRIMARY KEY (id) 
 ); 
 ```
+
 ```sql
 CREATE INDEX ON users(tags)
 ```
+
 ```sql
 SELECT * FROM users WHERE tags CONTAINS 'java';
 ```
 
 ## Batches
+
 ```
 BEGIN BATCH 
 INSERT INTO courses (id, tags) 
@@ -347,24 +396,31 @@ APPLY BATCH;
 ```
 
 ## Lightweight Transactions
+
 ```
 1. Prepare ! Promise 
 2. Read ! Results 
 3. Propose ! Accept 
 4. Commit ! Ack
 ```
+
 ## User Defined Functions
+
 - Use `hourly`
+
 ```sql
 SELECT asTimeStr(duration, false) 
 FROM courses 
 WHERE id = ‘advanced-javascript’
 ``` 
+
     - Input: 24936 => Output: 6h 55 m
+
 - Defined
-![DefinedFunction](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/DefinedFunction.JPG)
+  ![DefinedFunction](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/DefinedFunction.JPG)
 
 ## Primary Key and Composite Partition Keys
+
 ```sql
 CREATE TABLE keyspace101.table2 (
     id varchar PRIMARY KEY,
@@ -372,6 +428,7 @@ CREATE TABLE keyspace101.table2 (
     author varchar
 )
 ```
+
 ```sql
 CREATE TABLE keyspace101.table2 (
     id varchar,
@@ -382,35 +439,39 @@ CREATE TABLE keyspace101.table2 (
 ```
 
 ## Tombstones
-When data is deleted in Cassandra, it isn't just removed
-immediately from the cluster.
-A tombstone is written to the database, marking the data in question as deleted. 
-This tombstone is partitioned data just like any other 
-data written to the cluster, and this managed accordingly,
-with hinted handoffs, read repairs everything.      
-For example, we have a key space with a replication factor of three, and we delete some data at a consistency level of quorum. 
-Now let's suppose this right doesn't make it to the third node in a cluster responsible for that token range.
-Having the tombstone allows the reed repair process to propagate this tombstone to the outdated node 
+
+When data is deleted in Cassandra, it isn't just removed immediately from the cluster. A tombstone is written to the
+database, marking the data in question as deleted. This tombstone is partitioned data just like any other data written
+to the cluster, and this managed accordingly, with hinted handoffs, read repairs everything.      
+For example, we have a key space with a replication factor of three, and we delete some data at a consistency level of
+quorum. Now let's suppose this right doesn't make it to the third node in a cluster responsible for that token range.
+Having the tombstone allows the reed repair process to propagate this tombstone to the outdated node
 
 - property: `gc_grace_seconds` (default is 10 days)
 
 ## Other
-cql: 
+
+cql:
+
 ```sql
 expand on; // select result is row format
 expand off; // select result is column format
 tracing on; 
 tracing off;
 ```
+
 ## Counters
-Counters are a special data type in Cassandra
-since dealing with them in a distributed environment requires special care. 
-Counters must live in tables by themselves other than the primary keys they also carry with them.
-Some added overhead as they rely on read before, right.
+
+Counters are a special data type in Cassandra since dealing with them in a distributed environment requires special
+care. Counters must live in tables by themselves other than the primary keys they also carry with them. Some added
+overhead as they rely on read before, right.
+
 ## Multi-row Partitions
+
 1. Composite partition keys and Clustering keys
-![Key](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/Key.JPG)
+   ![Key](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/Key.JPG)
 2. Static columns
+
 ```sql
 CREATE TABLE courses ( 
  id varchar, 
@@ -420,13 +481,16 @@ CREATE TABLE courses (
  PRIMARY KEY (id, module_id)
 );
 ```
+
 3. Time Series Data
+
 - TimeUUID Data Type
     - Example: `45b94a50-12e5-11e5-9114-091830ac5256`
     - The number of 100 ns intervals since UUID epoch
     - MAC address
     - Clock sequence number to prevent duplicates
 - cql ex:
+
 ```sql
 CREATE TABLE course_page_views ( 
  course_id text, 
@@ -434,7 +498,9 @@ CREATE TABLE course_page_views (
  PRIMARY KEY (course_id, view_id) 
 ) WITH CLUSTERING ORDER BY (view_id DESC);
 ```
+
 - now
+
 ```sql
 CREATE TABLE course_page_views ( 
  course_id text, 
@@ -442,12 +508,16 @@ CREATE TABLE course_page_views (
  PRIMARY KEY (course_id, view_id) 
 ) WITH CLUSTERING ORDER BY (view_id DESC);
 ```
-- dateOf / unixTimestampOf 
+
+- dateOf / unixTimestampOf
+
 ```sql
 SELECT course_id, dateOf(view_id) 
 FROM course_page_views WHERE course_id = ‘advanced-python‘;
 ```
+
 - minTimeuuid / maxTimeuuid
+
 ```sql
 SELECT dateOf(view_id) 
 FROM course_page_views 
@@ -457,6 +527,7 @@ AND view_id < minTimeuuid(‘2019-12-01 00:00+0000')
 ```
 
 4. Bucketing Time series data
+
 ```sql
 CREATE TABLE course_page_views ( 
  bucket_id text, 
@@ -467,35 +538,52 @@ CREATE TABLE course_page_views (
 ```
 
 ## Storing Data in Cassandra
+
 All data stored in Cassandra is associated with a token
+
 ## Snitches
+
 ???
+
 ## Replication Strategies
+
 ![Cassandra_Terminology](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/Cassandra_terminology.JPG)
-1. SimpleStrategy   
+
+1. SimpleStrategy
+
 - Used in dev env or single data center cluster
 - CQL ex
+
 ```sql
 CREATE KEYSPACE keyspace101 with replication =
 {'class': 'SimpleStrategy', 'replication_factor' : 3}
 ```
-`replication_factor : 3` = asking Cassandra to store three copies of all the partitions in all tahe tables written to the cluster, in this keyspace
+
+`replication_factor : 3` = asking Cassandra to store three copies of all the partitions in all the tables written to
+the cluster, in this keyspace
+
 2. NetworkTopologyStrategy
+
 - CQL ex
+
 ```sql
 CREATE KEYSPACE keyspace102 with replication =
 {'class': 'NetworkTopologyStrategy', 'DC1' : 3, 'DC2': 1}
 ```
+
 storing 4 copies of the data for each partition in each table/in the keyspace. `BUT` 3 in DC1, and 1 in DC2
 
 ## Tunable Consistency
+
 - `Hinted Handoff` is used to handle transient failures
 - (Write Consistency + Read Consistency) > Replication Factor
 - Command set consistency level
-    - multi-dc: ` consistency local_one;` 
+    - multi-dc: ` consistency local_one;`
     - single-dc: `consistency quorum;`
+
 1. Read
-![Tunable Consistency Reads](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/TunableConsistency_Reads.JPG)
+   ![Tunable Consistency Reads](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/TunableConsistency_Reads.JPG)
+
 - Read Repair
     - What happens when 1 node with old data, and 2 node with good data?
     - Then, the third node will return a digest that does not match the other two nodes.
@@ -503,8 +591,10 @@ storing 4 copies of the data for each partition in each table/in the keyspace. `
     - Write correct data back to the node that's in error
 
 2. Write
-- Coordinator (node receive write statement) will wait to receive an ack of the other node before returning a positive response to the collar
-![Tunable Consistency - Writes](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/TunableConsistency_Writes.JPG)
+
+- Coordinator (node receive write statement) will wait to receive an ack of the other node before returning a positive
+  response to the collar
+  ![Tunable Consistency - Writes](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/TunableConsistency_Writes.JPG)
 
 - Hinted Handoff
     - What happens if one of those writes fails?
@@ -513,13 +603,15 @@ storing 4 copies of the data for each partition in each table/in the keyspace. `
     - Then the coordinator know tries repeatedly to deliver the data
 
 3. Consistency with multiple data centers
+
 - EACH_QUORUM
 - LOCAL_QUORUM
 - LOCAL_ONE
 
-
 ## Docker Install
+
 1. Single datacenter
+
 ```yml
 version: '3'
 services:
@@ -546,7 +638,9 @@ services:
 networks:
   cluster:
 ```
+
 2. Multi datacenter
+
 ```yml
 version: '3'
 services:
@@ -583,11 +677,14 @@ services:
 networks:
   cluster:
 ```
+
 3. Dockerfile
+
 ```
 FROM cassandra:3.11
 COPY cqlshrc /root/.cqlshrc
 ```
+
 - `.cqlshrc`
 
 ```config
@@ -600,9 +697,7 @@ timeout = 60
 request_timeout = 60
 ```
 
-
 Ref: https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/cassandra-developers.zip
-
 
 ## Difference between partition key, composite key and clustering key?
 

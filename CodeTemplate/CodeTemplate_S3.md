@@ -10,9 +10,10 @@ category:
     - code_template
 ---
 
-- Upload file có option set quyền public/private   
-- Get link download (signed URL)  
-- Delete file  
+- Upload file có option set quyền public/private
+- Get link download (signed URL)
+- Delete file
+
 ## 1. Basic
 
 ```java
@@ -130,11 +131,14 @@ public class S3UploadUtils {
 }
 ```
 
-## 2. Sử dụng SSE-C để encrypt/decrypt object 
-- Với cách này, chỉ có client chứa "key" mới có thể download/retrivew metadata của object được. Cho dù tài khoản root của AWS có full quyền, cũng không thể can thiệp, nếu không có key.
-ref: https://docs.aws.amazon.com/AmazonS3/latest/dev/sse-c-using-java-sdk.html
+## 2. Sử dụng SSE-C để encrypt/decrypt object
+
+- Với cách này, chỉ có client chứa "key" mới có thể download/retrivew metadata của object được. Cho dù tài khoản root
+  của AWS có full quyền, cũng không thể can thiệp, nếu không có key.
+  ref: https://docs.aws.amazon.com/AmazonS3/latest/dev/sse-c-using-java-sdk.html
+
 ### Code example
- 
+
 ```java
 package tung.demo.ssec_s3;
 
@@ -252,14 +256,20 @@ public class ServerSideEncryptionUsingClientSideEncryptionKey {
     }
 }
 ```
-## 3. Note 
-- Trường hợp OS chạy app java, nếu thỏa mãn 2 điều kiện sau, thì không cần phải khai báo access key, secret key trong code cho hàm s3Client()
-  - OS là máy chủ AWS, có gán ROLE access tới S3 
-  - OS có cài tool aws-cli, và có config accesskey, secret key.
-- Với file được upload lên với giới hạn truy cập private, trường hợp muốn download thì cần generator link có token, khái niệm này là SIGNED URL. Và link có token sẽ chỉ valid trong 1 khoảng thời gian được cấu hình bởi biến TIME_MINUTES_EXPIRED
+
+## 3. Note
+
+- Trường hợp OS chạy app java, nếu thỏa mãn 2 điều kiện sau, thì không cần phải khai báo access key, secret key trong
+  code cho hàm s3Client()
+    - OS là máy chủ AWS, có gán ROLE access tới S3
+    - OS có cài tool aws-cli, và có config accesskey, secret key.
+- Với file được upload lên với giới hạn truy cập private, trường hợp muốn download thì cần generator link có token, khái
+  niệm này là SIGNED URL. Và link có token sẽ chỉ valid trong 1 khoảng thời gian được cấu hình bởi biến
+  TIME_MINUTES_EXPIRED
 
 ## 4. CopyObject sử dụng multi-thread - CompletableFuture
-// S3 SDK không hỗ trợ copyObject cho nhiều object cùng lúc 
+
+// S3 SDK không hỗ trợ copyObject cho nhiều object cùng lúc
 
 ```java
 import org.springframework.boot.CommandLineRunner;
@@ -336,8 +346,9 @@ public class Test implements CommandLineRunner {
     }
 }
 ```
-// Từ Java 9 trở đi CompleteTableFutre support delay giữa các async Executer 
-   
+
+// Từ Java 9 trở đi CompleteTableFutre support delay giữa các async Executer
+
 ```java
 //  CompletableFuture.delayedExecutor(5, TimeUnit.SECONDS)
  private CompletableFuture<ProductList> clientAsyncGetProduct(Store store, int page, String createdOnMax) {

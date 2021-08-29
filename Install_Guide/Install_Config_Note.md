@@ -11,23 +11,28 @@ category:
 # Install & config note
 
 ## Selenium ChromeDriver
+
 https://tecadmin.net/setup-selenium-chromedriver-on-ubuntu/
 
 ## OpenVPN
+
 https://support.hidemyass.com/hc/en-us/articles/202721546-OpenVPN-via-terminal-using-openvpn-binary-the-manual-way-
 
 - [Easy Way to Install and Configure OpenVPN Server on Ubuntu 18.04 / Ubuntu 16.04](https://computingforgeeks.com/easy-way-to-install-and-configure-openvpn-server-on-ubuntu-18-04-ubuntu-16-04/)
 
-## Install PostgreSQL 12 on linux    
+## Install PostgreSQL 12 on linux
+
 https://computingforgeeks.com/install-postgresql-12-on-ubuntu/
 
 ## Aria2
+
 - `aria2`: tool download
 - `webui-aria2`: cung cấp giao diện webui cho aria2
 
-1. Install 
+1. Install
 
 ref: https://hub.docker.com/r/timonier/webui-aria2
+
 - install `aria2`
 
 ```bash
@@ -45,6 +50,7 @@ curl --location "https://gitlab.com/timonier/aria2/raw/master/bin/installer" | s
 
 aria2c --help
 ```
+
 - run aria2
 
 ```bash
@@ -82,7 +88,7 @@ $ command -v npm
 /usr/local/bin/npm
 ```
 
-##  Postgresql
+## Postgresql
 
 ```bash
  docker run --name postgres-crawler1688 \
@@ -92,7 +98,7 @@ $ command -v npm
     -d postgres
 ```
 
-###  pgadmin4 (webui cho postgresql)
+### pgadmin4 (webui cho postgresql)
 
 ```bash
 docker run -p 8083:80 \
@@ -100,7 +106,8 @@ docker run -p 8083:80 \
     -e 'PGADMIN_DEFAULT_PASSWORD=password@' \
     -d dpage/pgadmin4
 ```
-###  install psql client
+
+### install psql client
 
 ```bash
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
@@ -164,12 +171,14 @@ tar zxvf openjdk-11.0.2_linux-x64_bin.tar.gz
 ```bash
 sudo mv jdk-11* /usr/local/
 ```
+
 - Set environment variables
 
 ```bash
 sudo nano /etc/profile.d/jdk.sh
 ```
-- Add 
+
+- Add
 
 ```bash
 export JAVA_HOME=/usr/local/jdk-11.0.2
@@ -181,15 +190,19 @@ export PATH=$PATH:$JAVA_HOME/bin
 ```
 /etc/environment
 ```
-or 
+
+or
+
 ```
 ~/.basrhc
 ```
+
 or new file in `/etc/profile.d/`
 
 ```
 /etc/profile.d/jdk.sh
 ```
+
 Source env when startup OS
 
 ```
@@ -197,6 +210,7 @@ source $file
 ```
 
 ### Common errors
+
 - Should append PATH (not replace)
 
 // Sưu tầm: https://computingforgeeks.com/how-to-install-java-11-on-ubuntu-18-04-16-04-debian-9
@@ -250,6 +264,7 @@ services:
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 ```
+
 ## docker-compose_install_kafdrop.yml
 
 ```yaml
@@ -263,7 +278,6 @@ services:
     environment:
       KAFKA_BROKERCONNECT: "tungexplorer.me:9092" 
 ```
-
 
 ## Install Node js http server
 

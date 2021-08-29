@@ -13,18 +13,23 @@ category:
 ---
 
 # Monitor traffic network vs combo: SNMP + Prometheus + Grafana
+
 - Monitor traffic network
     - SNMP: giao thức monitor network
     - Prometheus: collect metric data
-    - Grafana: web ui, giao diện đồ họa, dashboard theo dõi 
+    - Grafana: web ui, giao diện đồ họa, dashboard theo dõi
+
 # Install
+
 ## 1. SNMP
+
 - install `apt snmp` tool
 
 ```bash
 sudo apt-get update
 sudo apt-get install snmp snmp-mibs-downloader
 ```
+
 - Lưu ý:
     - `snmp` mặc định, chỉ có thể monitor resource: ram, cpu.
     - `snmp-mibs-downloader` hỗ trợ download "IF-MIB", dùng để monitor interface, traffic network
@@ -33,12 +38,14 @@ sudo apt-get install snmp snmp-mibs-downloader
 ```bash
 sudo apt-get install snmpd
 ```
+
 - edit file config
 
 ```bash
 sudo nano /etc/snmp/snmp.conf
 # comment on #mibs :
 ```
+
 ```bash
 # 1
 sudo nano /etc/snmp/snmpd.conf
@@ -60,13 +67,16 @@ sudo service snmpd restart
 # 5. check
 snmpwalk -v2c -c public 172.26.6.172 
 ```
+
 ## 2. Prometheus
+
 ### 2.1 Prometheus export
+
 - Là client thu nhập 1 loại metric riêng biệt
-- => `snmp_exporter` 
+- => `snmp_exporter`
 - Install `snmp_exporter`
     - Ref [link](https://github.com/prometheus/snmp_exporter)
-    
+
 ```bash
 #1 
 wget https://github.com/prometheus/snmp_exporter/releases/download/v0.16.1/snmp_exporter-0.16.1.linux-amd64.tar.gz
@@ -82,6 +92,7 @@ http://172.26.6.172:9116/snmp?module=if_mib&target=172.26.6.172
 ```
 
 ### 2.2 Prometheus server
+
 - Install via docker
 
 ```bash
@@ -90,6 +101,7 @@ docker run -d \
     -v /home/ubuntu/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml \
     prom/prometheus
 ```
+
 - Trong đó file `prometheus.yml`
 
 ```yml
@@ -111,16 +123,20 @@ scrape_configs:
       - target_label: __address__
         replacement: 172.26.6.172:9116 
 ```
+
 http://ls1.tungexplorer.me:9190/targets
 ![http://ls1.tungexplorer.me:9190/targets](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/prometheus/snmp_export_prometheus.png)
+
 - promQuery
 
 ```
 rate(ifHCOutOctets[1m])
 ```
+
 ![query get traffic](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/prometheus/query_gettraffic.png)
 
 ## 3. Grafana
+
 - web ui dashboard, graphic monitor
 - install via docker
 
@@ -128,8 +144,9 @@ rate(ifHCOutOctets[1m])
 docker run -d -p 3000:3000 grafana/grafana
 ## admin/admin
 ```
+
 - config
     - Add prometheus endpoint
-    - Create dashboard with query `rate(ifHCOutOctets[1m])` .   
+    - Create dashboard with query `rate(ifHCOutOctets[1m])` .
 
 ![Grafana dashboard](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/grafana/snmp_garafana.png)

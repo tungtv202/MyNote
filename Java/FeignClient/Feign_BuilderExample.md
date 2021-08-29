@@ -11,10 +11,13 @@ category:
     - feign
 ---
 
-# Tự build FeignCLient không sử dụng anotation
+# Tự build FeignClient không sử dụng annotation
+
 - Được sử dụng trong case không muốn sử dụng chung các bean đã config sẵn cho FeignClient
-- Sử dụng cách này thì tại class interface client, không cần khai báo antotation `@FeignClient`
+- Sử dụng cách này thì tại class interface client, không cần khai báo annotation `@FeignClient`
+
 ## 1. Code example
+
 - Config
 
 ```java
@@ -69,6 +72,7 @@ public class DemoFeignClientConfig {
     }
 }
 ```
+
 - `YourClient` class
 
 ```java

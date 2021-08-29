@@ -11,11 +11,14 @@ category:
     - jackson
 ---
 
-# Sử dụng Jackson để deserialize abstract class 
+# Sử dụng Jackson để deserialize abstract class
+
 # Inheritance with Jackson
+
 Tham khảo: https://www.baeldung.com/jackson-inheritance
 
 ## 1. Code mẫu
+
 ### Abtract class
 
 ```java
@@ -82,6 +85,7 @@ public class Truck extends Vehicle {
     }
 }
 ```
+
 ### using class
 
 ```java
@@ -92,6 +96,7 @@ public class Fleet {
     private Vehicle vehicle;
 }
 ```
+
 ### demo
 
 ```java
@@ -134,5 +139,7 @@ output:
 ```
 
 ## 2. Lưu ý
-- Trường hợp nếu CÓ khai báo `mapper.enableDefaultTyping();` thì class `Vehicle` không cần khai báo các `@JsonTypeInfo` và `@JsonSubTypes` 
+
+- Trường hợp nếu CÓ khai báo `mapper.enableDefaultTyping();` thì class `Vehicle` không cần khai báo các `@JsonTypeInfo`
+  và `@JsonSubTypes`
 - Lưu ý khai báo `property = "type2"` trường này sẽ quyết định xác định class con nào được deserialize
