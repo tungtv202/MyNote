@@ -317,3 +317,7 @@ class ManagerQuery extends AbstractQuery {
     }
 }
 ```
+
+## Strategy
+## Command
+## Observer
