@@ -8,24 +8,30 @@ tags:
 - redis
 - chat
 - rabbitmq
+
 category:
-- summary book
+- summary_book
+
 ---
 
 # Java chat app - use Cassandra, MySQL, Redis, RabbitMQ
 
-Book: [Pro Java Clustering and Scalability - Building Real-Time Apps with Spring, Cassandra, Redis, WebSocket and RabbitMQ](https://www.apress.com/gp/book/9781484229842?utm_campaign=3_pier05_product_page&utm_content=11232017&utm_medium=referral&utm_source=safari&wt_mc=ThirdParty.Safari.3.EPR653.ProductPagePurchase#otherversion=9781484229859)
+- Book: [Pro Java Clustering and Scalability - Building Real-Time Apps with Spring, Cassandra, Redis, WebSocket and RabbitMQ](https://www.apress.com/gp/book/9781484229842?utm_campaign=3_pier05_product_page&utm_content=11232017&utm_medium=referral&utm_source=safari&wt_mc=ThirdParty.Safari.3.EPR653.ProductPagePurchase#otherversion=9781484229859)
+
+- [Source code](https://github.com/tungtv202/pro-java-clustering-scalability) (fork)
 
 ## Single node
+
 
 ```mermaid
 graph TD
 U1(User 01 Browser) -- web socket --> C
 U2(User 02 Browser) -- web socket --> C 
-C((Chat App))
-C --> R[(Redis)]
-C --> Ca[(Cassandra)]
-C --> M[(MySQL)]
+C(Chat App)
+C --> R(Redis)
+C --> Ca(Cassandra)
+C --> M(MySQL)
+
 ```
 
 - MySQL: store user/ user role
@@ -56,22 +62,25 @@ C --> M[(MySQL)]
   - implementation group: 'org.springframework.session', name: 'spring-session'
   - spring.session.store-type: redis
 
+
 ```mermaid
 graph TD
 N(Nginx)
 N --> C1(Chat app 1)
 N --> C2(Chat app 2)
 N --> C3(Chat app 3)
-C1 --> R[(RabbitMQ STOMP Cluster)]
+C1 --> R(RabbitMQ STOMP Cluster)
 C2 --> R
 C3 --> R
+
 ```
 
 ```mermaid
 graph TD
-Re[(Redis Cluster)]
-Ca[(Cassandra Cluster)]
-My[(MySQL with Replication)]
+Re(Redis Cluster)
+Ca(Cassandra Cluster)
+My(MySQL with Replication)
+
 ```
 
 ## Code by features
