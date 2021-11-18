@@ -420,3 +420,48 @@ exec.submit(() -> {
     return null;
 });
 ```
+
+## Load proproties from file 
+
+```java
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+public class ExtraProperties {
+
+    public static final String OVERRIDE_PROPERTY = "extra.props";
+    public static final String DEFAULT_PATH = "conf/jvm.properties";
+
+    public static void initialize() {
+        String propsPath = System.getProperty(OVERRIDE_PROPERTY, DEFAULT_PATH);
+        try (FileInputStream in = new FileInputStream(propsPath)) {
+            System.getProperties().load(in);
+        } catch (FileNotFoundException e) {
+            if (!DEFAULT_PATH.equals(propsPath)) {
+                JamesServerMain.LOGGER.warn("Could not find extra system properties file {}", propsPath);
+            }
+        } catch (IOException e) {
+            JamesServerMain.LOGGER.warn(
+                    "Failed to load extra system properties from file {} : {}", propsPath, e.getMessage());
+        }
+    }
+}
+
+```
+
+```java
+ public static void main(String[] args) throws Exception {
+        ExtraProperties.initialize();
+    }
+```
+
+- Command: `java -jar -Dmy.property=/home/tungtv/workplace/jvm123.properties`
+- Sample file `jvm123.properties`
+
+```
+# my.property=whatever
+LOAD_ABC=true
+```
+
