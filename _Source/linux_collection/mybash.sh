@@ -30,3 +30,6 @@ echo 0 | sudo tee /sys/module/hid_apple/parameters/fnmode &> /dev/null
 # Getlink fshare
 alias fs="bash /home/tungtv/workplace/fshare/getlink"
 alias s3upload="bash /home/tungtv/workplace/MyNote/_Source/linux_collection/s3upload.sh"
+
+# pwd and Copy to clipboard
+alias pwc="pwd | xclip -selection clipboard && pwd"
