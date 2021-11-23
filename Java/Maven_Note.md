@@ -297,3 +297,7 @@ mvn clean source:jar deploy --settings $SETTINGS -DbuildNumber.version=$version 
 - Previous example: plugin scalafix has `scalafix` default goal. When maven is running to `process-test-classes` phase,
   it will execute scalafix plugin.
 - [`phase list`](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#lifecycle-reference)
+
+## Force a dependency cleanup on the build phase 
+
+`mvn dependency:purge-local-repository ... ` 
