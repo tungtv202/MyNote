@@ -1,8 +1,9 @@
 
-JAVA_HOME=/usr/local/jdk-11.0.2
+JAVA_HOME=/home/tungtv/install_and_tool/jdk-11.0.2
 #JAVA_HOME=/usr/local/jdk1.8.0_231
 PATH=$PATH:$JAVA_HOME/bin
 # For mouse - scroll wheel
+
 alias ms="bash /home/tungtv/workplace/MyNote/_Source/linux_collection/mousewheel.sh"
 
 # Docker
@@ -22,7 +23,6 @@ alias gitlog="git log --graph --oneline --all"
 alias sdn="sudo shutdown -h now"
 alias rsn="sudo reboot -h now"
 alias open="nautilus ."
-. /usr/share/autojump/autojump.sh
 
 # For keyboard RK84
 echo 0 | sudo tee /sys/module/hid_apple/parameters/fnmode &> /dev/null
@@ -33,3 +33,10 @@ alias s3upload="bash /home/tungtv/workplace/MyNote/_Source/linux_collection/s3up
 
 # pwd and Copy to clipboard
 alias pwc="pwd | xclip -selection clipboard && pwd"
+
+# mkdir && cd
+mkcdir ()
+{
+    mkdir -p -- "$1" &&
+      cd -P -- "$1"
+}

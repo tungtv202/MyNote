@@ -12,7 +12,7 @@ chsh -s $(which zsh)
 
 ## Ohmyzsh
 sudo curl -L http://install.ohmyz.sh | sh
-zsh
+# zsh
 
 ## zsh-autosuggestions
 git clone git://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
@@ -42,6 +42,16 @@ sudo apt-get install psensor
 sudo apt install bluez bluez-tools
 sudo apt install blueman
 
+## Imwheels
+sudo apt-get install imwheel
+
+# Install Go Tieng Viet
+# https://github.com/BambooEngine/ibus-bamboo
+sudo add-apt-repository ppa:bamboo-engine/ibus-bamboo
+sudo apt-get update
+sudo apt-get install ibus ibus-bamboo --install-recommends
+ibus restart
+env DCONF_PROFILE=ibus dconf write /desktop/ibus/general/preload-engines "['BambooUs', 'Bamboo']" && gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us'), ('ibus', 'Bamboo')]"
 
 
 
