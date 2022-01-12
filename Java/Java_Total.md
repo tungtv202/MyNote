@@ -465,3 +465,39 @@ public class ExtraProperties {
 LOAD_ABC=true
 ```
 
+## String equals() Vs contentEquals()
+```java
+String actualString = "baeldung";
+CharSequence identicalStringBufferInstance = new StringBuffer("baeldung");
+
+assertFalse(actualString.equals(identicalStringBufferInstance));
+assertTrue(actualString.contentEquals(identicalStringBufferInstance));
+```
+
+## Concurrent thread will not care to `static` method
+
+```java
+public class ThreadStaticMethod {
+
+    @SneakyThrows
+    public static void staticMethod() {
+        System.out.println(Thread.currentThread().getName() + " - " + new Date());
+        TimeUnit.SECONDS.sleep(5);
+    }
+
+
+    public static void main(String[] args) {
+        for (int i = 1; i < 10; i++) {
+            new Thread(ThreadStaticMethod::staticMethod).start();
+        }
+    }
+}
+```
+output:
+```
+Thread-2 - Tue Jan 11 21:52:51 ICT 2022
+Thread-0 - Tue Jan 11 21:52:51 ICT 2022
+Thread-3 - Tue Jan 11 21:52:51 ICT 2022
+Thread-1 - Tue Jan 11 21:52:51 ICT 2022
+```
+
