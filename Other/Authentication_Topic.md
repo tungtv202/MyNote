@@ -121,3 +121,7 @@ category:
 - `state`, `session_state`: for CSRF
 - Spring debug at class: `org.springframework.security.oauth2.client.oidc.authentication.OidcAuthorizationCodeAuthenticationProvider`
 - When `credential` mode: client_id + client_secret = username + password. It implicit is `Basic Auth`
+
+### Why does OAuth server return a authorization code instead of access token in the first step?
+- https://stackoverflow.com/questions/13387698/why-is-there-an-authorization-code-flow-in-oauth2-when-implicit-flow-works-s
+- https://www.quora.com/Why-does-OAuth-server-return-a-authorization-code-instead-of-access-token-in-the-first-step
