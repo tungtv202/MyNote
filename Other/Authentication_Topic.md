@@ -125,3 +125,5 @@ category:
 ### Why does OAuth server return a authorization code instead of access token in the first step?
 - https://stackoverflow.com/questions/13387698/why-is-there-an-authorization-code-flow-in-oauth2-when-implicit-flow-works-s
 - https://www.quora.com/Why-does-OAuth-server-return-a-authorization-code-instead-of-access-token-in-the-first-step
+
+- https://blog.httpwatch.com/2011/03/01/6-things-you-should-know-about-fragment-urls/

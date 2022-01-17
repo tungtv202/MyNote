@@ -501,3 +501,32 @@ Thread-3 - Tue Jan 11 21:52:51 ICT 2022
 Thread-1 - Tue Jan 11 21:52:51 ICT 2022
 ```
 
+## AutoCloseable  - try-with-resource
+
+```java
+@Slf4j
+public class AutoCloseableDemo {
+
+    @AllArgsConstructor
+    static class CustomCloseable implements AutoCloseable {
+        @Getter
+        @Setter
+        private String value;
+
+        @Override
+        public void close() throws Exception {
+            System.out.println("Closed : " + value);;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        try (CustomCloseable test = new CustomCloseable("Tung")) {
+            System.out.println(test.getValue());
+        }
+    }
+}
+```
+```
+Tung
+Closed : Tung
+```
