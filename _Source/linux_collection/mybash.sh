@@ -1,6 +1,6 @@
 # sudo apt install openjdk-11-jdk
-JAVA_HOME=/home/tungtv/install_and_tool/jdk-11
-#JAVA_HOME=/usr/local/jdk1.8.0_231
+#JAVA_HOME=/home/tungtv/install_and_tool/jdk-11
+JAVA_HOME=/home/tungtv/.jdks/corretto-1.8.0_322
 PATH=$PATH:$JAVA_HOME/bin
 # For mouse - scroll wheel
 
