@@ -530,3 +530,14 @@ public class AutoCloseableDemo {
 Tung
 Closed : Tung
 ```
+
+## Why we need `Thread.currentThread().interrupt();` 
+
+```java
+            try {
+               // some thing
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+```
+- it helps parent can handler InterruptedException. (In this exception has a flag, when we try catch it, that flag has been update, so the `Thread.currentThread().interrupt();` help recovery the state of flag)

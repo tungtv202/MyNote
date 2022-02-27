@@ -344,3 +344,6 @@ Result solve(Problem problem) {
 1. If you want to process all submitted tasks in order of arrival, just use newFixedThreadPool(1)
 2. If you want to optimize performance of big computation of recursive tasks, use ForkJoinPool or newWorkStealingPool
 3. If you want to execute some tasks periodically or at certain time in the future, use newScheduledThreadPool
+
+## Notify vs notifyAll ?
+If you are not sure which to use, then use notifyAll
