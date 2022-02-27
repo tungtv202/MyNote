@@ -22,99 +22,7 @@ CREATE KEYSPACE keyspace101 WITH REPLICATION  = {
 } AND DURABLE_WRITES = false;
 ```
 
-- Alter
-
-```SQL
-ALTER KEYSPACE keyspace101 WITH REPLICATION  = {
- 'class' : 'SimpleStrategy', 'replication_factor': 3
-} AND DURABLE_WRITES = true;
-```
-
-- Drop
-
-```sql
-DROP KEYSPACE keyspace101
-```
-
 ### 2. Tables
-
-- Create
-
-```SQL
-CREATE TABLE keyspace101.table101 (id varchar PRIMARY KEY);
-CREATE TABLE if not exists keyspace101.table101 (id varchar PRIMARY KEY);
-```
-
-- Alter
-
-```sql
-ALTER TABLE keyspace101.table101 ADD name varchar;
-ALTER TABLE keyspace101.table101 DROP title;
-```
-
-- Truncate
-
-```sql
-TRUNCATE keyspace101.table101;
-```
-
-- Drop
-
-```sql
-DROP TABLE keyspace101.table101
-```
-
-- Description
-
-```sql
-desc table table101;
-```
-
-- Selecting Data
-
-```sql
-SELECT id, title FROM table101;
-```
-
-```sql
-SELECT title, duration AS length FROM table101
-WHERE id = 'id101';
-```
-
-- Insert
-
-```sql
-INSERT INTO keyspace101.table102 (id, author)
-VALUES ('1','2')
-```
-
-- Upate
-
-```sql
-UPDATE keyspace101.table102 SET author ='3'
-WHERE id = '1' 
-```
-
-- Deleteing a row
-
-```sql
-DELETE FROM table102 
-WHERE id = 'id1'
-```
-
-- Deleting a column
-
-```sql
-DELETE author FROM table101
-WHERE id = 'id1'
-
-UPDATE table101 SET author = null
-WHERE id = 'id1'
-
-INSERT INTO table101 (id, author)
-VALUES ('1', null)
-
-```
 
 - Set the TTL for an entire row
 
@@ -149,10 +57,6 @@ CREATE TABLE reset_tokens (
     - speculative_retry
     - ...
 
-```sql
-CREATE TABLE keyspace101.table102 (id varchar PRIMARY KEY)
-WITH comment='A table of xxx'
-```
 
 ## Data Type
 
@@ -448,6 +352,15 @@ quorum. Now let's suppose this right doesn't make it to the third node in a clus
 Having the tombstone allows the reed repair process to propagate this tombstone to the outdated node
 
 - property: `gc_grace_seconds` (default is 10 days)
+- Note: CAN see a tombstone data by some tools
+
+### Why tombstone? 
+- it comes from a use case: when we try to delete some row while having one node in cluster DOWN. 
+When that node online comeback, it thinks another node is "missing" some data. It doesn't think that row has been removed. So => maybe data has been re-updated/re-insert again to another node.  => In order to avoid that, Cassandra doesn't remove permanently data, it just marks "flag" to rows - that has been removed.
+
+### When do tombstones cause problems?
+- Disk usage
+- Read performance - (When we query with a special partition key but has too many rows with same partition key (contains all row has been marked removed flag))
 
 ## Other
 
@@ -608,96 +521,20 @@ storing 4 copies of the data for each partition in each table/in the keyspace. `
 - LOCAL_QUORUM
 - LOCAL_ONE
 
-## Docker Install
-
-1. Single datacenter
-
-```yml
-version: '3'
-services:
-  n1:
-    image: cassandra:3.11
-    networks:
-      - cluster
-  n2:
-    image: cassandra:3.11
-    networks:
-      - cluster
-    environment:
-      - CASSANDRA_SEEDS=n1
-    depends_on:
-      - n1
-  n3:
-    image: cassandra:3.11
-    networks:
-      - cluster
-    environment:
-      - CASSANDRA_SEEDS=n1
-    depends_on:
-      - n1
-networks:
-  cluster:
-```
-
-2. Multi datacenter
-
-```yml
-version: '3'
-services:
-  n1:
-    image: cassandra:3.11
-    networks:
-      - cluster
-    environment:
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_DC=DC1
-      - CASSANDRA_RACK=RAC1
-  n2:
-    image: cassandra:3.11
-    networks:
-      - cluster
-    environment:
-      - CASSANDRA_SEEDS=n1
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_DC=DC1
-      - CASSANDRA_RACK=RAC2
-    depends_on:
-      - n1
-  n3:
-    image: cassandra:3.11
-    networks:
-      - cluster
-    environment:
-      - CASSANDRA_SEEDS=n1
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_DC=DC2
-      - CASSANDRA_RACK=RAC1
-    depends_on:
-      - n1
-networks:
-  cluster:
-```
-
-3. Dockerfile
-
-```
-FROM cassandra:3.11
-COPY cqlshrc /root/.cqlshrc
-```
-
-- `.cqlshrc`
-
-```config
-[connection]
-
-;; A timeout in seconds for opening new connections
-timeout = 60
-
-;; A timeout in seconds for executing queries
-request_timeout = 60
-```
-
-Ref: https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/cassandra-developers.zip
-
 ## Difference between partition key, composite key and clustering key?
+
+- Primary Key: Cassandra uses a special type of primary key called a composite key to represent group of related rows, alsoe called "Partitions"
+- Primary Key = Partition Key + OPTIONAL clustering columns
+- Partition key = it determines the nodes on which rows are stored and itself contains multiple columns 
+- Composite column = It controls how data is stored inside the partition
+
+
+## Static column
+
+it is a special column that is shared by all the rows of a partition. the static column is very useful when we want to share a column with a single value.
+- A table that does not define any clustering columns cannot have a static column. 
+- You can batch conditional updates to a static column.
+- Use the DISTINCT keyword to select static columns. 
+- If COMPACT STORAGE is specified when the table is built, static columns are not allowed at this time
+- If a column is part of partition key/Clustering columns, it cannot be described as a static column
 
