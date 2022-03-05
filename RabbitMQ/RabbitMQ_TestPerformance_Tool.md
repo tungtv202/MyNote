@@ -1,7 +1,7 @@
 ---
 title: Rabbitmq - Test performance tool
-date: 2022-03-05 13:05:00
-updated: 2022-03-05 13:05:00
+date: 2022-03-05 13:05:01
+updated: 2022-03-05 13:05:01
 tags:
     - test tool
     - performance test
@@ -10,7 +10,8 @@ category:
     - rabbitmq
 ---
 
-## Tool test performance RabbitMQ
+
+# Tool for test performance RabbitMQ
 
 [https://github.com/rabbitmq/rabbitmq-perf-test](https://github.com/rabbitmq/rabbitmq-perf-test)
 
@@ -21,7 +22,7 @@ TLDR:
 
 Have 2 ways to run the test tool:
 
-### Using `PerfTest`
+## Using `PerfTest`
 
 The spec of the scenario will be set by arguments of the command. The result is a log file or metric.
 
@@ -30,7 +31,7 @@ Command run the example:
 bin/runjava com.rabbitmq.perf.PerfTest -x 2 -y 4 -h amqp://tung:tung@localhost:5672 --queue-pattern 'perf-test-%d'  --queue-pattern-from 1 --queue-pattern-to 10
 ```
 
-### Using `PerfTestMulti`
+## Using `PerfTestMulti`
 
 The spec will be input in single `.js` file. The result is another `.js` file and can be visualized by graph WebUI
 
@@ -49,7 +50,7 @@ or https://raw.githubusercontent.com/rabbitmq/rabbitmq-perf-test/main/html/examp
 - Copy `publish-consume-result.js` to `/html/examples/publish-consume-result.js`. Start webserver to view graph by the command `bin/runjava com.rabbitmq.perf.WebServer` then goto: http://localhost:8080/examples/sample.html
 
 
-### Other
+## Other
 - If rabbitmq has authen: Declare uri: `'uri': 'amqp://username:pass@localhost:5672'`
 
 ## Bonus
@@ -71,6 +72,7 @@ https://github.com/rabbitmq/rabbitmq-perf-test/releases/download/v2.16.0/rabbitm
 - RabbitMQ: Docker 3.9.13 (latest)
 - Tool test: rabbitmq-perf-test 2.16.0 (latest)
 - Scenario spec
+
 ```
 [{'name': 'consume', 'type': 'simple',
 
@@ -78,6 +80,7 @@ https://github.com/rabbitmq/rabbitmq-perf-test/releases/download/v2.16.0/rabbitm
 'params':
     [{'time-limit': 300, 'producer-count': 2, 'consumer-count': 4}]}]
 ```
+
 - Result:
 
 From tool:

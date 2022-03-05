@@ -106,8 +106,7 @@ get `IllegalArgumentException` if you use `legacy` way.
 
 ## The Template Method Pattern
 
-->  allows us to define some common steps for an algorithm. Then, the subclasses override some of these steps with their
-specific behaviors for a particular step
+->  allows us to define some common steps for an algorithm. Then, the subclasses override some of these steps with their specific behaviors for a particular step
 
 1. We have:
 

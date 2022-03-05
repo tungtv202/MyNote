@@ -25,6 +25,7 @@ category:
 ## Code example
 
 - Maven: 
+
 ```xml
         <dependency>
             <groupId>net.lightbody.bmp</groupId>
@@ -32,6 +33,8 @@ category:
             <version>2.1.5</version>
         </dependency>
 ```
+
+- Sample code
 
 ```java
 

@@ -13,7 +13,10 @@ category:
 # Keycloak 
 
 ## Quick start 
-`docker run -p 8080:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin quay.io/keycloak/keycloak:latest`
+
+```bash
+docker run -p 8080:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin quay.io/keycloak/keycloak:latest
+```
 
 [http://localhost:8080/auth/admin/](http://localhost:8080/auth/admin/)
 

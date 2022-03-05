@@ -1,5 +1,5 @@
 ---
-title: Java Design Pattern
+title: Java - Design Pattern
 date: 2021-08-04 00:05:26
 updated: 2022-03-06 02:38:26
 tags:
@@ -585,7 +585,7 @@ class ObserverDemoMain {
 
 Output
 
-```text
+```
  --- Update 0 ---
 Current temperature: 28
 Current humidity: 60
