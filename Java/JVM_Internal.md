@@ -36,7 +36,7 @@ category:
       Exception ??
     - Frame objects được phân bổ trong Heap mà không cần phải liền kề
 - `Native Stack`: không phải JVM nào cũng hỗ trợ
-- `Stack Rétrictions`
+- `Stack Restrictions`
     - Stack có thể dynamic, hoặc fixed size
     - Nếu thread yêu cầu stack lớn hơn => StackOverflowError
     - Nếu thread yêu cầu frame mới và không đủ bộ nhớ => OutOfMemoryError

@@ -421,7 +421,7 @@ exec.submit(() -> {
 });
 ```
 
-## Load proproties from file 
+## Load properties from file 
 
 ```java
 
@@ -541,3 +541,6 @@ Closed : Tung
             }
 ```
 - it helps parent can handler InterruptedException. (In this exception has a flag, when we try catch it, that flag has been update, so the `Thread.currentThread().interrupt();` help recovery the state of flag)
+
+## Dequeue vs Stack
+- Stack is threadSafe, DeQueue is not

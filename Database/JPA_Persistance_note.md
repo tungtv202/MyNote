@@ -94,3 +94,9 @@ VALUES (1, Good, 2), (3, Good, 4), (5, Good, 6)
   kèm với `@DynamicUpdate`)
 
 # Caching
+todo
+
+## Pessimistic Locking vs Optimistic Locking
+- pessimistic will more consistency than optimistic
+- Optimistic use `version` row to lock (detecting when update)
+- Pessimistic: another query will to wait state when has once query "lock" resource
