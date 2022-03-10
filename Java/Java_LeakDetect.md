@@ -86,6 +86,7 @@ public class PhantomHandle implements ResourceFacade {
 ```
 
 - PhantomResourceRef
+
 ```java
 public class PhantomResourceRef extends PhantomReference<PhantomHandle> {
 

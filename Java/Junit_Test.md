@@ -407,3 +407,11 @@ import net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson
 
 ```
 
+### Assert List
+```java
+ assertThat(loggingEvents.list).hasSize(1)
+                .allSatisfy(loggingEvent -> {
+                    assertThat(loggingEvent.getLevel()).isEqualTo(Level.ERROR);
+                    assertThat(loggingEvent.getFormattedMessage()).contains("Trace record", "LeakAwareTest#leakDetectionShouldLogTraceRecordWhenLevelIsAdvanced");
+                });
+```
