@@ -544,3 +544,7 @@ Closed : Tung
 
 ## Dequeue vs Stack
 - Stack is threadSafe, DeQueue is not
+
+## PhantomReference
+https://openplanning.net/13697/java-phantomreference
+Về cơ bản PhantomReference cung cấp cho bạn khả năng xác định chính xác khi nào đối tượng innerObject của nó bị xoá khỏi bộ nhớ. Phương thức phantomRef.isEnqueued() trả về true nghĩa là đối tượng innerObject đã bị xoá bỏ khỏi bộ nhớ. Khi đối tượng innerObject bị xoá khỏi bộ nhớ thì đối tượng phantomRef sẽ được đặt vào hàng đợi (queue).
