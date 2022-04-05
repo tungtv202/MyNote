@@ -38,12 +38,12 @@ Input:
 Star Wars: Episode VII - The Force Awakens
 ```
 
-| Field   |            |  Example Output |
-|----------|:-------------|------|
-| movie_title |  The “root” field is analyzed as configured in the mapping	 | ["star","wars","episode","vii","the","force","awakens"] |
-| movie_title._2gram	 |    Splits sentence up by two words	   |  	["Star Wars","Wars Episode","Episode VII","VII The","The Force","Force Awakens"] |
-| movie_title._3gram	 | Splits the sentence up by three words	 |    	["Star Wars","Star Wars Episode","Wars Episode","Wars Episode VII","Episode VII", ... ] |
-|movie_title._index_prefix	|This uses an edge n-gram token filter to split up each word into substrings, starting from the edge of the word|["S","St","Sta","Star"]|
+| Field                     |                                                                                                                 | Example Output                                                                          |
+|---------------------------|:----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| movie_title               | The “root” field is analyzed as configured in the mapping                                                       | ["star","wars","episode","vii","the","force","awakens"]                                 |
+| movie_title._2gram        | Splits sentence up by two words                                                                                 | ["Star Wars","Wars Episode","Episode VII","VII The","The Force","Force Awakens"]        |
+| movie_title._3gram        | Splits the sentence up by three words                                                                           | ["Star Wars","Star Wars Episode","Wars Episode","Wars Episode VII","Episode VII", ... ] |
+| movie_title._index_prefix | This uses an edge n-gram token filter to split up each word into substrings, starting from the edge of the word | ["S","St","Sta","Star"]                                                                 |
 
 
 ## Example
@@ -215,6 +215,26 @@ result:
 ["s", "se", "sea", "sear", "searc", "search"]
 ```
 
-- index_analyzer vs search_analyzer?
+### index_analyzer vs search_analyzer
+Why do we need two analyzers?
+This comes from ES mechanism work. Let's imagine through the following example:
+- We have a document with content "XXXXXXXX" (1).  
+- When "index time", (1) has been indexed (`index_analyzer`) to tokens: [A, B, C, D].
+- When we search text "XXXX" (2), this string will be analyzing (`search_analyzer`) to tokens: [A, B, E] 
+- In order to detect results, ES will compare tokens of documents from "index time" with tokens of "query text" from "search time". Example A=A, B=B
+
+Why do we use single analyers for both index and search?. Let example:
+- We have document "elasticsearch".
+- Document has been indexed by edge_ngram (min_gram=3, max_gram=20)  (Analyzer A1). => Tokens: ["ela", "elas","elast","elasti","elastic","elastics","elasticse","elasticsea","elasticsear","eleasticsearc" and "elasticsearch"]
+- We search with text query "elapsed". With Analyzer A1, tokens will be: ["ela", "elap", "elaps", "elapse", "elapsed"]  
+- We can see "ela"="ela". So, when we search "elapsed", the result will contain "elasticsearch". Is it our expected? NO
+- If we tokenizing "elapsed" by another Analyzer. Example: Analyzer A2 (tokenizer=standard, filter=standar). Then tokens will be ["elapsed" ]  => Then the result will NOT contain "elasticsearch"
+
+
+
+
+
+
+
 
 
