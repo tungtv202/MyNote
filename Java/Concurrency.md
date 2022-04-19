@@ -346,4 +346,15 @@ Result solve(Problem problem) {
 3. If you want to execute some tasks periodically or at certain time in the future, use newScheduledThreadPool
 
 ## Notify vs notifyAll ?
+
 If you are not sure which to use, then use notifyAll
+
+## Reactor Schedulers
+
+- `Schedulers.parallel()`: The number of parallel threads is equal to the number of machine threads. Example = 8, 12, 16.
+In time, we can have many threads, (example 100), but only N threads can be parallel. (max N=8,12,16...)
+- `Schedulers.boundedElastic()`: by default is x10 machine threads. Example = 80, 120, 160.
+- By default, `parallel` and `boundedElastic` is daemon thread. If we using `.newParall` or `.newBoundedElastic`, daemon thread = false 
+- `Schedulers.elastic` - Deprecated - unlimited threads we can create. (Note: The default time-to-live for unused thread pools is 60 seconds, use the appropriate factory to set a different value.)
+
+
