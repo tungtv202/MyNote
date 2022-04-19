@@ -230,6 +230,8 @@ Why do we use single analyers for both index and search?. Let example:
 - We can see "ela"="ela". So, when we search "elapsed", the result will contain "elasticsearch". Is it our expected? NO
 - If we tokenizing "elapsed" by another Analyzer. Example: Analyzer A2 (tokenizer=standard, filter=standar). Then tokens will be ["elapsed" ]  => Then the result will NOT contain "elasticsearch"
 
+Ref: https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-index-search-time.html#different-analyzers
+
 
 
 

@@ -40,3 +40,7 @@ mkcdir ()
     mkdir -p -- "$1" &&
       cd -P -- "$1"
 }
+
+alias wo="warp-cli enable-always-on"
+alias wf="warp-cli disable-always-on"
+alias neofetch="neofetch --off"
