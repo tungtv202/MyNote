@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  tmail-backend-memory:
+    image: linagora/tmail-backend-memory:18test
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/root/glowroot/glowroot.jar
+    ports:
+      - 80:8080
+      - 8000:8000
+      - 4000:4000
+    volumes:
+      - /home/tungtv/workplace/2_JAMES/ENV/tmail-backend-memory/jwt_publickey:/root/conf/jwt_publickey
+      - /home/tungtv/workplace/2_JAMES/ENV/tmail-backend-memory/jwt_privatekey:/root/conf/jwt_privatekey
+    command: javax -version
