@@ -1,8 +1,17 @@
 # sudo apt install openjdk-11-jdk
 #JAVA_HOME=/home/tungtv/install_and_tool/jdk-11
-JAVA_HOME=/home/tungtv/.jdks/corretto-1.8.0_322
-PATH=$PATH:$JAVA_HOME/bin
+#JAVA_HOME=/home/tungtv/.jdks/corretto-1.8.0_322
+# PATH=$PATH:$JAVA_HOME/bin
+# /home/tungtv/install_and_tool/apache-maven-3.8.5
+export M2_HOME=/home/tungtv/install_and_tool/apache-maven-3.8.5
+export M2=$M2_HOME/bin 
+export PATH=$M2:$PATH
+# scala
+export PATH="$PATH:/home/tungtv/.local/share/coursier/bin"  
+
 # For mouse - scroll wheel
+# sudo update-alternatives --config javac
+# sudo update-alternatives --config java
 
 alias ms="bash /home/tungtv/workplace/MyNote/_Source/linux_collection/mousewheel.sh"
 
@@ -44,3 +53,6 @@ mkcdir ()
 alias wo="warp-cli enable-always-on"
 alias wf="warp-cli disable-always-on"
 alias neofetch="neofetch --off"
+
+
+#sudo service nginx stop
