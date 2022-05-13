@@ -1,0 +1,99 @@
+jenkins:
+  authorizationStrategy: 
+    github:
+      adminUserNames: "tungtv202, karenshii"
+      organizationNames: "companyxyz"
+      useRepositoryPermissions: true
+      authenticatedUserReadPermission: false
+  systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin\n\n"
+  nodes:
+  - permanent:
+      launcher:
+        jnlp:
+          workDirSettings:
+            disabled: false
+            failIfWorkDirIsMissing: false
+            internalDir: "remoting"
+      name: "ci-runner-03"
+      labelString: "ubuntu"
+      nodeDescription: "Remote dockerized environment"
+      numExecutors: 1
+      remoteFS: "/home/jenkins/build/"
+  - permanent:
+      launcher:
+        jnlp:
+          workDirSettings:
+            disabled: false
+            failIfWorkDirIsMissing: false
+            internalDir: "remoting"
+      name: "ci-runner-04"
+      labelString: "ubuntu"
+      nodeDescription: "Remote dockerized environment"
+      numExecutors: 1
+      remoteFS: "/home/jenkins/build/"
+  numExecutors: 0
+  securityRealm:
+    github:
+      clientID: ${CLIENT_ID}
+      clientSecret: ${CLIENT_SECRET}
+      githubApiUri: "https://api.github.com"
+      githubWebUri: "https://github.com"
+      oauthScopes: "read:org,user:email"
+
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - usernamePassword:
+          id: "github"
+          password: ${GITHUB_TOKEN}
+          scope: GLOBAL
+          description: "Jenkins GithubToken"
+      - gitlabPersonalAccessToken:
+          scope: SYSTEM
+          id: "gitlab-scan"
+          token: "${GITLAB_TOKEN}"
+      - usernamePassword:
+          id: "gitlab-job"
+          username: ${GITLAB_USER}
+          password: ${GITLAB_TOKEN}
+          scope: GLOBAL
+      - usernamePassword:
+          id: "dockerHub"
+          username: ${DOCKER_HUB_USER}
+          password: ${DOCKER_HUB_TOKEN}
+          scope: GLOBAL
+          description: "Jenkins DockerHub token"
+
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
+  maven:
+    installations:
+      - name: "maven_3_latest"
+  jdk:
+    installations:
+      - name: "jdk_11_latest"
+
+unclassified:
+  location:
+    url: ${JENKINS_URL}
+    adminAddress: ${ADMIN_ADDRESS}
+  email-ext:
+    charset: "UTF-8"
+    mailAccount:
+      smtpHost: "smtp"
+  gitLabServers:
+    servers:
+      - credentialsId: "gitlab-scan"
+        manageWebHooks: false                         
+        manageSystemHooks: false 
+        name: "ci.xyz.com"
+        serverUrl: "https://ci.gitlabxyz.com"
+        hooksRootUrl: ""
+        secretToken: ""
+
+jobs:
+  - file: /usr/share/jenkins/ref/jobs/build-projectA.groovy
