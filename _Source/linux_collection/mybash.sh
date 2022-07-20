@@ -33,8 +33,6 @@ alias sdn="sudo shutdown -h now"
 alias rsn="sudo reboot -h now"
 alias open="nautilus ."
 
-# For keyboard RK84
-echo 0 | sudo tee /sys/module/hid_apple/parameters/fnmode &> /dev/null
 
 # Getlink fshare
 alias fs="bash /home/tungtv/workplace/fshare/getlink"
