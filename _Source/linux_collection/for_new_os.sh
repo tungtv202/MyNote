@@ -15,7 +15,7 @@ sudo curl -L http://install.ohmyz.sh | sh
 # zsh
 
 ## zsh-autosuggestions
-git clone git://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 plugins=(zsh-autosuggestions)
 echo "source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
 
