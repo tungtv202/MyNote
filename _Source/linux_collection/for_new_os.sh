@@ -4,9 +4,10 @@ sudo apt install git -y
 # Install curl
 sudo snap install curl
 
+## If failed: install by guide at: https://vitux.com/ubuntu-zsh-shell/
 # Install combo ZSH
 ## Zsh 
-sudo apt-get install zsh -y
+sudo apt-get install zsh
 which zsh
 chsh -s $(which zsh)
 
@@ -56,3 +57,7 @@ env DCONF_PROFILE=ibus dconf write /desktop/ibus/general/preload-engines "['Bamb
 
 # Install Keepass
 sudo apt install keepass2
+
+
+# Sudo without password
+# https://www.cyberciti.biz/faq/linux-unix-running-sudo-command-without-a-password/
