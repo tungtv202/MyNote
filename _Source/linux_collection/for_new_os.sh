@@ -60,4 +60,11 @@ sudo apt install keepass2
 
 
 # Sudo without password
-# https://www.cyberciti.biz/faq/linux-unix-running-sudo-command-without-a-password/
+# https://www.cyberciti.biz/faq/linux-unix-running-sudo-command-without-a-password/ 
+
+## Setting nvidia as primary
+# sudo su -
+# prime-select query  # show options
+# prime-select nvidia # select nvidia gpu
+# prime-select intel  # select intel gpu
+# reboot
