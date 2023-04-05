@@ -21,6 +21,18 @@ alias dcu="docker-compose up"
 
 # Maven 
 alias mvnfire="mvn clean install -Dmaven.javadoc.skip=true -DskipTests"
+mvnDocker ()
+{
+  TAG=""
+  if [ -z "$1" ]
+  then
+      TAG=$(date '+%m%d.%H%M')
+  else
+      TAG=$1
+  fi
+    echo "Maven compile and build+push docker tungtv202/tmail-backend-distributed:$TAG"
+    mvn compile -DskipTests -Djib.to.image=tungtv202/tmail-backend-distributed:$TAG jib:build
+}
 
 # Git
 alias gitupdate="git pull origin HEAD && git submodule update"
