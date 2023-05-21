@@ -38,3 +38,5 @@ mkcdir ()
     mkdir -p -- "$1" &&
       cd -P -- "$1"
 }
+
+source /home/tungtv/workplace/MyNote/_Source/linux_collection/bash_getlink_fshare.sh
