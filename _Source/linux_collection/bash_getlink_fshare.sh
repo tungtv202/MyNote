@@ -43,14 +43,12 @@ fs () {
 		"token": "'"$TOKEN"'"
 	}')
 	LINK=$( echo "$LINK_RESPONSE" |  python3 -c "import sys, json; print(json.load(sys.stdin)['location'])")
+	echo "Link"
+	echo $2
 	echo $LINK
 
-	if [ "$2" == "v" ]; then
-	vlc $LINK
-	fi
-
-	if [ "$2" == "w" ]; then
-	wget $LINK
-	fi
+  echo $LINK | xclip -selection clipboard
+  if [[ "$2" = "v" ]]; then vlc $LINK;  fi
+  if [[ "$2" = "w" ]]; then wget $LINK;  fi
 }
 
