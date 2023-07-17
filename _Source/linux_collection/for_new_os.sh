@@ -68,3 +68,5 @@ sudo apt install keepass2
 # prime-select nvidia # select nvidia gpu
 # prime-select intel  # select intel gpu
 # reboot
+
+## ibus-daemon -drx
