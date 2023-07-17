@@ -301,3 +301,9 @@ mvn clean source:jar deploy --settings $SETTINGS -DbuildNumber.version=$version 
 ## Force a dependency cleanup on the build phase 
 
 `mvn dependency:purge-local-repository ... ` 
+
+## Check new version of dependencies
+
+```bash
+mvn org.codehaus.mojo:versions-maven-plugin:display-dependency-updates "-Dmaven.version.ignore=.*-M.*,.*-alpha.*,.*-RC.*,.*beta.*,.*Alpha.*,.*SNAP.*"
+```
