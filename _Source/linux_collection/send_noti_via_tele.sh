@@ -1,4 +1,4 @@
-#!/bin/bash
+
 
 # Replace <YOUR_BOT_TOKEN> with your actual bot token from BotFather on Telegram
 BOT_TOKEN="6302963671:AAFKnL8W31TjqbeEW4A_ZnenA6fShf1nNWc"
