@@ -1,0 +1,8 @@
+FROM msoap/shell2http
+# may be install some alpine packages:
+# RUN apk add --no-cache ...
+RUN apk add curl
+RUN wget https://raw.githubusercontent.com/tungtv202/MyNote/master/_Source/linux_collection/send_noti_via_tele.sh
+RUN chmod +x send_noti_via_tele.sh
+
+CMD ["-form", "/", "./send_noti_via_tele.sh $v_message"]
