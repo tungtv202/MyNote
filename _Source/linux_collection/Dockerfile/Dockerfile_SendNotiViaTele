@@ -1,3 +1,5 @@
+# tungtv202/send-noti-via-tele:latest
+
 FROM msoap/shell2http
 # may be install some alpine packages:
 # RUN apk add --no-cache ...
