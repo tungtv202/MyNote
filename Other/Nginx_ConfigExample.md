@@ -41,6 +41,8 @@ server {
 sudo apt-get install apache2-utils
 
 # 2
+# nginx = username, you can change it to user1, user2
+# /etc/nginx/.htpasswd = path store username + hash(pass)
 sudo htpasswd -c /etc/nginx/.htpasswd nginx
 
 # 3, verify
@@ -55,7 +57,7 @@ server {
   server_name file.tungexplorer.me;
   access_log off;
   auth_basic            "Restricted Access!";
-  auth_basic_user_file  /etc/nginx/conf.d/.htpasswd;
+  auth_basic_user_file  /etc/nginx/.htpasswd;
 
   location / {
     proxy_pass http://127.0.0.1:8082;
