@@ -1,0 +1,44 @@
+<div class="title-list">
+    <div class="right-top">
+        <div id="default-panel">
+            <i class="iconfont icon-search" data-title="find<% if (theme.shortcutKey != false) {%> hot key i<%}%>"></i>
+            <div class="right-title"><%= __('all_articles') %></div>
+            <i class="iconfont icon-file-tree" data-title="TOC<% if (theme.shortcutKey != false) {%>  w<%}%>"></i>
+        </div>
+        <div id="search-panel">
+            <i class="iconfont icon-left" data-title="back"></i>
+            <input id="local-search-input" autocomplete="off"/>
+            <label class="border-line" for="input"></label>
+            <i class="iconfont icon-case-sensitive" data-title="match cases"></i>
+            <i class="iconfont icon-tag" data-title="tag"></i>
+        </div>
+        <div id="outline-panel" style="display: none">
+            <div class="right-title">---TOC---</div>
+            <i class="iconfont icon-list" data-title="all articles"></i>
+        </div>
+    </div>
+
+    <%- partial('_partial/tag') %>
+    <% if (theme.searchAll) { %>
+    <div id="local-search-result">
+
+    </div>
+    <% } %>
+    <nav id="title-list-nav">
+        <% site.posts.forEach(function(post, i){  %>
+        <% if (post.hidden === true) { return true } %>
+        <a <% if(post.top){%>id="top"<%}%> class="<%= __('all_articles') %> <% post.categories.forEach(function(category, i){ %><%=category.name%> <% }) %>"
+           href="<%- url_for(post.path) %>"
+           data-tag="<% post.tags.forEach(function(tag, i){ %><%=tag.name%><% if (i+1<post.tags.length){%>,<%}})%>"
+           data-author="<% if(theme.author && theme.author.on==true && post.author) {%><%=post.author %><%}%>" >
+            <span class="post-title" title="<%=post.title %>"><%=post.title %></span>
+            <span class="post-date" title="<%= date(post.date, 'YYYY-MM-DD HH:mm:ss')%>"><%= date(post.date, 'YYYY/MM/DD') %></span>
+        </a>
+        <% }) %>
+        <div id="no-item-tips">
+
+        </div>
+    </nav>
+    <div id="outline-list">
+    </div>
+</div>
