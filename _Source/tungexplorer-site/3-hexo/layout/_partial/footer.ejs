@@ -315,6 +315,9 @@
                 mermaid.initialize(mermaidOptions)
                 mermaid.contentLoaded()
             }
+             var s = document.getElementById("github_link");
+             var currentContent = s.textContent;
+             s.textContent = currentContent+window.location.pathname.substring(9).slice(0, -1) + '.md';
         })
         <% } %>
     }
