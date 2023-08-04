@@ -94,4 +94,29 @@ server {
     proxy_set_header   X-Real-IP         $remote_addr;
   }
 }
-```   
+
+```
+
+### HTTPS
+https://viblo.asia/p/cau-hinh-ssl-https-voi-nginx-va-lets-enscrypt-3P0lP86blox
+
+```
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name site.tungexplorer.me;
+
+  include snippets/tungexplorer.me.conf;
+  include snippets/ssl-params.conf;
+  location / {
+        proxy_pass http://127.0.0.1:6258;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_cache_bypass $http_upgrade;
+
+  }
+}
+```
