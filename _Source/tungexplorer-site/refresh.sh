@@ -23,4 +23,7 @@ hexo generate
 
 # Must setting git ssh key first
 hexo deploy
+
+# Send notification to telegram
+curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage -d chat_id=$TELEGRAM_CHAT_ID -d text="Deploy tungtv202.github.io successfully"
 sleep 120
