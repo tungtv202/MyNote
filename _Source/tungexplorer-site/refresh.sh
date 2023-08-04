@@ -9,6 +9,7 @@ if [ ! -f ~/.ssh/id_ed25519 ]; then
     echo "=========================================================="
     echo "=========================================================="
     sleep 30
+    ssh-keyscan github.com >> ~/.ssh/known_hosts
 fi
 
 cd MyNote
