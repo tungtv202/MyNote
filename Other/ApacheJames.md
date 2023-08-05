@@ -12,6 +12,24 @@ category:
 
 todo
 
+```bash
+source 2_sandbox_env.txt
+echo "USER_COUNT = $USER_COUNT"
+echo "DURATION = $DURATION"
+echo "MAX_DURATION = $MAX_DURATION" 
+cd james-gatling
+
+if [[ "$1" = "imap" ]]; then 
+  echo "IMAP test"
+  sbt "gatling:testOnly org.apache.james.gatling.simulation.imap.PlatformValidationSimulation";
+fi
+if [[ "$1" = "jmap" ]]; then
+  echo "JMAP test"
+  sbt "gatling:testOnly org.apache.james.gatling.simulation.jmap.rfc8621.PushPlatformValidationSimulation";  
+fi
+```
+## Alternative 
+
 1. sudo su => vào quyền root
 2. cd /root/upn/james/james-gatling
   sbt => chạy simulation cho imap và jmap
