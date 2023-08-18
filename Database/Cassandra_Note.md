@@ -538,3 +538,23 @@ it is a special column that is shared by all the rows of a partition. the static
 - If COMPACT STORAGE is specified when the table is built, static columns are not allowed at this time
 - If a column is part of partition key/Clustering columns, it cannot be described as a static column
 
+## How to quick warm up cassandra after start for development?
+
+- Run with argument `JVM_OPTS=-Dcassandra.skip_wait_for_gossip_to_settle=0 -Dcassandra.initial_token=1`
+Example in docker-compose file 
+```yaml
+version: '3'
+
+services:
+  cassandra:
+    image: cassandra:4.1.3
+    ports:
+      - "9042:9042"
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 3s
+      timeout: 20s
+      retries: 5
+    environment:
+      - JVM_OPTS=-Dcassandra.skip_wait_for_gossip_to_settle=0 -Dcassandra.initial_token=1
+```
