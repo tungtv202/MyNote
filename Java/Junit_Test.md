@@ -415,3 +415,10 @@ import net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson
                     assertThat(loggingEvent.getFormattedMessage()).contains("Trace record", "LeakAwareTest#leakDetectionShouldLogTraceRecordWhenLevelIsAdvanced");
                 });
 ```
+
+### Timeout
+```
+  @Test
+  @Timeout(180)
+  def apiRequestsShouldBeProcessed
+```
