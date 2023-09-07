@@ -312,7 +312,7 @@ mvn org.codehaus.mojo:versions-maven-plugin:display-dependency-updates "-Dmaven.
 
 ```
 MAVEN_VERSION=3.9.4
-curl -Lf https://downloads.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xzv
+curl -Lf https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xzv
 export M2_HOME=/opt/apache-maven-$MAVEN_VERSION
 ln -s $M2_HOME/bin/mvn /usr/bin/mvn
 ```
@@ -329,7 +329,7 @@ RUN apt-get install -y git wget unzip
 
 # Install Maven
 WORKDIR /root
-RUN curl -Lf https://downloads.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xzv
+RUN curl -Lf https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xzv
 ENV M2_HOME /opt/apache-maven-$MAVEN_VERSION
 
 RUN ln -s $M2_HOME/bin/mvn /usr/bin/mvn
