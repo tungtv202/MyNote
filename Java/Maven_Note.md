@@ -307,3 +307,30 @@ mvn clean source:jar deploy --settings $SETTINGS -DbuildNumber.version=$version 
 ```bash
 mvn org.codehaus.mojo:versions-maven-plugin:display-dependency-updates "-Dmaven.version.ignore=.*-M.*,.*-alpha.*,.*-RC.*,.*beta.*,.*Alpha.*,.*SNAP.*"
 ```
+
+## Bash install maven 
+
+```
+MAVEN_VERSION=3.9.4
+curl -Lf https://downloads.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xzv
+export M2_HOME=/opt/apache-maven-$MAVEN_VERSION
+ln -s $M2_HOME/bin/mvn /usr/bin/mvn
+```
+- Dockerfile
+
+```Dockerfile
+FROM eclipse-temurin:11-jdk-focal
+
+ARG MAVEN_VERSION=3.9.4
+
+# Install git
+RUN apt-get update
+RUN apt-get install -y git wget unzip
+
+# Install Maven
+WORKDIR /root
+RUN curl -Lf https://downloads.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xzv
+ENV M2_HOME /opt/apache-maven-$MAVEN_VERSION
+
+RUN ln -s $M2_HOME/bin/mvn /usr/bin/mvn
+```
