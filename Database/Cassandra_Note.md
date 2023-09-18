@@ -558,3 +558,51 @@ services:
     environment:
       - JVM_OPTS=-Dcassandra.skip_wait_for_gossip_to_settle=0 -Dcassandra.initial_token=1
 ```
+
+
+## TWCS vs STCS
+### TimeWindowCompactionStrategy (TWCS)
+
+Use Case: 
+
+    TWCS is specifically designed for time-series data, where data is constantly appended and older data becomes less frequently accessed.
+
+How It Works: 
+
+    TWCS divides data into windows based on time intervals (e.g., hours, days, or weeks). Within each window, data is organized using Size-Tiered Compaction (STCS). When a window becomes older than a specified time threshold, it is compacted into a single SSTable (sorted string table). This helps in efficiently managing time-series data with minimal disk I/O.
+
+Advantages:
+
+    Efficient for time-series data.
+    Reduces read amplification for recent data.
+    Older data is less frequently compacted, reducing compaction overhead.
+
+
+### SizeTieredCompactionStrategy (STCS)
+Use Case: 
+    
+    STCS is a general-purpose compaction strategy that can be used for a wide range of workloads.
+
+How It Works: 
+
+    STCS organizes data into SSTables based on their size. When the number of SSTables in a given level exceeds a threshold, compaction is triggered. SSTables are merged into larger SSTables, and data is compacted based on size.
+
+Advantages:
+
+    Simplicity and good performance for various workloads.
+    Effective for write-intensive workloads where data is rapidly changing.
+
+Disadvantages:
+
+    Less efficient for time-series data since it doesn't consider time-based access patterns.
+
+### Choosing Between TWCS and STCS
+The choice between TWCS and STCS depends on your data and access patterns:
+
+- If you are dealing with time-series data, such as log data, sensor readings, or financial data, TWCS is typically a better choice. It optimizes storage and access patterns for time-based data.
+
+- For general-purpose workloads or write-intensive applications, STCS can work well. It's simple to configure and is suitable for scenarios where data isn't primarily organized by time.
+
+In some cases, a mixed strategy approach is used, where you might use TWCS for recent data and STCS for historical or less frequently accessed data to strike a balance between efficiency and simplicity.
+
+Ultimately, the choice of compaction strategy should align with your specific use case and performance requirements. It's important to benchmark and monitor your Cassandra cluster to ensure that the chosen strategy meets your needs.
