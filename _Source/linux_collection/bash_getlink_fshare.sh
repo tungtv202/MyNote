@@ -38,7 +38,7 @@ fs () {
 	--header 'Cookie: session_id='"$SESSION"'' \
 	--data-raw '{
 		"zipflag" : 0,
-		"url" : "https://www.fshare.vn/file/'"$1"'",
+		"url" : "'"$1"'",
 		"password" : "",
 		"token": "'"$TOKEN"'"
 	}')
@@ -52,3 +52,40 @@ fs () {
   if [[ "$2" = "w" ]]; then wget $LINK;  fi
 }
 
+pfs() {
+  keyword=$1
+
+  # Make the simplified curl request and store the JSON response
+  response=$(curl -L -X POST "https://timfshare.com/api/v1/string-query-search?query=${keyword}" -s)
+
+  # Extract the URL using jq
+  url=$(echo "${response}" | jq -r '.data[] | select(.name | contains("'"${keyword}"'")) | .url' | head -n 1)
+
+  # Print the URL
+ if [ -n "${url}" ]; then
+    echo "${url}"
+	fs "${url}" v
+  else
+    echo "No URL"
+  fi
+
+  
+}
+
+wfs() {
+  keyword=$1
+
+  # Make the simplified curl request and store the JSON response
+  response=$(curl -L -X POST "https://timfshare.com/api/v1/string-query-search?query=${keyword}" -s)
+
+  # Extract the URL using jq
+  url=$(echo "${response}" | jq -r '.data[] | select(.name | contains("'"${keyword}"'")) | .url' | head -n 1)
+
+  # Print the URL
+ if [ -n "${url}" ]; then
+    echo "${url}"
+	fs "${url}" w
+  else
+    echo "No URL"
+  fi
+}
