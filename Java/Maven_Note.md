@@ -334,3 +334,17 @@ ENV M2_HOME /opt/apache-maven-$MAVEN_VERSION
 
 RUN ln -s $M2_HOME/bin/mvn /usr/bin/mvn
 ```
+
+### Re-run the test failed at least once time
+ 
+For case the unstable test, we can re-run the test failed at least once time. 
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <configuration>
+        <rerunFailingTestsCount>2</rerunFailingTestsCount>
+    </configuration>
+</plugin>
+```
