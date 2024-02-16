@@ -7,7 +7,7 @@ sudo snap install curl
 ## If failed: install by guide at: https://vitux.com/ubuntu-zsh-shell/
 # Install combo ZSH
 ## Zsh 
-sudo apt-get install zsh
+sudo apt-get install zsh -y
 which zsh
 chsh -s $(which zsh)
 
