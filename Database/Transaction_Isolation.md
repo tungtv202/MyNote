@@ -15,104 +15,89 @@ category:
 
 ## Concurrency Control
 
-- Two phase locking (avoid conflict)
-    - Shared lock (read lock)
-    - Exclusive lock (write lock)
+- **Two-Phase Locking (2PL):** Avoids conflicts by using:
+  - **Shared Lock (Read Lock):** Allows multiple transactions to read but not modify a resource.
+  - **Exclusive Lock (Write Lock):** Allows one transaction to modify a resource, preventing others from reading or modifying it.
+  - **Deadlock:** A situation where two or more transactions are waiting for each other to release locks, causing all of them to be blocked.
 
-=> Deadlock
-
-- Multi-Version Concurrency control (detect conflict)
-    - Oracle: uses the `undo segments`(https://docs.oracle.com/database/121/CNCPT/consist.htm#CNCPT221)
-    - Sql Server: mặc định dùng 2PL cho tất cả isolation level
-    - Postgres SQL:  lưu cả `current rows` và `previous version` trong cùng 1 `actual database`. Mỗi row table có 2
-      column xmin,xmax dùng để kiểm soát row version. Khi row được inserted, transaction identifier được lưu vào xmin
-      column. Khi xóa hoặc update, thì sẽ tạo row mới với transaction identifier được lưu vào cột xmax.
-    - MySQL: rollback segment
+- **Multi-Version Concurrency Control (MVCC):** Detects conflicts by using multiple versions of data.
+  - **Oracle:** Uses the `undo segments` [documentation](https://docs.oracle.com/database/121/CNCPT/consist.htm#CNCPT221).
+  - **SQL Server:** Defaults to 2PL for all isolation levels.
+  - **PostgreSQL:** Stores both `current rows` and `previous versions` in the actual database. Each row has `xmin` and `xmax` columns to control row version. When a row is inserted, the transaction identifier is stored in the `xmin` column. When a row is deleted or updated, a new row is created with the transaction identifier in the `xmax` column.
+  - **MySQL:** Uses rollback segments.
 
 ## Phenomena
 
-### Dirty write
+### Dirty Write
 
-- Dirty write xảy ra khi có 2 transaction cùng được phép ghi vào 1 row cùng lúc. => Dẫn tới việc dữ liệu có thể bị ghi
-  đè bởi commit thứ 2.
-  ![DrityWrite](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/dirty_write1.JPG)
-- Có thể dẫn tới vấn đề khi 1 trong 2 commit muốn roll back lại, thì sẽ lựa chọn commit nào để rollback?
+- Occurs when two transactions simultaneously write to the same row, potentially leading to one transaction's changes being overwritten by the other.
+  ![Dirty Write](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/dirty_write1.JPG)
+- If one of the transactions needs to roll back, it can be unclear which changes to retain.
 
-### Dirty read
+### Dirty Read
 
-- Xảy ra khi 1 transaction đọc dữ liệu đã bị thay đổi bởi 1 transaction khác. Nhưng transaction đó lại chưa commited.
-  ![DrityRead](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/drity_read1.JPG)
-- -> để tránh điều này xảy ra, thì khi data thay đổi chưa được commited, thì chỉ có transaction đó mới read được data
-  thay đổi. Còn các transaction khác thì không thấy data thay đổi.
-- Nếu db sử dụng cơ chế Two Phase Locking, những row đang ở trạng thái uncommitted sẽ bị lock bởi transaction đang ghi
-  vào, (các transaction khác muốn đọc vào sẽ bị chặn)
-- Nếu db sử dụng cơ chế MVCC (Multi Version Concurrency Control), db sẽ sử dụng undo log (cái đang lưu trữ giá trị của
-  row trước lúc committed) để trả lại cho transaction cần đọc.
+- Occurs when a transaction reads data that has been modified by another transaction that has not yet committed.
+  ![Dirty Read](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/drity_read1.JPG)
+- To avoid this, uncommitted changes should only be visible to the transaction that made them.
+- **2PL:** Rows in an uncommitted state are locked by the writing transaction, blocking other transactions from reading them.
+- **MVCC:** Uses undo logs to provide the previous version of the row to reading transactions.
 
-#### Non-Repeatable read
+### Non-Repeatable Read
 
-![Non_reapeatableRead](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/Non_reapeatable_read1.JPG)
+![Non-Repeatable Read](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/Non_reapeatable_read1.JPG)
 
-- Với JPA/Hibernate để tránh điều này, thì data của row được cache ở Persistence Context
+- **JPA/Hibernate:** Cache row data in the Persistence Context to avoid this issue.
 
-#### Phantom read
+### Phantom Read
 
-![PhantomRead](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/PhantomRead1.JPG)
+![Phantom Read](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/PhantomRead1.JPG)
 
-### Read skew
+### Read Skew
 
-![ReadSkew1](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/ReadSkew1.JPG)
+![Read Skew](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/ReadSkew1.JPG)
 
-### Write skew
+### Write Skew
 
-![WriteSkew1](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/WriteSkew1.JPG)
+![Write Skew](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/WriteSkew1.JPG)
 
-### Lost update
+### Lost Update
 
-![LostUpdate1](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/LostUpdate1.JPG)
+![Lost Update](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/LostUpdate1.JPG)
 
-- Với Hibernate/JPA thì sẽ tránh bằng việc sử dụng Row Version, để Optimistic Lock. (Cách này là cách application sẽ
-  handler)
+- **Hibernate/JPA:** Use Row Version to implement Optimistic Locking, handling this issue at the application level.
 
-## Isolation level
+## Isolation Levels
 
-|  Isolation level    |   Dirty read    |   Non-repeatable read    |   Phantom read    | 
-|---	|---	|---	|---	|
-| Read Uncommitted    |   Yes    |   Yes    |   Yes    |
-| Read Committed    |   No    |   Yes    |   Yes    |
-| Repeatable Read    | No|  No |   Yes    |
-| Serializable    |   No    |   No    |   No    |
+| Isolation Level     | Dirty Read | Non-Repeatable Read | Phantom Read |
+|---------------------|------------|---------------------|--------------|
+| Read Uncommitted    | Yes        | Yes                 | Yes          |
+| Read Committed      | No         | Yes                 | Yes          |
+| Repeatable Read     | No         | No                  | Yes          |
+| Serializable        | No         | No                  | No           |
 
 ### Read Uncommitted
 
-![ReadUncommitted_Table1](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/ReadUncommited_Table1.JPG)
+![Read Uncommitted](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/ReadUncommited_Table1.JPG)
 
-- Oracle không hỗ trợ Dirty read
+- **Oracle:** Does not support Dirty Read.
 
 ### Read Committed
 
-![ReadCommitted_Table1](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/ReadCommited_Table1.JPG)
+![Read Committed](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/ReadCommited_Table1.JPG)
 
-- Oracle: tất cả statement phải có start_timestamp  (để create database snapshot point-in-time). Khi có 2 transaction
-  cùng update 1 record, thì transaction 1 sẽ lock record để tránh dirty write.
+- **Oracle:** Ensures that all statements have a `start_timestamp` to create a database snapshot at a point in time. When two transactions update the same record, the first transaction locks the record to prevent a dirty write.
 
 ### Repeatable Read
 
-![RepeatableRead_table1](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/ReapeabtaleRead_Table1.JPG)
+![Repeatable Read](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/ReapeabtaleRead_Table1.JPG)
 
 ### Serializable
 
-![Serializable_Table1](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/Serializable_table1.JPG)
+![Serializable](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/persistence/sqldb/Serializable_table1.JPG)
 
 # Transaction - Durability
 
-- Oracle: redo log. Vì lý do performance, redo record được lưu trong buffer, và Log Writer sẽ flush từ in-memory record
-  về redo log file. (Vậy là vẫn có rủi ro nếu bị crash khi không flush kịp?). Oracle có tối thiểu 2 redo files, nhưng
-  chỉ có 1 active. Khi transaction được commit, database sẽ flush từ buffer để persisted.
-- SQL Server: compile cả undo log và redo log trong 1 file là `transaction log`. Khi transaction được committed nó sẽ
-  flush xuống disk trước, xong mới return về cho client (chắc chắn phết). Từ SQL Server 2014, có hỗ
-  trợ `configurable durability`(https://msdn.microsoft.com/en-us/library/dn449490.aspx), log flush sẽ được delayed, mục
-  đích cho tăng performance IO
-- PostgreSQL: WAL (Write-Ahead Log), log entries được buffer trong in-memory và flush xuống disk mỗi khi transaction
-  được committed (http://www.postgresql.org/docs/current/static/wal-intro.html)
-- My SQL: redo log entries được liên kết với single transaction
+- **Oracle:** Uses redo logs. For performance reasons, redo records are stored in a buffer, and the Log Writer flushes from in-memory records to redo log files. There is a risk of data loss if the buffer isn't flushed before a crash. Oracle maintains at least two redo files, but only one is active at a time. When a transaction is committed, the database flushes the buffer to persist the data.
+- **SQL Server:** Combines undo and redo logs in a single `transaction log` file. When a transaction is committed, the data is flushed to disk before returning to the client. Since SQL Server 2014, it supports `configurable durability`, allowing log flush delays to improve I/O performance [documentation](https://msdn.microsoft.com/en-us/library/dn449490.aspx).
+- **PostgreSQL:** Uses Write-Ahead Log (WAL). Log entries are buffered in memory and flushed to disk when a transaction is committed [documentation](http://www.postgresql.org/docs/current/static/wal-intro.html).
+- **MySQL:** Redo log entries are linked to single transactions.

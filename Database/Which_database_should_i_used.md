@@ -10,76 +10,73 @@ category:
 
 ## CAP Theorem
 
-![CAPTheorem](https://tungexplorer.s3-ap-southeast-1.amazonaws.com/other_file/CAP_Considerations.png)
+![CAP Theorem](https://tungexplorer.s3-ap-southeast-1.amazonaws.com/other_file/CAP_Considerations.png)
 
-## 7 Database paradigm
+## 7 Database Paradigms
 
-1. Key-value database
+### 1. Key-Value Database
 
-- Example: redis, Memcached
-- Pros: fast
-- Cons:
-    - limited space
-    - no queries
-- Best for:
-    - caching
-    - pub/sub
-    - leaderboards
-- Real world: https://github.blog/2009-10-20-how-we-made-github-fast/
+- **Examples:** Redis, Memcached
+- **Pros:** Fast
+- **Cons:**
+  - Limited space
+  - No queries
+- **Best for:**
+  - Caching
+  - Pub/Sub
+  - Leaderboards
+- **Real world example:** [How We Made GitHub Fast](https://github.blog/2009-10-20-how-we-made-github-fast/)
 
-2. Wide column
+### 2. Wide Column
 
-- Ex: HBase, Cassandra
-- Pros:
-    - schema less
-    - easy scale
-- Cons:
-    - without joins
-- Best for:
-    - time-series
-    - historical records
-    - high write - low read
-- Real world: https://netflixtechblog.com/scaling-time-series-data-storage-part-i-ec2b6d44ba39
+- **Examples:** HBase, Cassandra
+- **Pros:**
+  - Schema-less
+  - Easy to scale
+- **Cons:** No joins
+- **Best for:**
+  - Time-series data
+  - Historical records
+  - High write, low read workloads
+- **Real world example:** [Scaling Time Series Data Storage at Netflix](https://netflixtechblog.com/scaling-time-series-data-storage-part-i-ec2b6d44ba39)
 
-3. Document
+### 3. Document
 
-- Ex: mongoDB, fireStore
-- Pros:
-    - schema less
-    - relational-ish queries
-- Cons:
-    - without joins
-- Best for:
-    - most apps
-    - games
-    - iot
-- Not ideal for:
-    - graphs
+- **Examples:** MongoDB, Firestore
+- **Pros:**
+  - Schema-less
+  - Relational-ish queries
+- **Cons:** No joins
+- **Best for:**
+  - Most applications
+  - Games
+  - IoT
+- **Not ideal for:**
+  - Graphs
 
-4. Relational
+### 4. Relational
 
-- Ex: MySQL, PostgreSQL
-- Best for: most app
-- Not ideal for:
-    - unstructured data
+- **Examples:** MySQL, PostgreSQL
+- **Best for:** Most applications
+- **Not ideal for:**
+  - Unstructured data
 
-5. Graph
+### 5. Graph
 
-- Ex: neo4j
-- Best for:
-    - Graphs
-    - Knowledge graphs
-    - recommendation engines
-- Real world: airbnb
+- **Example:** Neo4j
+- **Best for:**
+  - Graphs
+  - Knowledge graphs
+  - Recommendation engines
+- **Real world example:** Airbnb
 
-6. Search
+### 6. Search
 
-- Ex: elasticSearch
-- Best for:
-    - search engines
-    - typeahead
+- **Example:** Elasticsearch
+- **Best for:**
+  - Search engines
+  - Typeahead
 
-7. Multi model
+### 7. Multi-Model
 
-- Ex: Fauna
-
+- **Example:** Fauna
