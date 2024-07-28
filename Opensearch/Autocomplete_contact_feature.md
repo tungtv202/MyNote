@@ -1,34 +1,39 @@
+
 ---
-title: ElasticSearch - Contact autocomplete feature
+title: ElasticSearch - Contact Autocomplete Feature
 date: 2022-04-05 22:00:26
 updated: 2022-04-05 22:00:26
 tags:
-    - elasticsearch
-    - search contact
-    - autocomplete
-category: 
-    - elasticsearch
+- elasticsearch
+- search contact
+- autocomplete
+category:
+- elasticsearch
 ---
 
-# Contact autocomplete feature
+# Contact Autocomplete Feature
 
 ## Context
-- Build a autocomplete feature (search feature).
-- Data index: 
+
+- Build an autocomplete feature (search feature).
+- Data index:
+
 ```json
 [{
-    "contactId" : 1,
-    "email" : "tungtv202@gmail.com",
-    "firstname" : "Tung",
-    "surname" : "Tran Van"
-}, ....]
+    "contactId": 1,
+    "email": "tungtv202@gmail.com",
+    "firstname": "Tung",
+    "surname": "Tran Van"
+}, ...]
 ```
-- Search with any text query. Example "tungtv202". The results should be returned exactly expected.
 
+- Search with any text query. Example "tungtv202". The results should be returned exactly as expected.
 
-## 1. Create index
-- `PUT /contact`    
-```json           
+## 1. Create Index
+
+- `PUT /contact`
+
+```json
 {
     "settings": {
         "number_of_shards": 5,
@@ -70,7 +75,7 @@ category:
             }
         }
     },
-    "mapping": {
+    "mappings": {
         "properties": {
             "contactId": {
                 "type": "keyword"
@@ -92,17 +97,21 @@ category:
 }
 ```
 
-1. Why `email` has NOT index analyzers is `edge_ngram_filter_analyzer`?
-    - "tranvantung@gmail.com" will NOT in contain of results when we searching "tung"
+### Why `email` Uses `ngram_filter_analyzer` Instead of `edge_ngram_filter_analyzer`?
+
+- Using `edge_ngram_filter_analyzer` on `email` would result in tokens like these:
+
 ```bash
 GET /_analyze
 {
   "tokenizer": "uax_url_email",
-  "filter" : [{"type": "edge_ngram", "min_gram": 3, "max_gram": 30 }],
+  "filter": [{"type": "edge_ngram", "min_gram": 3, "max_gram": 30 }],
   "text": "tranvantung@gmail.com"
 }
 ```
+
 Tokens result:
+
 ```
 [
   "tra",
@@ -126,19 +135,22 @@ Tokens result:
   "tranvantung@gmail.com"
 ]
 ```
-We can see, no any token has value `tung`.
-Now, let try with `ngram`
+
+No token contains `tung`.
+
+- Using `ngram_filter_analyzer` instead:
 
 ```bash
 GET /_analyze
 {
   "tokenizer": "uax_url_email",
-  "filter" : [{"type": "ngram", "min_gram": 3, "max_gram": 4 }],
+  "filter": [{"type": "ngram", "min_gram": 3, "max_gram": 4 }],
   "text": "tranvantung@gmail.com"
 }
-
 ```
-tokens result:
+
+Tokens result:
+
 ```
 [
   "tra",
@@ -180,21 +192,23 @@ tokens result:
   "com"
 ]
 ```
-Has token "tung".
 
-2.  Why `firstname/surname` has index analyzers is `edge_ngram_filter_analyzer`?
-- When you search contact by contactName, you will not search "ung" for "Tung" contact?
-you will type: T...Tu...Tun...Tung
+Includes the token `tung`.
+
+### Why `firstname` and `surname` Use `edge_ngram_filter_analyzer`?
+
+- When searching for contact names, users typically type progressively (e.g., T...Tu...Tun...Tung).
 
 ```bash
 GET /_analyze
 {
   "tokenizer": "standard",
-  "filter" : [{"type": "edge_ngram", "min_gram": 3, "max_gram": 30 }],
+  "filter": [{"type": "edge_ngram", "min_gram": 3, "max_gram": 30 }],
   "text": "Tran Van Tung"
 }
 ```
-tokens result:
+
+Tokens result:
 
 ```
 [
@@ -206,25 +220,28 @@ tokens result:
 ]
 ```
 
-3. Why `"tokenizer": "uax_url_email"`?
+### Why Use `tokenizer`: `uax_url_email`?
 
-- https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-uaxurlemail-tokenizer.html
+- The `uax_url_email` tokenizer is designed to tokenize email addresses and URLs effectively.
 
-4. Why we need `search_analyzer`?
-- It will be used when searching, for field "email".
-- We can setting search analyzer for email by default
+Reference: [Elasticsearch UAX URL Email Tokenizer](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-uaxurlemail-tokenizer.html)
+
+### Why Use `search_analyzer`?
+
+- The `search_analyzer` is used during search queries for the `email` field. It can be set as the default search analyzer or assigned in the query:
+
+```json
+"email": {
+    "type": "text",
+    "analyzer": "ngram_filter_analyzer",
+    "search_analyzer": "search_analyzer"
+}
 ```
-            "email": {
-                "type": "text",
-                "analyzer": "ngram_filter_analyzer",
-                "search_analyzer": "search_analyzer"
-            },
-```
-or we can assign it in query when searching
 
+## 2. Search Query
 
-## 2. Search query
 - `GET /contact/_search`
+
 ```json
 {
   "query": {
@@ -233,19 +250,14 @@ or we can assign it in query when searching
         {
           "multi_match": {
             "query": "nobita",
-            "fields": [
-              "email"
-            ],
+            "fields": ["email"],
             "analyzer": "search_analyzer"
           }
         },
         {
           "multi_match": {
             "query": "nobita",
-            "fields": [
-              "firstname",
-              "surname"
-            ]
+            "fields": ["firstname", "surname"]
           }
         }
       ],
@@ -255,7 +267,8 @@ or we can assign it in query when searching
 }
 ```
 
-// Bonus more complex query
+### More Complex Query
+
 ```json
 {
   "from": 0,
@@ -269,19 +282,14 @@ or we can assign it in query when searching
               {
                 "multi_match": {
                   "query": "nobita",
-                  "fields": [
-                    "email"
-                  ],
+                  "fields": ["email"],
                   "analyzer": "search_analyzer"
                 }
               },
               {
                 "multi_match": {
                   "query": "nobita",
-                  "fields": [
-                    "firstname",
-                    "surname"
-                  ]
+                  "fields": ["firstname", "surname"]
                 }
               }
             ],
@@ -304,4 +312,3 @@ or we can assign it in query when searching
   }
 }
 ```
-

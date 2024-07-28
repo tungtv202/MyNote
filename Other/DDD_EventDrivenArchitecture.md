@@ -1,5 +1,5 @@
 ---
-title: Domain Driver Design & Event Driven Architecture
+title: Domain-Driven Design & Event-Driven Architecture
 date: 2020-01-26 18:00:26
 updated: 2020-01-26 18:00:26
 tags:
@@ -9,102 +9,100 @@ category:
     - other
 ---
 
-# Domain Driver Design và Event Driven Architecture
+# Domain-Driven Design and Event-Driven Architecture
 
-- Đặt đơn hàng trong giờ cao điểm, cái khách hàng quan tâm là đặt đúng hàng họ cần, đúng số lượng, và có thông báo thành
-  công => quá trình xử lý lúc đặt giờ cao điểm
-  nó `khác với quá trình xử lý đơn hàng cho người vận hành tại thời điểm sau đó` => thiết kế
-- Hệ thống chạy nhanh không bằng hệ thống chạy ổn định
-- Ví dụ: nói về đơn hàng, sẽ có order và order item. Database sẽ có 2 table, order và order item, nhưng sẽ chỉ có 1
-  object Order. Vì khi đã nói tới đơn hàng, thì sẽ có order và order item, không thể có 1 đơn hàng, mà đơn hàng đó không
-  có sản phẩm, và không thể nói về sản phẩm đơn hàng, mà không biết đơn hàng nào.
-- Giả sử cần lấy 2 field thông tin, thì dùng 2 query khác nhau (đã được global trong hệ thống), rồi dùng code tổng hợp
-  lại, còn hơn là viết 1 query mới lấy ra 2 field chỉ để giải quyết 1 nhu cầu.
-- `Model` không phải là `Table`.
-    - `Table` thiết kế để lưu trữ ghi nhanh, đọc nhanh
-    - `Model` phản ánh tính chất logic nghiệp vụ của hệ thống
-- **Aggregate**
-    - là một nhóm các đối tượng dữ liệu được đối xử như 1 thể thống nhất trong hệ thống.
-        - VD: order và order item phải coi như là 2 thành phần nhất quán của đối tượng aggregate order, định danh trong
-          hệ thống là order id
-    - đảm báo cách nhìn thống nhất trong toàn bộ hệ thống
-    - khi nói đến 1 aggregate phải nói tới 1 đối tượng dữ liệu ` toàn vẹn, đầy đủ `
-    - không tồn tại các nghiệp vụ riêng biệt với từng thành phần của 1 aggregate
-    - tất cả các logic từ data access tới service đều phải xoanh quanh các aggregate
-    - chọn lựa phạm vi aggregate `vừa đủ`
-    - phạm vi aggregate quá lớn sẽ dẫn đến performance không tốt
-    - phạm vi aggregate quá bé sẽ dẫn tới logic bị phân mảnh và khó quản lý
-    - đảm báo các thành phần của 1 aggregate luôn nhất quán
-    - sử dụng pattern về data access thống nhất
-        - Repository Pattern
-        - ORM
-    - Cấu trúc resource API tương ứng với các aggregate
-- **Don't repeat Yourself:**
-    - Không nhầm lẫn Aggregate và các DTO  (DTO là nhu cầu làm việc gì đó với 1 cục dự liệu nào đó? và code để Data
-      Access cho tầng dữ liệu đó? @@)
-    - Không design API dựa theo nhu cầu hiển thị
-    - Không xây dựng data access theo từng chức năng
+- When placing orders during peak hours, customers care about getting the right products, in the right quantity, with a successful notification. The processing during peak hours is different from the processing of orders for operators later. This design ensures that the system runs fast and stable.
+- For example: talking about orders, there will be an order and order items. The database will have 2 tables, order and order item, but there will be only one Order object. When talking about an order, it must include both order and order items. There cannot be an order without items, and it doesn't make sense to talk about order items without knowing the order they belong to.
+- If you need to retrieve 2 fields of information, use 2 separate queries (already global in the system), then aggregate them with code, rather than writing a new query just to get 2 fields for one specific need.
+- **Model** is not a **Table**.
+  - **Table** is designed for quick storage and retrieval.
+  - **Model** reflects the logical business properties of the system.
 
-#### Mô hình kiến trúc
+## Aggregate
+
+- An aggregate is a group of data objects treated as a single unit within the system.
+  - Example: order and order items should be treated as consistent components of the aggregate order, identified in the system by the order id.
+- Ensures a consistent view throughout the system.
+- When referring to an aggregate, it must be a complete, fully defined data object.
+- There should be no separate business logic for each component of an aggregate.
+- All logic from data access to service should revolve around aggregates.
+- Choose the "just right" scope for aggregates.
+- Too large an aggregate scope leads to poor performance.
+- Too small an aggregate scope leads to fragmented and hard-to-manage logic.
+- Ensure the components of an aggregate are always consistent.
+- Use unified data access patterns:
+  - Repository Pattern
+  - ORM
+- Structure API resources corresponding to aggregates.
+
+## Don't Repeat Yourself:
+
+- Don't confuse Aggregate with DTO (DTO is for working with a specific data block and writing code for Data Access for that data layer).
+- Don't design APIs based on display needs.
+- Don't build data access for each function.
+
+### Architectural Model
 
 ![MoHinhKienTruc](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/ddd/MoHinhKienTruc.JPG)
 
-#### Infrastructure Layer
+### Infrastructure Layer
 
-- Đảm nhiệm vai trò làm việc với các thành phân bên dưới như DB, Message Queue, File...
-- Phần lớn logic của hệ thống là logic nghiệp vụ
-- Không để logic của phần infrastructure làm giảm tốc độ phát triển của nghiệp vụ
-- Phải có khả năng tái sử dụng cao
-- Phai nhất quán trong toàn bộ cấu trúc hệ thống
-- **Pattern:**
-    - Repository Pattern
-    - Observer Pattern
-    - ORM Pattern
+- Works with underlying components such as DB, Message Queue, File...
+- Most of the system logic is business logic.
+- Don't let infrastructure logic slow down business development.
+- Must be highly reusable.
+- Must be consistent throughout the system structure.
+- **Patterns:**
+  - Repository Pattern
+  - Observer Pattern
+  - ORM Pattern
 
-#### Mức độ tái sử dụng
+### Reusability Level
 
 ![Layer](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/java/ddd/layer.JPG)
 
-- Các layer càng cao thì càng được sử dụng nhiều.
-- Các layer càng bên dưới thì càng phải tái sử dụng cao
-- Tránh thiết kế để độ phức tạp là ngang nhau giữa tất cả các layer.
+- Higher layers are used more frequently.
+- Lower layers must be highly reusable.
+- Avoid designing equal complexity across all layers.
 
-#### Đảm bảo thứ tự của message
+### Ensuring Message Order
 
-- Đảm bảo thứ tự ghi dữ liệu
-- Đảm bảo thứ tự gửi event
-- Đảm bảo thứ tứ nhận event
+- Ensure data write order.
+- Ensure event sending order.
+- Ensure event receiving order.
 
-#### - Solution đảm bảo thứ tự ghi
+### Solution to Ensure Write Order
 
-- **Solution 1:** lock theo key range, sử dụng transaction mode lock serializable Ví dụ: lock theo key là id order
-- **Solution 2:** sử dụng hai resources:    
-  R1: snapshot của object     
+- **Solution 1:** Lock by key range, use transaction mode lock serializable. Example: lock by order id.
+- **Solution 2:** Use two resources:    
+  R1: snapshot of the object     
   R2: event log   
-  Lock lệnh update trên R1 và append vào R2
-- **Solution 3:** nếu lưu event trên table, thì sử dụng bộ cặp primary key của event:          
+  Lock the update command on R1 and append to R2.
+- **Solution 3:** If storing events in a table, use a composite primary key of the event:          
   Aggregate Id – Version      
-  Các event cùng version sẽ bị đụng độ khi insert.
+  Events with the same version will conflict when inserting.
 
-#### - Solution đảm bảo thứ tự gửi
+### Solution to Ensure Sending Order
 
-- Không áp dụng đồng thời ghi DB và gửi event vì không có transaction.
-- Phải gửi log các event trước khi gửi đi
-- Gộp nhóm các event theo id của aggregate phát event. Lưu trữ event với cặp key: aggregateId – version
-- Load các event cần gửi theo aggregate id, và gửi tuần tự theo version
-- Dừng gửi ngay khi gặp event lỗi
-- Xử lý sự cố -> Load lại theo aggregateId và gửi tiếp theo thứ tự version
-- Sử dụng hai bảng:
-    - Bảng Event để store event
-    - Bảng Undispatched Event để lưu tạm các event chờ gửi, sẽ xóa sau khi gửi xong.
+- Don't apply simultaneous DB write and event send because there's no transaction.
+- Must log events before sending them.
+- Group events by the id of the aggregate that emits the event. Store events with a composite key: aggregateId – version.
+- Load events to be sent by aggregate id, and send sequentially by version.
+- Stop sending immediately if an error event is encountered.
+- Recover -> Load by aggregateId and continue sending in version order.
+- Use two tables:
+  - Event table to store events.
+  - Undispatched Event table to temporarily store events awaiting dispatch, deleted after sending.
 
-#### Đảm bảo thứ tự nhận message
+### Ensuring Message Reception Order
 
-- Gom nhóm các message theo một định danh: ví dụ aggregate id
-- Các message của một nhóm chỉ được nhận bởi một thread tại một thời điểm
-- Tận dụng các tính năng Partition của Kafka hoặc Session của Windows Service Bus để đảm bảo thứ tự message khi routing
+- Group messages by an identifier, such as aggregate id.
+- Messages in a group should be received by one thread at a time.
+- Use Kafka's Partition or Windows Service Bus's Session features to ensure message order when routing.
 
-// ref:
+---
 
-- https://tungexplorer.s3.ap-southeast-1.amazonaws.com/other_file/DDD_EventDrivenArchitecture.pdf
-- https://youtu.be/glZs4QFfwbc
+**References:**
+
+- [DDD Event-Driven Architecture PDF](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/other_file/DDD_EventDrivenArchitecture.pdf)
+- [YouTube Video](https://youtu.be/glZs4QFfwbc)

@@ -11,15 +11,14 @@ category:
 
 # Policy Evaluation Logic
 
-- đã deny thì chắc chắn bị deny cho dù có rule allow cho object/bucket đó.
-- không deny thì chưa chắc đã allow, cần define rõ thì mới allow đc.
-- ref : https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html
-- IAM Policy giống như việc bạn được cấp 1 giấy phép lái xe ô tô, nghĩa là bạn được quyền ngồi lên ô tô và lái xe đi;
-  còn S3 là nơi bạn muốn lái xe đến, chỗ đó có cho phép bạn vào hay không thì tùy thuộc vào Policy ở đấy.
+- If a request is denied, it is definitively denied, regardless of any allow rule for the object/bucket.
+- If a request is not denied, it does not necessarily mean it is allowed; explicit allow must be defined for it to be granted.
+- Reference: [AWS IAM Policy Evaluation Logic](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html)
+- IAM Policy is like a driver's license that permits you to drive a car; whether or not you are allowed to enter a certain place (e.g., an S3 bucket) depends on the policies set for that place.
 
 ![PolicyEvaluate](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/aws/PolicyEvaluationHorizontal.png)
 
 ![Policy2](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/aws/policy2.JPG)
 
-- Cross-Account Policy Evaluation Logic: sẽ có 1 logic evaluate riêng
-  https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic-cross-account.html
+- Cross-Account Policy Evaluation Logic has its own evaluation logic.
+  Reference: [Cross-Account Policy Evaluation Logic](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic-cross-account.html)

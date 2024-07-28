@@ -1,7 +1,7 @@
 ---
 title: Authentication Topic
 date: 2020-02-17 18:00:26
-updated: 2021-12-08 18:00:26
+updated: 2024-07-28 18:00:26
 tags:
     - authentication
     - basic
@@ -13,28 +13,24 @@ category:
 
 ## 1. Basic Authentication
 
-- `Authorization: Basic YWJjOjEyMw== `  trong đó `YWJjOjEyMw==` là `base64encode` của `abc:123`  (username = abc,
-  password = 123)
+- The `Authorization` header for Basic Authentication looks like this: `Authorization: Basic YWJjOjEyMw==`. Here, `YWJjOjEyMw==` is the `base64` encoded string of `abc:123` (username = abc, password = 123).
 
 ![BasicAuthen](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/authen_topic/basicAuthFlow.jpg)
 
 ## 2. Session-based Authentication
 
-- Session ID sẽ xuất hiện trong các HTTP request tiếp theo trong Cookie (header `Cookie: SESSION_ID=abc`)
+- The Session ID will appear in subsequent HTTP requests within the Cookie header (e.g., `Cookie: SESSION_ID=abc`).
 
 ![SessionAuthen](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/authen_topic/Session-based_Authentication.jpg)
 
 ## 3. Token-based Authentication
 
-- Token thường có tính self-contained (như JWT), tức là có thể tự kiểm tra tính đúng đắn nhờ vào các thuật toán mã hóa
-  và giải mã chỉ dựa vào thông tin trên token và 1 secret key nào đó của server. Do đó server không cần thiết phải lưu
-  lại token, hay truy vấn thông tin user để xác nhận token.
-- Token sẽ xuất hiện trong các HTTP request tiếp theo trong Authorization header.
+- Tokens, often self-contained (like JWT), can be verified for correctness using encryption and decryption algorithms based on the token's information and a secret key of the server. Therefore, the server does not need to store the token or query user information to verify the token.
+- The token will appear in subsequent HTTP requests within the Authorization header (e.g., `Authorization: Bearer abc`).
 
-(`Authorization: Bearer abc`)
 ![TokenAuthen](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/authen_topic/TokenBased.jpg)
 
-## 4. Compare
+## 4. Comparison
 
 ![Compare](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/authen_topic/compare.JPG)
 
@@ -42,47 +38,54 @@ category:
 
 ![Oauth2.0](https://shopify.dev/assets/api/oauth-code-grant-flow.png)
 
-- The merchant requests to install the app.
-- The app redirects to Shopify to load the OAuth grant screen and requests the required scopes.
-- Shopify displays a prompt to receive authorization and prompts the merchant to login if required.
-- The merchant consents to the scopes and is redirected to the redirect_uri.
-- The app makes an access token request to Shopify including the client_id, client_secret, and code.
-- Shopify returns the access token and requested scopes.
-- The app uses the token to make requests to the Shopify API.
-- Shopify returns the requested data.
-  [ref](https://shopify.dev/tutorials/authenticate-with-oauth)
+1. The merchant requests to install the app.
+2. The app redirects to Shopify to load the OAuth grant screen and requests the required scopes.
+3. Shopify displays a prompt to receive authorization and prompts the merchant to log in if required.
+4. The merchant consents to the scopes and is redirected to the `redirect_uri`.
+5. The app makes an access token request to Shopify including the `client_id`, `client_secret`, and code.
+6. Shopify returns the access token and requested scopes.
+7. The app uses the token to make requests to the Shopify API.
+8. Shopify returns the requested data.
+
+[Reference](https://shopify.dev/tutorials/authenticate-with-oauth)
 
 ## 6. OIDC - openId connect
-- oidc = extend oauth
+- OIDC = extends OAuth 2.0.
 
-### id token vs access token?
-- id token
-  - SHOULD: get info of user, example birthday, address...
-  - SHOULD: app -> id provider  (Spring oauth use id_token for call api get userInfo to ID provider)
-  - SHOULD NOT: for authorizing
-  - SHOULD NOT: client -> app
-- access token
-  - SHOULD: for authorizing
-  - SHOULD: client -> app, app -> id provider
-  
+### ID Token vs Access Token
+
+- **ID Token**:
+  - SHOULD: Be used to get information about the user, such as birthday, address, etc.
+  - SHOULD: Be used by the app to get user info from the ID provider (e.g., Spring OAuth uses `id_token` to call API and get user info from the ID provider).
+  - SHOULD NOT: Be used for authorizing.
+  - SHOULD NOT: Be sent from client to app.
+
+- **Access Token**:
+  - SHOULD: Be used for authorizing.
+  - SHOULD: Be sent from client to app and from app to ID provider.
+
 ### Authorization Code Flow vs PKCE
-- PKCE is extending of Authorization Code
-- Authorization Code need `clientId`  AND `clientSecret` (use in step: App -> Authorization Server) 
-  - SHOULD NOT use it in SPA (can implement by Reactjs, AngularJs, that we don't have a backend authorization). Because user can use the web browser to get `clientSecret`
-  - SHOULD: traditional web app, like as thymeleaf with spring boot 
-- PKCE: more secure
-  - client app (reactjs) NEED create a `code_verifier` (it may be random string). `HASH(code_verifier) = code_challenge`. 
-  - Then, client app sends `code_challenge` to Authorization Server.
-  - Authorization Server will store the `code_challenge` for later verification
-  - after the user authenticates, redirects back to the app with an authorization code. The app makes the request to exchange the code for tokens, only it sends the Code Verifier instead of a fixed secret. Now the Authorization Server can hash the Code Verifier and compare it to the hashed value it stored earlier.
+
+- PKCE is an extension of Authorization Code Flow.
+- Authorization Code Flow requires `clientId` and `clientSecret` (used in the step: App -> Authorization Server).
+  - SHOULD NOT: Be used in Single Page Applications (SPAs) (e.g., React.js, AngularJS) because users can access `clientSecret` from the web browser.
+  - SHOULD: Be used in traditional web apps (e.g., Thymeleaf with Spring Boot).
+
+- **PKCE**: More secure.
+  - The client app (e.g., React.js) needs to create a `code_verifier` (a random string). `HASH(code_verifier) = code_challenge`.
+  - The client app sends the `code_challenge` to the Authorization Server.
+  - The Authorization Server stores the `code_challenge` for later verification.
+  - After the user authenticates, they are redirected back to the app with an authorization code. The app requests to exchange the code for tokens, sending the `code_verifier` instead of a fixed secret. The Authorization Server hashes the `code_verifier` and compares it to the stored hashed value.
+
 ![PKCE Flow](https://developer.okta.com/assets-jekyll/blog/okta-authjs-pkce/pkce-59cd81484ee5be4248d4f8efc986070d7d6ac20b8091da3b8377bf1e278a0b54.svg)
 
 ### What is JWKS URI?
-- JWKS = JSON web key set 
-- JWKS URI = endpoint to get public key, in order to use the public key for the verification token
-- Often this endpoint has suffix is `.well-known/jwks.json`
-  - But in keycloak, it has format `/auth/realms/realm1/protocol/openid-connect/certs`
-  - Format look like this: 
+
+- **JWKS**: JSON Web Key Set.
+- **JWKS URI**: Endpoint to get the public key, used for token verification.
+- This endpoint often has the suffix `.well-known/jwks.json`.
+  - In Keycloak, it has the format `/auth/realms/realm1/protocol/openid-connect/certs`.
+  - The format looks like this:
 
 ```json
 {
@@ -116,14 +119,18 @@ category:
     ]
 }
 ```
-- Need pay attention to `kid` property, it help we detect the exactly public_key for any token. (`kid` will be contains in header of jwt token)
-### Note
-- `state`, `session_state`: for CSRF
-- Spring debug at class: `org.springframework.security.oauth2.client.oidc.authentication.OidcAuthorizationCodeAuthenticationProvider`
-- When `credential` mode: client_id + client_secret = username + password. It implicit is `Basic Auth`
 
-### Why does OAuth server return a authorization code instead of access token in the first step?
-- https://stackoverflow.com/questions/13387698/why-is-there-an-authorization-code-flow-in-oauth2-when-implicit-flow-works-s
-- https://www.quora.com/Why-does-OAuth-server-return-a-authorization-code-instead-of-access-token-in-the-first-step
+- Pay attention to the `kid` (Key ID) property, which helps identify the exact public key for any token. The `kid` is contained in the header of a JWT token.
 
-- https://blog.httpwatch.com/2011/03/01/6-things-you-should-know-about-fragment-urls/
+### Notes
+
+- `state`, `session_state`: Used for CSRF protection.
+- Spring debug class: `org.springframework.security.oauth2.client.oidc.authentication.OidcAuthorizationCodeAuthenticationProvider`.
+- In `credential` mode: `client_id + client_secret` is equivalent to `username + password`. This is implicitly `Basic Auth`.
+
+### Why does the OAuth server return an authorization code instead of an access token in the first step?
+
+- [Stack Overflow Discussion](https://stackoverflow.com/questions/13387698/why-is-there-an-authorization-code-flow-in-oauth2-when-implicit-flow-works-s)
+- [Quora Discussion](https://www.quora.com/Why-does-OAuth-server-return-a-authorization-code-instead-of-access-token-in-the-first-step)
+- [HTTPWatch Blog](https://blog.httpwatch.com/2011/03/01/6-things-you-should-know-about-fragment-urls/)
+

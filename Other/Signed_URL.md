@@ -125,32 +125,23 @@ Kịch bản là code Java sử dụng SDK của AWS, để generate Signed URL 
 Code Java:
 
 ```java
-  /**
- * @param amazonS3
- * @param bucketName
- * @param fileName
- * @return download link
- */
-public static String getDownloadLink(AmazonS3 amazonS3,String bucketName,String fileName){
-    String downloadLink="";
-    if(bucketName.isEmpty()||fileName.isEmpty())return downloadLink;
-    Date expiration=new Date();
-    long expTimeMillis=new Date().getTime();
-    expiration.setTime(expTimeMillis+TIME_MINUTES_EXPIRED*1000*60);
+public static String getDownloadLink(AmazonS3 amazonS3, String bucketName, String fileName) {
+  Date expiration = new Date(System.currentTimeMillis() + TIME_MINUTES_EXPIRED * 60 * 1000);
+  try {
+    GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, fileName)
+            .withMethod(HttpMethod.GET)
+            .withExpiration(expiration);
 
-    try{
-    GeneratePresignedUrlRequest generatePresignedUrlRequest=
-    new GeneratePresignedUrlRequest(bucketName,fileName)
-    .withMethod(HttpMethod.GET)
-    .withExpiration(expiration);
-    URL url=amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
-    downloadLink=url.toString();
-    }catch(AmazonServiceException ase){
-    }catch(AmazonClientException ace){
-    LOG.error("Error Message: "+ace.getMessage());
-    }
-    return downloadLink;
-    }
+    URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+    return url.toString();
+  } catch (AmazonServiceException ase) {
+    LOG.error("AmazonServiceException: " + ase.getMessage(), ase);
+  } catch (AmazonClientException ace) {
+    LOG.error("AmazonClientException: " + ace.getMessage(), ace);
+  }
+  return "";
+}
+
 ```
 
 downloadLink example:
