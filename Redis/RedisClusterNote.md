@@ -6,7 +6,7 @@ tags:
     - redis
     - redis cluster
 category: 
-    - other
+    - redis
 ---
 
 
