@@ -10,193 +10,7 @@ category:
     - database
 ---
 
-## CQL
-
-### 1. Keyspaces
-
-- Create
-
-```SQL
-CREATE KEYSPACE keyspace101 WITH REPLICATION  = {
- 'class' : 'NetworkTopologyStrategy', 'DC1': 3
-} AND DURABLE_WRITES = false;
-```
-
-### 2. Tables
-
-- Set the TTL for an entire row
-
-```sql
-INSERT INTO table101 (id, token)
-VALUES ('id1', 'token2') USING TTL 10800;
-``` 
-
-- Set a table-wide, default TTL
-
-```sql
-CREATE TABLE reset_tokens (
-    id varchar PRIMARY KEY,
-    token varchar
-) WITH default_time_to_live = 10800;
-```
-
-## Table properties
-
-    - comment
-    - caching (keys, row_per_partition)
-    - read_repair_chance
-    - dclocal_read_repair_chance
-    - default_time_to_live  (ttls to delete data)
-    - gc_grace_seconds  (circle time to gc delete forever data, that make tombstones)
-    - bloom_filter_fp_chance
-    - compaction
-    - compression
-    - min/max_index_interval
-    - memtable_flush_period_in_ms
-    - populate_io_cache_on_flush
-    - speculative_retry
-    - ...
-
-
 ## Data Type
-
-### 1. Basic Data Types
-
-- Numeric: bigint, decimal, double, float, int, variant
-- String: ascii, text, varchar
-- Date: timestamp, timeuuid
-- Other: boolean. uuid, inet, blob
-
-### 2. Complex Data Types
-
-- `2.1 Set`
-    - Create
-    ```sql
-        CREATE TABLE courses ( 
-        id varchar, 
-        name static, 
-        features set<varchar> static, 
-        module_id int, 
-        PRIMARY KEY (id, module_id) 
-        )
-    ```
-    - Insert
-    ```sql
-        INSERT INTO courses (id, features) VALUES ('nodejs-big-picture', {'cc'}); 
-    ```
-    - Adding to a set
-    ```sql
-    UPDATE courses SET features = features + {'cc'} WHERE course_id = ‘nodejs-big-picture’;
-    ```
-    - Removing from a set
-    ```sql
-    UPDATE courses SET features = features - {'cc'} WHERE course_id = ‘nodejs-big-picture';
-    ```
-    - Empty
-    ```sql
-    UPDATE courses SET features = {} WHERE course_id = 'nodejs-big-picture'; 
-    ```
-- `2.2 List`
-    - Create
-    ```sql
-    CREATE TABLE courses ( 
-    id varchar, 
-    name static, 
-    module_id int, 
-    clips list<varchar>, 
-    PRIMARY KEY (id, module_id) 
-    )
-    ```
-    - Insert
-    ```sql
-    INSERT INTO courses (id, module_id, clips) 
-    VALUES ('nodejs-big-picture',1,['Course Overview']); 
-    ```
-    - Adding to a list
-    ```sql
-    UPDATE courses SET clips = ['Course Introduction'] + clips 
-    WHERE course_id = 'nodejs-big-picture' AND module_id = 2; 
-    ```
-    ```sql
-    UPDATE courses SET clips = clips + ['Considering Node.js'] 
-    WHERE course_id = 'nodejs-big-picture' AND module_id = 2;
-    ```
-    - Removing from a list
-    ```sql
-    UPDATE courses SET clips = clips - [‘Course Overview'] 
-    WHERE course_id = ‘nodejs-big-picture‘ and module_id = 1;
-    ```
-    - Manipulating a list by element id
-    ```sql
-    UPDATE courses SET clips[2] = ‘What Makes up Node.js?’ 
-    WHERE course_id = ‘nodejs-big-picture‘ AND module_id = 2; 
-    ```
-    ```sql
-    UPDATE courses SET clips[2] = ‘What Makes up Node.js?’ 
-    WHERE course_id = ‘nodejs-big-picture‘ AND module_id = 2; 
-    ```
-- `2.3 Map`
-    - Create
-    ```sql
-    CREATE TABLE users ( 
-    id varchar, 
-    first_name varchar, 
-    last_name varchar, 
-    password varchar, 
-    reset_token varchar, 
-    last_login map<varchar,timestamp>, 
-    PRIMARY KEY (id) 
-    )
-    ```
-    - Inserting with a map
-    ```sql
-    INSERT INTO users (id, first_name, last_name, last_login) 
-    VALUES ('john-doe', 'John', 'Doe', 
-    {'383cc0867cd2': '2015-06-30 09:02:24'}); 
-    ```
-    - Updating / adding to a map
-    ```sql
-    UPDATE users SET last_login['383cc0867cd2'] 
-    = '2015-07-01 11:17:42' WHERE user_id = 'john-doe';
-    ``` 
-    ```sql
-    UPDATE users SET last_login = last_login + {'7eb0a8997f39': 
-    '2015-07-02 07:32:17'} WHERE user_id = 'john-doe';
-    ```
-    - Removing from a map
-    ```sql
-    DELETE last_login['383cc0867cd2'] FROM users 
-    WHERE id = 'john-doe';
-    ```
-    ```sql
-    UPDATE users SET last_login = last_login - {'7eb0a8997f39'} 
-    WHERE id = 'john-doe';
-    ```
-    - Emptying the entire map
-    ```sql
-    UPDATE users SET last_login = {}
-    WHERE id = 'john-doe';
-    ```
-    - Collections and TTL
-    ```sql
-    UPDATE users USING TTL 31536000 
-    SET last_login['383cc0867cd2'] = '2015-07-01 11:17:42' 
-    WHERE user_id = 'john-doe';
-    ```
-- `2.4 Tuples`
-    - Create
-    ```sql
-    CREATE TABLE users ( 
-    id varchar, 
-    first_name varchar, 
-    last_name varchar, 
-    password varchar, 
-    reset_token varchar, 
-    last_login map<varchar, 
-    frozen<tuple<timestamp,inet>>>, 
-    PRIMARY KEY (id) 
-    )
-    ```
 
 ### 3. User Defined Types
 
@@ -323,55 +137,24 @@ WHERE id = ‘advanced-javascript’
 - Defined
   ![DefinedFunction](https://tungexplorer.s3.ap-southeast-1.amazonaws.com/cassandra/DefinedFunction.JPG)
 
-## Primary Key and Composite Partition Keys
-
-```sql
-CREATE TABLE keyspace101.table2 (
-    id varchar PRIMARY KEY,
-    name varchar,
-    author varchar
-)
-```
-
-```sql
-CREATE TABLE keyspace101.table2 (
-    id varchar,
-    name varchar,
-    author varchar,
-    PRIMARY KEY ((id, author))
-)
-```
-
 ## Tombstones
 
-When data is deleted in Cassandra, it isn't just removed immediately from the cluster. A tombstone is written to the
-database, marking the data in question as deleted. This tombstone is partitioned data just like any other data written
-to the cluster, and this managed accordingly, with hinted handoffs, read repairs everything.      
-For example, we have a key space with a replication factor of three, and we delete some data at a consistency level of
-quorum. Now let's suppose this right doesn't make it to the third node in a cluster responsible for that token range.
-Having the tombstone allows the reed repair process to propagate this tombstone to the outdated node
+When data is deleted in Cassandra, it isn't immediately removed from the cluster. Instead, a tombstone is written to the database, marking the data in question as deleted. This tombstone is partitioned data, just like any other data written to the cluster, and it is managed accordingly with hinted handoffs, read repairs, and more.
 
-- property: `gc_grace_seconds` (default is 10 days)
-- Note: CAN see a tombstone data by some tools
+For example, consider a keyspace with a replication factor of three, and we delete some data at a consistency level of quorum. Now let's suppose this write doesn't make it to the third node in the cluster responsible for that token range. Having the tombstone allows the read repair process to propagate this tombstone to the outdated node.
 
-### Why tombstone? 
-- it comes from a use case: when we try to delete some row while having one node in cluster DOWN. 
-When that node online comeback, it thinks another node is "missing" some data. It doesn't think that row has been removed. So => maybe data has been re-updated/re-insert again to another node.  => In order to avoid that, Cassandra doesn't remove permanently data, it just marks "flag" to rows - that has been removed.
+- Property: `gc_grace_seconds` (default is 10 days)
+- Note: You can see tombstone data using certain tools.
 
-### When do tombstones cause problems?
-- Disk usage
-- Read performance - (When we query with a special partition key but has too many rows with same partition key (contains all row has been marked removed flag))
+### Why Tombstones?
 
-## Other
+Tombstones address a specific use case: when we try to delete a row while one node in the cluster is down. When that node comes back online, it might think another node is "missing" some data. It doesn't realize that the row has been deleted. As a result, the data could be re-updated or re-inserted into another node. To avoid this, Cassandra doesn't permanently remove data; it just marks the rows with a "flag" indicating they have been removed.
 
-cql:
+### When Do Tombstones Cause Problems?
 
-```sql
-expand on; // select result is row format
-expand off; // select result is column format
-tracing on; 
-tracing off;
-```
+- **Disk Usage:** Tombstones can accumulate and consume disk space.
+- **Read Performance:** When querying with a specific partition key that includes too many rows marked as deleted, read performance can degrade.
+
 
 ## Counters
 
@@ -521,22 +304,23 @@ storing 4 copies of the data for each partition in each table/in the keyspace. `
 - LOCAL_QUORUM
 - LOCAL_ONE
 
-## Difference between partition key, composite key and clustering key?
+## Difference between Partition Key, Composite Key, and Clustering Key
 
-- Primary Key: Cassandra uses a special type of primary key called a composite key to represent group of related rows, alsoe called "Partitions"
-- Primary Key = Partition Key + OPTIONAL clustering columns
-- Partition key = it determines the nodes on which rows are stored and itself contains multiple columns 
-- Composite column = It controls how data is stored inside the partition
+- **Primary Key:** Cassandra uses a special type of primary key called a composite key to represent a group of related rows, also called "Partitions".
+- **Primary Key = Partition Key + OPTIONAL Clustering Columns**
+- **Partition Key:** It determines the nodes on which rows are stored and can contain multiple columns.
+- **Composite Key:** It controls how data is stored inside the partition.
 
+## Static Column
 
-## Static column
+A static column is a special column that is shared by all the rows of a partition. The static column is very useful when we want to share a column with a single value.
 
-it is a special column that is shared by all the rows of a partition. the static column is very useful when we want to share a column with a single value.
-- A table that does not define any clustering columns cannot have a static column. 
+- A table that does not define any clustering columns cannot have a static column.
 - You can batch conditional updates to a static column.
-- Use the DISTINCT keyword to select static columns. 
-- If COMPACT STORAGE is specified when the table is built, static columns are not allowed at this time
-- If a column is part of partition key/Clustering columns, it cannot be described as a static column
+- Use the DISTINCT keyword to select static columns.
+- If `COMPACT STORAGE` is specified when the table is built, static columns are not allowed.
+- If a column is part of the partition key or clustering columns, it cannot be described as a static column.
+
 
 ## How to quick warm up cassandra after start for development?
 
@@ -559,48 +343,48 @@ services:
       - JVM_OPTS=-Dcassandra.skip_wait_for_gossip_to_settle=0 -Dcassandra.initial_token=1
 ```
 
-
 ## TWCS vs STCS
+
 ### TimeWindowCompactionStrategy (TWCS)
 
-Use Case: 
+**Use Case:**
 
-    TWCS is specifically designed for time-series data, where data is constantly appended and older data becomes less frequently accessed.
+TWCS is specifically designed for time-series data, where data is constantly appended and older data becomes less frequently accessed.
 
-How It Works: 
+**How It Works:**
 
-    TWCS divides data into windows based on time intervals (e.g., hours, days, or weeks). Within each window, data is organized using Size-Tiered Compaction (STCS). When a window becomes older than a specified time threshold, it is compacted into a single SSTable (sorted string table). This helps in efficiently managing time-series data with minimal disk I/O.
+TWCS divides data into windows based on time intervals (e.g., hours, days, or weeks). Within each window, data is organized using Size-Tiered Compaction (STCS). When a window becomes older than a specified time threshold, it is compacted into a single SSTable (Sorted String Table). This helps in efficiently managing time-series data with minimal disk I/O.
 
-Advantages:
+**Advantages:**
 
-    Efficient for time-series data.
-    Reduces read amplification for recent data.
-    Older data is less frequently compacted, reducing compaction overhead.
-
+- Efficient for time-series data.
+- Reduces read amplification for recent data.
+- Older data is less frequently compacted, reducing compaction overhead.
 
 ### SizeTieredCompactionStrategy (STCS)
-Use Case: 
-    
-    STCS is a general-purpose compaction strategy that can be used for a wide range of workloads.
 
-How It Works: 
+**Use Case:**
 
-    STCS organizes data into SSTables based on their size. When the number of SSTables in a given level exceeds a threshold, compaction is triggered. SSTables are merged into larger SSTables, and data is compacted based on size.
+STCS is a general-purpose compaction strategy that can be used for a wide range of workloads.
 
-Advantages:
+**How It Works:**
 
-    Simplicity and good performance for various workloads.
-    Effective for write-intensive workloads where data is rapidly changing.
+STCS organizes data into SSTables based on their size. When the number of SSTables in a given level exceeds a threshold, compaction is triggered. SSTables are merged into larger SSTables, and data is compacted based on size.
 
-Disadvantages:
+**Advantages:**
 
-    Less efficient for time-series data since it doesn't consider time-based access patterns.
+- Simplicity and good performance for various workloads.
+- Effective for write-intensive workloads where data is rapidly changing.
+
+**Disadvantages:**
+
+- Less efficient for time-series data since it doesn't consider time-based access patterns.
 
 ### Choosing Between TWCS and STCS
+
 The choice between TWCS and STCS depends on your data and access patterns:
 
 - If you are dealing with time-series data, such as log data, sensor readings, or financial data, TWCS is typically a better choice. It optimizes storage and access patterns for time-based data.
-
 - For general-purpose workloads or write-intensive applications, STCS can work well. It's simple to configure and is suitable for scenarios where data isn't primarily organized by time.
 
 In some cases, a mixed strategy approach is used, where you might use TWCS for recent data and STCS for historical or less frequently accessed data to strike a balance between efficiency and simplicity.
