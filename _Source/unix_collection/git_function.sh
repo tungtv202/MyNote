@@ -1,34 +1,23 @@
 #!/usr/bin/env zsh
 
-# Git config aliases from ~/.gitconfig, plus older aliases kept from this note.
-git config --global alias.co checkout
-git config --global alias.br branch
-git config --global alias.ci commit
-git config --global alias.st status
-git config --global alias.rss 'reset --soft HEAD^1'
-git config --global alias.rsh 'reset --hard'
-git config --global alias.stp 'stash pop'
-git config --global alias.cl 'clean -fd'
-git config --global alias.f 'fetch'
-git config --global alias.amne 'commit --amend --no-edit --date'
-git config --global alias.rbi 'rebase -i origin/main'
-git config --global alias.rbmo 'rebase -i origin/master'
-git config --global alias.rbm 'rebase -i origin/master'
-git config --global alias.fa 'fetch --all --prune --tags'
-git config --global alias.fao 'fetch --prune --tags origin'
-git config --global alias.gom '!f() { git fetch --prune origin; if git show-ref --verify --quiet refs/remotes/origin/master; then b=master; elif git show-ref --verify --quiet refs/remotes/origin/main; then b=main; else echo "Không thấy origin/master hoặc origin/main"; return 1; fi; git switch "$b" 2>/dev/null || git switch --track "origin/$b"; git reset --hard "origin/$b"; }; f'
+# Personal Git helper functions for interactive shell usage.
 
-# Custom git helpers from ~/.zshrc.
+# Fetch a GitHub pull request by number into a local branch named pr-<number>,
+# then check out that branch for local review or testing.
+# Example: gitpr 123
 gitpr() {
-    if [ -z "$1" ]; then
-        echo "Usage: gitpr <pull-request-number>"
-        return 1
-    fi
-    git fetch origin pull/"$1"/head:pr-"$1"
-    git checkout pr-"$1"
+  if [[ -z "$1" ]]; then
+    echo "Usage: gitpr <pull-request-number>"
+    return 1
+  fi
+
+  git fetch origin pull/"$1"/head:pr-"$1"
+  git checkout pr-"$1"
 }
 
-# Recreate local main/master from the current branch, then force push it to remote "tung".
+# Recreate the repository default branch (main/master) from the current HEAD,
+# then force-push that branch to the remote named "tung".
+# Example: gmt
 gmt() {
   if ! git rev-parse --git-dir >/dev/null 2>&1; then
     echo "gmt: not inside a git repository"
@@ -78,7 +67,9 @@ gmt() {
   git push --force tung "$target_branch:$target_branch"
 }
 
-# List local git branches by latest commit time.
+# Show the most recently updated local branches in a compact table.
+# The optional argument limits the number of branches; default is 8.
+# Examples: gitbrs, gitbrs 20
 gitbrs() {
   local limit="${1:-8}"
 
@@ -138,24 +129,27 @@ gitbrs() {
     '
 }
 
-# List local branches and SSH remote branches by latest commit time.
-gitbrsAll() {
+# Show the most recently updated local branches plus branches from SSH remotes.
+# Remote branches from HTTPS remotes are skipped to reduce noise.
+# The optional argument limits the number of rows; default is 10.
+# Examples: gitbrs_all, gitbrs_all 30
+gitbrs_all() {
   local limit="${1:-10}"
 
   case "$limit" in
     ''|*[!0-9]*)
-      echo "Usage: gitbrsAll [number-of-branches]"
+      echo "Usage: gitbrs_all [number-of-branches]"
       return 1
       ;;
   esac
 
   if (( limit < 1 )); then
-    echo "Usage: gitbrsAll [number-of-branches]"
+    echo "Usage: gitbrs_all [number-of-branches]"
     return 1
   fi
 
   if ! git rev-parse --git-dir >/dev/null 2>&1; then
-    echo "gitbrsAll: not inside a git repository"
+    echo "gitbrs_all: not inside a git repository"
     return 1
   fi
 

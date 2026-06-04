@@ -2,7 +2,7 @@
 
 # How to use?
 #   - 1. set Fshare Env
-#   - 2. run bash commend `bash bash_getlink_fshare QVVJT9JL2B24`  (with QVVJT9JL2B24 is the key of fshare link, ex: https://www.fshare.vn/file/QVVJT9JL2B24)
+#   - 2. run bash command `bash fshare_get_link.sh QVVJT9JL2B24`  (with QVVJT9JL2B24 is the key of fshare link, ex: https://www.fshare.vn/file/QVVJT9JL2B24)
 
 # Should export fshare env first
 #export FSHARE_USERNAME="TODO" # example: tungtv202@gmail.com
