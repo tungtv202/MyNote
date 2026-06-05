@@ -6,7 +6,7 @@ tags:
     - paseto
     - token
     - authen
-category: 
+categories:
     - other
 ---
 

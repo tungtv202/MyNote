@@ -6,7 +6,7 @@ tags:
     - krakend
     - kong
     - api gateway
-category: 
+categories:
     - other
 ---
 

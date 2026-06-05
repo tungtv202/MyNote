@@ -4,7 +4,7 @@ date: 2022-03-05 13:05:01
 updated: 2022-03-05 13:05:01
 tags:
     - apache james
-category: 
+categories:
     - apache james
 ---
 

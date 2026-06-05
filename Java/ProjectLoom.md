@@ -8,7 +8,7 @@ tags:
     - project loom
     - fiber
     - virtual thread
-category: 
+categories:
     - java
 ---
 

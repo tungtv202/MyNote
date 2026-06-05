@@ -6,7 +6,7 @@ tags:
     - java
     - prometheus
     - metric
-category: 
+categories:
     - java
 ---
 

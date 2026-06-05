@@ -6,7 +6,7 @@ tags:
     - aws
     - sts
     - security token service
-category: 
+categories:
     - aws
 ---
 

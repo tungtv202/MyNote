@@ -6,7 +6,7 @@ tags:
     - ha
     - rabbitmq
     - mirror queue
-category: 
+categories:
     - rabbitmq
 ---
 

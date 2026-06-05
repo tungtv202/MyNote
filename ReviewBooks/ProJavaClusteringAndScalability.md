@@ -9,7 +9,7 @@ tags:
 - chat
 - rabbitmq
 
-category:
+categories:
 - summary_book
 
 ---

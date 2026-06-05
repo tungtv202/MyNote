@@ -5,7 +5,7 @@ updated: 2020-01-26 18:00:26
 tags:
     - ddd
     - domain driver design
-category: 
+categories:
     - other
 ---
 

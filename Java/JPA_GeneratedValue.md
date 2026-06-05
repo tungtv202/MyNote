@@ -6,7 +6,7 @@ tags:
     - java
     - GeneratedValue
     - jpa
-category: 
+categories:
     - java
 ---
 

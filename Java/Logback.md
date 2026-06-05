@@ -5,7 +5,7 @@ updated: 2020-06-09 18:00:26
 tags:
     - log
     - logback
-category: 
+categories:
     - java
 ---
 

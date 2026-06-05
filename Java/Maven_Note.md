@@ -6,7 +6,7 @@ tags:
     - java
     - maven
     - lib-common
-category: 
+categories:
     - java
 ---
 

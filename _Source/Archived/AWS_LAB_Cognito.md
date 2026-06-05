@@ -4,7 +4,7 @@ date: 2020-01-30 18:00:26
 updated: 2020-01-30 18:00:26
 tags:
     - archived
-category: 
+categories:
     - z.archived
 ---
 

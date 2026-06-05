@@ -6,7 +6,7 @@ tags:
     - code template
     - Google Translate
     - translate
-category: 
+categories:
     - code_template
 ---
 

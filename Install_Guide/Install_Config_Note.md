@@ -4,7 +4,7 @@ date: 2020-04-01 18:00:26
 updated: 2020-04-01 18:00:26
 tags:
     - note
-category: 
+categories:
     - install_guide
 ---
 

@@ -6,7 +6,7 @@ tags:
     - java
     - fuzz
     - testing
-category: 
+categories:
     - java
 ---
 

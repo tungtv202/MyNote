@@ -6,7 +6,7 @@ tags:
     - serialize
     - java
     - jackson
-category: 
+categories:
     - java
     - jackson
 ---

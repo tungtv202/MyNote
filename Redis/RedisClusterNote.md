@@ -5,7 +5,7 @@ updated: 2024-04-26 12:00:26
 tags:
     - redis
     - redis cluster
-category: 
+categories:
     - redis
 ---
 

@@ -9,7 +9,7 @@ tags:
     - volatile
     - thread safe
     - completable future
-category: 
+categories:
     - java
 ---
 

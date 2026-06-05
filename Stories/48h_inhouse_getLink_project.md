@@ -6,7 +6,7 @@ tags:
     - fshare
     - get link
     - stories
-category: 
+categories:
     - stories
 ---
 

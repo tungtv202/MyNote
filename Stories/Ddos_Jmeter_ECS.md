@@ -7,7 +7,7 @@ tags:
     - aws
     - ecs
     - test
-category: 
+categories:
     - stories
 ---
 

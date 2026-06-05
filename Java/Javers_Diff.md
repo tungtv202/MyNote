@@ -6,7 +6,7 @@ tags:
     - java
     - javers
     - diff
-category: 
+categories:
     - java
 ---
 

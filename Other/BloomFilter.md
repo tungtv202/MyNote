@@ -7,7 +7,7 @@ tags:
     - algorithm
     - false positive
     - bf
-category: 
+categories:
     - other
 ---
 

@@ -6,7 +6,7 @@ tags:
     - sso
     - oidc
     - id provider
-category: 
+categories:
     - other
 ---
 

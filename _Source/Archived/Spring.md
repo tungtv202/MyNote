@@ -5,7 +5,7 @@ updated: 2022-03-06 02:00:26
 tags:
     - spring
     - java
-category: 
+categories:
     - java
 ---
 

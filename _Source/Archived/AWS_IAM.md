@@ -6,7 +6,7 @@ tags:
     - aws
     - iam
     - policy 
-category: 
+categories:
     - aws
 ---
 

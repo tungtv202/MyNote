@@ -1,4 +1,3 @@
-
 ---
 title: ElasticSearch - Contact Autocomplete Feature
 date: 2022-04-05 22:00:26
@@ -7,7 +6,7 @@ tags:
 - elasticsearch
 - search contact
 - autocomplete
-category:
+categories:
 - elasticsearch
 ---
 

@@ -6,7 +6,7 @@ tags:
     - elasticsearch
     - search as you type
     - autocomplete
-category: 
+categories:
     - elasticsearch
 ---
 

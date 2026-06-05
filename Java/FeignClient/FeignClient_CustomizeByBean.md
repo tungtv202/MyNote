@@ -6,7 +6,7 @@ tags:
     - http client
     - java
     - feign
-category: 
+categories:
     - java
     - feign
 ---

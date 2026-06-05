@@ -5,7 +5,7 @@ updated: 2022-04-19 22:00:26
 tags:
     - java
     - thread
-category: 
+categories:
     - java
 ---
 

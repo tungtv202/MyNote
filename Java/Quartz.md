@@ -6,7 +6,7 @@ tags:
     - java
     - quartz
     - auto scheduler
-category: 
+categories:
     - java
 ---
 

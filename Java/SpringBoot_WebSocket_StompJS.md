@@ -7,7 +7,7 @@ tags:
     - web socket
     - stompJs
     - spring
-category: 
+categories:
     - java
 ---
 

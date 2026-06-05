@@ -6,7 +6,7 @@ tags:
     - redis
     - redis sentinel
     - sentinel
-category: 
+categories:
     - redis
 ---
 

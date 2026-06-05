@@ -8,7 +8,7 @@ tags:
     - reactor
     - spring webflux
     - webclient
-category: 
+categories:
     - java
 ---
 

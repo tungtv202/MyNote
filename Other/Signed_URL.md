@@ -6,7 +6,7 @@ tags:
     - signed url
     - object storage
     - s3
-category: 
+categories:
     - other
 ---
 

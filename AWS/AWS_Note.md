@@ -5,7 +5,7 @@ updated: 2020-06-18 18:00:26
 tags:
     - aws
     - note total
-category: 
+categories:
     - aws
 ---
 

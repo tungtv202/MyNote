@@ -7,7 +7,7 @@ tags:
     - basic
     - session
     - token
-category: 
+categories:
     - other
 ---
 

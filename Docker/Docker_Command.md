@@ -7,7 +7,7 @@ tags:
     - command
     - script
     - install
-category: 
+categories:
     - docker
 ---
 

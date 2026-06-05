@@ -6,7 +6,7 @@ tags:
     - java
     - functional
     - pattern
-category: 
+categories:
     - other
 ---
 

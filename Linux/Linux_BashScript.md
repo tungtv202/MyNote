@@ -6,7 +6,7 @@ tags:
     - bash
     - script
     - install
-category: 
+categories:
     - linux
 ---
 

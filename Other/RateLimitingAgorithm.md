@@ -5,7 +5,7 @@ updated: 2022-02-14 12:00:26
 tags:
     - rate limiting
     - algorithm
-category: 
+categories:
     - other
 ---
 

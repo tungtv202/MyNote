@@ -5,7 +5,7 @@ updated: 2020-01-01 18:00:26
 tags:
     - template
     - vagrant
-category: 
+categories:
     - cicd_ops
 ---
 

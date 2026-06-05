@@ -6,7 +6,7 @@ tags:
     - test tool
     - performance test
     - rabbitmq
-category: 
+categories:
     - rabbitmq
 ---
 

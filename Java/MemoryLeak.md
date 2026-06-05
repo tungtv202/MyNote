@@ -5,7 +5,7 @@ updated: 2019-03-17 18:00:26
 tags:
     - java
     - memory leak
-category: 
+categories:
     - java
 ---
 

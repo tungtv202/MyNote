@@ -8,7 +8,7 @@ tags:
     - krakend
     - sso
     - slo
-category: 
+categories:
     - other
 ---
 

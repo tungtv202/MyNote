@@ -4,7 +4,7 @@ date: 2019-12-03 18:00:26
 updated: 2019-12-03 18:00:26
 tags:
   - archived
-category:
+categories:
   - z.archived
 ---
 

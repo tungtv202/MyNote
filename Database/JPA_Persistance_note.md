@@ -6,7 +6,7 @@ tags:
     - jpa
     - hibernate
     - persistence
-category: 
+categories:
     - database
 ---
 

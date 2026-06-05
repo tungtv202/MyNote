@@ -5,7 +5,7 @@ updated: 2019-12-21 18:00:26
 tags:
     - aws
     - evaluation logic
-category: 
+categories:
     - aws
 ---
 

@@ -7,7 +7,7 @@ tags:
     - mockito
     - unit test
     - java
-category: 
+categories:
     - java
 ---
 

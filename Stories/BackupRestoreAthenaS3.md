@@ -5,7 +5,7 @@ updated: 2020-04-20 18:00:26
 tags:
     - s3
     - query sql
-category: 
+categories:
     - stories
 ---
 

@@ -8,7 +8,7 @@ tags:
     - reactor
     - spring webflux
     - observable
-category: 
+categories:
     - java
 ---
 

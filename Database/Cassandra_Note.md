@@ -6,7 +6,7 @@ tags:
     - cql
     - cassandra
     - database
-category: 
+categories:
     - database
 ---
 

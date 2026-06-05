@@ -4,7 +4,7 @@ date: 2021-01-10 10:39:26
 updated: 2021-01-10 10:39:26
 tags:
     - sync
-category: 
+categories:
     - stories
 ---
 

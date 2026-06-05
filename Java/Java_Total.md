@@ -6,7 +6,7 @@ tags:
     - java
     - note
     - KafkaListener
-category: 
+categories:
     - java
 ---
 

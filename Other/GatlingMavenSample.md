@@ -6,7 +6,7 @@ tags:
     - gatling
     - maven
     - performance test
-category: 
+categories:
     - other
 ---
 

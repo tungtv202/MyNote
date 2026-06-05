@@ -8,7 +8,7 @@ tags:
     - grafana
     - script
     - install
-category: 
+categories:
     - install_guide
 ---
 

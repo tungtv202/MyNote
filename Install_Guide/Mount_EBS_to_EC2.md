@@ -5,7 +5,7 @@ updated: 2020-01-25 18:00:26
 tags:
   - EBS
   - install
-category:
+categories:
   - install_guide
 ---
 

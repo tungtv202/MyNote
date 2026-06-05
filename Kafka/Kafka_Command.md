@@ -6,7 +6,7 @@ tags:
     - kafka
     - kafka cli
     - command
-category: 
+categories:
     - kafka
 ---
 

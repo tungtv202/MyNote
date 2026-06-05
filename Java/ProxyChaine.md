@@ -7,7 +7,7 @@ tags:
     - selenium
     - proxy
     - proxy chained
-category: 
+categories:
     - java
 ---
 

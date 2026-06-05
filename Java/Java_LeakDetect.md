@@ -7,7 +7,7 @@ tags:
     - leak
     - leak detect
     - phantomreference
-category: 
+categories:
     - java
 ---
 

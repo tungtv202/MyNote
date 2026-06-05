@@ -6,7 +6,7 @@ tags:
     - aws
     - s3
     - object storage
-category: 
+categories:
     - aws
 ---
 

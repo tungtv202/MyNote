@@ -5,7 +5,7 @@ updated: 2018-10-14 18:00:26
 tags:
     - aws
     - lambda
-category: 
+categories:
     - aws
 ---
 

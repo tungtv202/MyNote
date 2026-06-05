@@ -7,7 +7,7 @@ tags:
     - jhipster
     - auto tool
     - gen code
-category: 
+categories:
     - java
 ---
 

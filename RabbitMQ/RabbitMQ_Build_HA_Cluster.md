@@ -7,7 +7,7 @@ tags:
     - rabbitmq
     - quorum queue
     - stories
-category: 
+categories:
     - rabbitmq
 ---
 

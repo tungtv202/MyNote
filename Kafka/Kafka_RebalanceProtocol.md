@@ -6,7 +6,7 @@ tags:
     - kafka
     - rebalance
     - coordinator
-category: 
+categories:
     - kafka
 ---
 

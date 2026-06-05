@@ -7,7 +7,7 @@ tags:
     - equal
     - hashcode
     - EqualsVerifier
-category: 
+categories:
     - java
 ---
 

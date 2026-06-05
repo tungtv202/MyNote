@@ -6,7 +6,7 @@ tags:
     - sql
     - partition
     - sharding
-category: 
+categories:
     - database
 ---
 

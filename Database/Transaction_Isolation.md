@@ -7,7 +7,7 @@ tags:
     - isolation
     - durability
     - persistence
-category: 
+categories:
     - database
 ---
 

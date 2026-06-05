@@ -9,7 +9,7 @@ tags:
     - selenium
     - chromedriver
     - chartjs
-category: 
+categories:
     - stories
 ---
 

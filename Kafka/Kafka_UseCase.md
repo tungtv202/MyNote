@@ -5,7 +5,7 @@ updated: 2020-01-02 18:00:26
 tags:
     - kafka
     - use case
-category: 
+categories:
     - kafka
 ---
 

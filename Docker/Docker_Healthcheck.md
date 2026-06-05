@@ -6,7 +6,7 @@ tags:
     - docker
     - healthcheck
     - graceful shutdown
-category: 
+categories:
     - docker
 ---
 

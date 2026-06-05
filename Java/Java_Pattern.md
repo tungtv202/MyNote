@@ -12,7 +12,7 @@ tags:
     - adapter
     - command
     - observer
-category: 
+categories:
     - java
 ---
 

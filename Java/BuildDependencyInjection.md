@@ -7,7 +7,7 @@ tags:
     - dependency
     - dependency injection
     - reflection
-category: 
+categories:
     - java
 ---
 

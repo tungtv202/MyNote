@@ -6,7 +6,7 @@ tags:
     - code template
     - aws
     - s3
-category: 
+categories:
     - code_template
 ---
 

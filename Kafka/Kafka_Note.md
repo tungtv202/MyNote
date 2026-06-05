@@ -6,7 +6,7 @@ tags:
     - kafka
     - segment
     - total
-category: 
+categories:
     - kafka
 ---
 

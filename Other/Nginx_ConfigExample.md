@@ -5,7 +5,7 @@ updated: 2019-02-11 18:00:26
 tags:
     - nginx
     - template
-category: 
+categories:
     - other
 ---
 
