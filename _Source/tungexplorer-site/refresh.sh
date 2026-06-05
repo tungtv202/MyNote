@@ -18,8 +18,13 @@ cd ..
 rsync -av --progress MyNote/. source/_posts/. --exclude .git \
     --exclude .gitignore --exclude README.md --exclude deploy.sh \
     --exclude _Source --exclude tung_explorer.png --exclude refresh.sh
+
+# Do not deploy a GitHub Pages custom domain.
+rm -f source/CNAME themes/3-hexo/source/CNAME
+
 hexo clean
 hexo generate
+rm -f public/CNAME
 
 # Must setting git ssh key first
 hexo deploy
