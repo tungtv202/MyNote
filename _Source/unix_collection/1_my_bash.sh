@@ -3,32 +3,11 @@
 # Shared shell helpers sourced by ~/.zshrc.
 # Keep Linux-only commands in only_linux/linux_bash.sh.
 
-if [[ -o interactive && -t 1 ]]; then
-  # Load Powerlevel10k instant prompt only for interactive terminal sessions.
-  if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-  fi
-fi
-
 # Resolve this file's directory so sibling scripts can be sourced reliably.
 MY_BASH_DIR="${${(%):-%x}:A:h}"
 
 # Prefer personal scripts installed in ~/bin.
 export PATH="$HOME/bin:$PATH"
-
-# Load Oh My Zsh and interactive zsh plugins only in real terminal sessions.
-if [[ -o interactive && -t 1 && -d "$HOME/.oh-my-zsh" ]]; then
-  export ZSH="$HOME/.oh-my-zsh"
-  ZSH_THEME="powerlevel10k/powerlevel10k"
-  plugins=(git)
-  source "$ZSH/oh-my-zsh.sh"
-
-  [[ ! -f "$HOME/.p10k.zsh" ]] || source "$HOME/.p10k.zsh"
-
-  [[ -f /opt/homebrew/etc/profile.d/autojump.sh ]] && source /opt/homebrew/etc/profile.d/autojump.sh
-  [[ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-  [[ -f "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
-fi
 
 # Java/Maven
 # Load Java and Maven environment helpers.
